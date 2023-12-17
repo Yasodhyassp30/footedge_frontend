@@ -9,7 +9,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import "./dashboard.css";
 import axios, { AxiosResponse, CancelTokenSource } from "axios";
 import io, { Socket } from "socket.io-client";
-import { Grid } from "@mui/material";
+import { Grid,Slider } from "@mui/material";
 
 const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
 
@@ -24,33 +24,50 @@ const VisuallyHiddenInput = styled("input")({
   whiteSpace: "nowrap",
   width: 1,
 });
-
+interface ImageData {
+  frame: string[];
+  topview: string[];
+  kde1: string[];
+  kde2: string[];
+}
 function Dashboard() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
-  const [frame, setFrame] = useState<string | null>(null);
-  const [topview, setTopview] = useState<string | null>(null);
-  const [kde1, setkde1] = useState<string | null>(null);
-  const [kde2, setkde2] = useState<string | null>(null);
+  const [imageData, setImageData] = useState<ImageData>({
+    frame: [],
+    topview: [],
+    kde1: [],
+    kde2: [],
+  });
   const [videoDetails, setVideoDetails] = useState({
     fileName: "",
     fileSize: "",
   });
+  const [slider,setSlider] =useState<number>(0)
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const cancelSourceRef = useRef<CancelTokenSource | null>(null);
+  const [frame, setFrame] = useState<string | null>(null);
+  const [topview, setTopview] = useState<string | null>(null);
+  const [kde1, setkde1] = useState<string | null>(null);
+  const [kde2, setkde2] = useState<string | null>(null);
 
   useEffect(() => {
     if (socket) {
       socket.on("message_from_server", (data) => {
         
-        let imageBase64 = data.frame;
-        setFrame(`data:image/jpeg;base64, ${imageBase64}`)
-        imageBase64 = data.topview;
-        setTopview(`data:image/jpeg;base64, ${imageBase64}`)
-        imageBase64 = data.kde_team1;
-        setkde1(`data:image/jpeg;base64, ${imageBase64}`)
-        imageBase64 = data.kde_team2;
-        setkde2(`data:image/jpeg;base64, ${imageBase64}`)
+        const  imageBase64_frame = data.frame;
+        setImageData(prevState => ({ ...prevState, frame: [...prevState.frame, `data:image/jpeg;base64, ${imageBase64_frame}`] }));
+        
+        const imageBase64_topview = data.topview;
+        setImageData(prevState => ({ ...prevState, topview: [...prevState.topview, `data:image/jpeg;base64, ${imageBase64_topview}`] }));
+        
+        const imageBase64_team1 = data.kde_team1;
+        setImageData(prevState => ({ ...prevState, kde1: [...prevState.kde1, `data:image/jpeg;base64, ${imageBase64_team1}`] }));
+        
+        const imageBase64_team2 = data.kde_team2;
+        
+        setImageData(prevState => ({ ...prevState, kde2: [...prevState.kde2, `data:image/jpeg;base64, ${imageBase64_team2}`] }));
+        
       });
       socket.on("final_message_from_server", (data) => {
         socket.disconnect()
@@ -194,8 +211,8 @@ function Dashboard() {
           width:"100%",
           padding:"10px"
         }}>
-        {frame && (
-         <img src={frame} className="result_image" alt="Received Image" />
+        {imageData.frame.length!==0 && (
+         <img src={imageData.frame[slider-1]} className="result_image" alt="Received Image1" />
       )}
         </Grid>
         <Grid item xs={10} md={6} sx={{
@@ -203,8 +220,8 @@ function Dashboard() {
           width:"100%",
           padding:"10px"
         }}>
-        {frame && (
-        <img src={topview!} className="result_image" alt="Received Image" />
+        {imageData.topview.length!==0  && (
+        <img src={imageData.topview[slider-1]} className="result_image" alt="Received Image2" />
       )}
         </Grid>
         <Grid item xs={10} md={6} sx={{
@@ -212,8 +229,8 @@ function Dashboard() {
           width:"100%",
           padding:"10px"
         }}>
-        {frame && (
-         <img src={kde1!} className="result_image" alt="Received Image" />
+        {imageData.kde1.length!==0 && (
+         <img src={imageData.kde1[slider-1]} className="result_image" alt="Received Image3" />
       )}
         </Grid>
         <Grid item xs={10} md={6} sx={{
@@ -221,9 +238,24 @@ function Dashboard() {
           width:"100%",
           padding:"10px"
         }}>
-        {frame && (
-        <img src={kde2!} className="result_image" alt="Received Image" />
+        {imageData.kde2.length!==0  && (
+        <img src={imageData.kde2[slider-1]} className="result_image" alt="Received Image4" />
       )}
+        </Grid>
+        <Grid item xs={1} md={3}></Grid>
+        <Grid item xs={10} md={6} sx={{
+          width:"100%",
+          padding:"10px"
+        }}>
+<Slider
+        aria-label="Temperature"
+        defaultValue={slider}
+        valueLabelDisplay="auto"
+        step={1}
+        min={1}
+        max={imageData.frame.length}
+        onChange={(e,val)=>{setSlider(Number(val))}}
+      />
         </Grid>
       </Grid>
       
