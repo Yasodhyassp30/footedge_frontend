@@ -1,6 +1,7 @@
 import { Grid, Slider } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import { Socket } from 'socket.io-client';
+import Soccerfield from './soccerfield';
 
 interface TeamActivityProps {
     socket: Socket | null;
@@ -79,6 +80,20 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket }) => {
         {imageData.kde2.length!==0  && (
         <img src={imageData.kde2[slider-1]} className="result_image" alt="Received Image4" />
       )}
+        </Grid>
+        <Grid item xs={12} md={6} sx={{
+          minHeight:"320px",
+          width:"100%",
+          padding:"10px"
+        }}>
+          <Soccerfield/>
+        </Grid>
+        <Grid item xs={12} md={6} sx={{
+          minHeight:"320px",
+          width:"100%",
+          padding:"10px"
+        }}>
+       <Soccerfield/>
         </Grid>
         <Grid item xs={1} md={3}></Grid>
         <Grid item xs={10} md={6} sx={{
