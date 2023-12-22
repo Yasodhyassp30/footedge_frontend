@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { players } from "./teamActivity";
-import d3Dsv from "d3-dsv";
+
+
+
 interface SoccerfieldProps {
   data: players[];
 }
@@ -31,7 +33,7 @@ const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
 
       svg
         .append("circle")
-        .attr("cx", "12%")
+        .attr("cx", "16%")
         .attr("cy", "50%")
         .attr("r", "10%")
         .attr("fill", "none")
@@ -40,7 +42,7 @@ const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
 
       svg
         .append("circle")
-        .attr("cx", "88%")
+        .attr("cx", "84%")
         .attr("cy", "50%")
         .attr("r", "10%")
         .attr("fill", "none")
@@ -51,7 +53,7 @@ const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
         .append("rect")
         .attr("x", "0%")
         .attr("y", "22.5%")
-        .attr("width", "16%")
+        .attr("width", "20%")
         .attr("height", "55%")
         .attr("fill", "green")
         .attr("stroke", "white")
@@ -59,9 +61,9 @@ const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
 
       svg
         .append("rect")
-        .attr("x", "84%")
+        .attr("x", "80%")
         .attr("y", "22.5%")
-        .attr("width", "16%")
+        .attr("width", "20%")
         .attr("height", "55%")
         .attr("fill", "green")
         .attr("stroke", "white")
@@ -71,7 +73,7 @@ const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
         .append("rect")
         .attr("x", "0%")
         .attr("y", "37.5%")
-        .attr("width", "6%")
+        .attr("width", "8%")
         .attr("height", "25%")
         .attr("fill", "none")
         .attr("stroke", "white")
@@ -79,9 +81,9 @@ const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
 
       svg
         .append("rect")
-        .attr("x", "94%")
+        .attr("x", "92%")
         .attr("y", "37.5%")
-        .attr("width", "6%")
+        .attr("width", "8%")
         .attr("height", "25%")
         .attr("fill", "green")
         .attr("stroke", "white")
@@ -110,10 +112,10 @@ const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
         .attr("class", "point") 
         .attr("cx", (d) => `${(d.coordinates[0]/1680)*100}%`)
         .attr("cy", (d) => `${(d.coordinates[1]/1080)*100}%`)
-        .attr("r", 5)
+        .attr("r", 10)
         .attr("fill", (d) => `rgb(${d.color[2]}, ${d.color[1]}, ${d.color[0]})`)
         .attr("stroke", "white")
-        .attr("stroke-width", 5);
+        .attr("stroke-width", 10);
     }
 
     

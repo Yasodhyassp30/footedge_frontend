@@ -2,6 +2,7 @@ import { Grid, Slider } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import { Socket } from 'socket.io-client';
 import Soccerfield from './soccerfield';
+import DensityPlot from './kdePlot';
 
 interface TeamActivityProps {
     socket: Socket | null;
@@ -24,12 +25,10 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket }) => {
     useEffect(() => {
         if (socket) {
           socket.on("message_from_server", (data) => {
-            console.log(data)
             setImageData((prevState) => ({
               frame: [...prevState.frame, `data:image/jpeg;base64, ${data.frame}`],
               info: [...prevState.info, data.info],
             }));
-            console.log(imageData.info)
             if (imageData.frame.length==1){
               setSlider(1)
             }
@@ -38,12 +37,11 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket }) => {
       }, [socket]);
 
       useEffect(() => {
-        console.log(imageData.info);
       }, [imageData.info])
   return (
     <div>
               <Grid container spacing={0}>
-        <Grid item xs={12} md={6} sx={{
+        <Grid item xs={12} md={12} sx={{
           minHeight:"320px",
           width:"100%",
           padding:"10px"
@@ -55,7 +53,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket }) => {
         <Grid item xs={12} md={6} sx={{
           minHeight:"320px",
           width:"100%",
-          padding:"10px"
+          padding:"5px"
         }}>
                {imageData.info[slider-1]!==undefined ? (
           <Soccerfield data={imageData.info[slider-1]} />
@@ -69,7 +67,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket }) => {
           padding:"10px"
         }}>
                 {imageData.info[slider-1]!==undefined ? (
-          <Soccerfield data={imageData.info[slider-1]} />
+          <DensityPlot data={imageData.info[slider-1].filter(item => item.team === 0)} color='red'/>
         ) : (
           <div></div>
         )}
@@ -80,7 +78,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket }) => {
           padding:"10px"
         }}>
        {imageData.info[slider-1]!==undefined ? (
-          <Soccerfield data={imageData.info[slider-1]} />
+          <DensityPlot data={imageData.info[slider-1].filter(item => item.team === 1)} color='blue'/>
         ) : (
           <div></div>
         )}
