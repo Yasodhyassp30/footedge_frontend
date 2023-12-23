@@ -170,11 +170,6 @@ function Dashboard() {
             color="error"
           >
             Cancel
-            <VisuallyHiddenInput
-              type="file"
-              accept="video/mp4"
-              onClick={handleCancelUpload}
-            />
           </Button>
         )}
       </div>
