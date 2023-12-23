@@ -123,7 +123,7 @@ const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
   
 
   return (
-    <div style={{ height: "100%", minHeight: "320px", minWidth: "480px" }}>
+    <div style={{ height: "100%",width:"100%" }}>
       <svg
         ref={svgRef}
         width="480"

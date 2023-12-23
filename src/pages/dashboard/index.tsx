@@ -178,7 +178,7 @@ function Dashboard() {
           </Button>
         )}
       </div>
-      <TeamActivity socket={socket} />
+      <TeamActivity socket={socket} url={videoSrc} />
     </div>
   );
 }

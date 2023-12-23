@@ -6,6 +6,7 @@ import DensityPlot from './kdePlot';
 
 interface TeamActivityProps {
     socket: Socket | null;
+    url: string | null;
   }
 export interface players{
   team:number,
@@ -16,7 +17,7 @@ interface ImageData {
     frame: string[];
     info: players[][];
   }
-const TeamActivity: React.FC<TeamActivityProps> = ({ socket }) => {
+const TeamActivity: React.FC<TeamActivityProps> = ({ socket,url }) => {
     const [imageData, setImageData] = useState<ImageData>({
         frame: [],
         info: []
@@ -38,10 +39,17 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket }) => {
 
       useEffect(() => {
       }, [imageData.info])
+
+    useEffect(() => {
+      setImageData({
+        frame: [],
+        info: [],
+      });
+    }, [url]);
   return (
     <div>
               <Grid container spacing={0}>
-        <Grid item xs={12} md={12} sx={{
+        <Grid item xs={12} md={8} sx={{
           minHeight:"320px",
           width:"100%",
           padding:"10px"
@@ -50,16 +58,31 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket }) => {
          <img src={imageData.frame[slider-1]} className="result_image" alt="Received Image1" />
       )}
         </Grid>
-        <Grid item xs={12} md={6} sx={{
+        
+        <Grid item xs={12} md={4} sx={{
+          display:"flex",
           minHeight:"320px",
           width:"100%",
-          padding:"5px"
+          height:"100%",
+          padding:"10px",
         }}>
-               {imageData.info[slider-1]!==undefined ? (
+          <Grid container spacing={2}>
+          <Grid item xs={12}>
+          {imageData.info[slider-1]!==undefined ? (
           <Soccerfield data={imageData.info[slider-1]} />
         ) : (
           <div></div>
         )}
+          </Grid>
+          <Grid item xs={12}>
+          {imageData.info[slider-1]!==undefined ? (
+            <div>
+            Detections
+            <div><h1>{imageData.info[slider-1].length}</h1></div>
+            </div>):(<div></div>)}
+          </Grid>
+        </Grid>
+           
         </Grid>
         <Grid item xs={12} md={6} sx={{
           minHeight:"320px",
@@ -90,7 +113,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket }) => {
         }}>
           {imageData.info.length !==0 && <Slider
         aria-label="Temperature"
-        defaultValue={slider}
+        value={slider}
         valueLabelDisplay="auto"
         step={1}
         min={1}

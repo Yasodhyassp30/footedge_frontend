@@ -123,7 +123,7 @@ const DensityPlot: React.FC<DensityPlotProps> = ({data,color }) => {
       ]);
   
   
-      const densityData =  kde.thresholds(5)(transformedData);;
+      const densityData =  kde.thresholds(15)(transformedData);;
   
   
       svg
@@ -139,7 +139,7 @@ const DensityPlot: React.FC<DensityPlotProps> = ({data,color }) => {
       
 
 
-  return (<div style={{ height: "100%", minHeight: "320px", minWidth: "480px" }}>
+  return (<div style={{ height: "100%",width:"100%" }}>
   <svg
     ref={svgRef}
     width="480"
