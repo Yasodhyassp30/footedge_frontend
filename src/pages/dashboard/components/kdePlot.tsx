@@ -14,7 +14,6 @@ const DensityPlot: React.FC<DensityPlotProps> = ({data,color,levels }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
   useEffect(() => {
-    console.log(data)
     if (svgRef.current) {
       const svg = d3.select(svgRef.current);
       svg
@@ -110,9 +109,6 @@ const DensityPlot: React.FC<DensityPlotProps> = ({data,color,levels }) => {
   
       const svg = d3
         .select(svgRef.current)
-        .attr('width', width)
-        .attr('height', height);
-  
       const kde = d3
         .contourDensity()
         .size([width, height])

@@ -78,11 +78,12 @@ const IndividualTracking: React.FC<localizationData> = ({ info }) => {
           xs={10}
           md={6}
           sx={{
+            minHeight: "320px",
             width: "100%",
             padding: "10px",
           }}
         >
-          <DensityPlot data={playerData} color={"red"} levels={5} />
+          <DensityPlot data={playerData} color={"red"} levels={15} />
         </Grid>
       </Grid>
     </div>
