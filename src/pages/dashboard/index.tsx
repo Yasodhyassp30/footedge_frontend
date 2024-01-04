@@ -10,8 +10,7 @@ import "./dashboard.css";
 import axios, { AxiosResponse, CancelTokenSource } from "axios";
 import io, { Socket } from "socket.io-client";
 import TeamActivity from "./components/teamActivity";
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
+
 
 const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
 

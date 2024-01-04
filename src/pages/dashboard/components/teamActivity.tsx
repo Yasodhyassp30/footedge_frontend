@@ -13,6 +13,8 @@ export interface players {
   team: number;
   color: number[];
   coordinates: number[];
+  tracker_id: number;
+
 }
 interface ImageData {
   frame: string[];
@@ -180,7 +182,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
         </Grid>
         <Grid item xs={1} md={3}></Grid>
 
-        {tab === 1 && <IndividualTracking />}
+        {tab === 1 && <IndividualTracking info={imageData.info} />}
         
       </Grid>
       <Grid container spacing={0}>
@@ -201,6 +203,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
                     (item) => item.team === 0
                   )}
                   color="red"
+                  levels={10}
                 />)}
               </Grid>
               )}
@@ -221,6 +224,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
                     (item) => item.team === 1
                   )}
                   color="blue"
+                  levels={10}
                 />
               ) }
             </Grid>

@@ -6,13 +6,15 @@ import { players } from "./teamActivity";
 interface DensityPlotProps {
 
   data:players[]
-  color:string
+  color:string,
+  levels:number
 }
 
-const DensityPlot: React.FC<DensityPlotProps> = ({data,color }) => {
+const DensityPlot: React.FC<DensityPlotProps> = ({data,color,levels }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
   useEffect(() => {
+    console.log(data)
     if (svgRef.current) {
       const svg = d3.select(svgRef.current);
       svg
@@ -123,7 +125,7 @@ const DensityPlot: React.FC<DensityPlotProps> = ({data,color }) => {
       ]);
   
   
-      const densityData =  kde.thresholds(15)(transformedData);;
+      const densityData =  kde.thresholds(levels)(transformedData);;
   
   
       svg
