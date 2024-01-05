@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { players } from "./teamActivity";
+import { players,totalTeam } from "./teamActivity";
 import { Grid, MenuItem, Select } from "@mui/material";
 import DensityPlot from "./kdePlot";
 
 interface localizationData {
   info: players[][];
+  team1: number[];
+  team2: number[];
+  details : totalTeam;
 }
 
-const IndividualTracking: React.FC<localizationData> = ({ info }) => {
+const IndividualTracking: React.FC<localizationData> = ({ info,team1,team2,details }) => {
   const [trackers, setTrackers] = useState<number[]>([]);
   const [selectedPlayer, setSelectedPlayer] = useState<number>(0);
   const [playerData, setPlayerData] = useState<players[]>([]);
@@ -46,6 +49,7 @@ const IndividualTracking: React.FC<localizationData> = ({ info }) => {
     >
       <Grid container spacing={0}>
         <Grid
+        item
           xs={12}
           md={6}
           sx={{

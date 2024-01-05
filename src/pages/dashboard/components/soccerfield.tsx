@@ -1,14 +1,17 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
-import { players } from "./teamActivity";
+import { players,totalTeam } from "./teamActivity";
 
 
 
 interface SoccerfieldProps {
   data: players[];
+  details : totalTeam;
+  team1:number[];
+  team2:number[];
 }
 
-const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
+const Soccerfield: React.FC<SoccerfieldProps> = ({ data,details,team1,team2 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
@@ -113,7 +116,7 @@ const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
         .attr("cx", (d) => `${(d.coordinates[0]/1680)*100}%`)
         .attr("cy", (d) => `${(d.coordinates[1]/1080)*100}%`)
         .attr("r", 10)
-        .attr("fill", (d) => `rgb(${d.color[2]}, ${d.color[1]}, ${d.color[0]})`)
+        .attr("fill", (d) => (details[d.tracker_id].team1>details[d.tracker_id].team2) ? `rgb(${team1[2]}, ${team1[1]}, ${team1[0]})`: `rgb(${team2[2]}, ${team2[1]}, ${team2[0]})`)
         .attr("stroke", "white")
         .attr("stroke-width", 10);
     }

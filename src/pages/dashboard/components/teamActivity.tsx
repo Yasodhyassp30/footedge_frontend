@@ -20,21 +20,54 @@ interface ImageData {
   frame: string[];
   info: players[][];
 }
+interface TeamStates {
+  team1:number,
+  team2:number
+}
+export interface totalTeam{
+  [key:number]:TeamStates
+}
 const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
   const [imageData, setImageData] = useState<ImageData>({
     frame: [],
     info: [],
   });
+  const [teamStates,setTeamstates ] = useState<totalTeam>({})
   const [tab, SetTab] = useState<number>(0);
-  const [slider, setSlider] = useState<number>(0);
+  const [slider, setSlider] = useState<number>(1);
+  const [team1, setTeamColors1] = useState<number[]>([]);
+  const [team2, setTeamColors2] = useState<number[]>([]);
   useEffect(() => {
     if (socket) {
       socket.on("message_from_server", (data) => {
+        for (let i = 0; i < data.info.length; i++) {
+          
+          if(data.info[i].team===0){
+            if(team1.length===0){
+              setTeamColors1(data.info[i].color)
+            } 
+            if(teamStates[data.info[i].tracker_id]){
+              teamStates[data.info[i].tracker_id].team1+=1
+            }else{
+              teamStates[data.info[i].tracker_id]={team1:1,team2:0}
+            }
+          }else if (data.info[i].team===1){
+            if(team2.length===0){
+              setTeamColors2(data.info[i].color)
+            } 
+            if(teamStates[data.info[i].tracker_id]){
+              teamStates[data.info[i].tracker_id].team2+=1
+            }else{
+              teamStates[data.info[i].tracker_id]={team1:0,team2:1}
+            }
+          }
+        }
+        console.log(data.info)
         setImageData((prevState) => ({
           frame: [...prevState.frame, `data:image/jpeg;base64, ${data.frame}`],
           info: [...prevState.info, data.info],
         }));
-        if (imageData.frame.length == 1) {
+        if (imageData.frame.length === 1) {
           setSlider(1);
         }
       });
@@ -86,7 +119,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               {imageData.info[slider - 1] !== undefined ? (
-                <Soccerfield data={imageData.info[slider - 1]} />
+                <Soccerfield data={imageData.info[slider - 1]} details={teamStates} team1={team1} team2={team2} />
               ) : (
                 <div></div>
               )}
@@ -168,7 +201,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
           {imageData.info.length !== 0 && (
             <Slider
               aria-label="Temperature"
-              defaultValue={1}
+              defaultValue={slider}
               value={slider}
               valueLabelDisplay="auto"
               step={1}
@@ -182,7 +215,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
         </Grid>
         <Grid item xs={1} md={3}></Grid>
 
-        {tab === 1 && <IndividualTracking info={imageData.info} />}
+        {tab === 1 && <IndividualTracking info={imageData.info} team1={team1} team2={team2} details={teamStates}/>}
         
       </Grid>
       <Grid container spacing={0}>
@@ -200,7 +233,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
               {imageData.info[slider - 1] !== undefined &&(
                 <DensityPlot
                   data={imageData.info[slider - 1].filter(
-                    (item) => item.team === 0
+                    (item) => teamStates[item.tracker_id].team1>teamStates[item.tracker_id].team2
                   )}
                   color="red"
                   levels={10}
@@ -221,7 +254,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
               {imageData.info[slider - 1] !== undefined && (
                 <DensityPlot
                   data={imageData.info[slider - 1].filter(
-                    (item) => item.team === 1
+                    (item) => teamStates[item.tracker_id].team1<teamStates[item.tracker_id].team2
                   )}
                   color="blue"
                   levels={10}
