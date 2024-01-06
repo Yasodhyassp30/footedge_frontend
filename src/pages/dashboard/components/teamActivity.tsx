@@ -14,25 +14,24 @@ export interface players {
   color: number[];
   coordinates: number[];
   tracker_id: number;
-
 }
 interface ImageData {
   frame: string[];
   info: players[][];
 }
 interface TeamStates {
-  team1:number,
-  team2:number
+  team1: number;
+  team2: number;
 }
-export interface totalTeam{
-  [key:number]:TeamStates
+export interface totalTeam {
+  [key: number]: TeamStates;
 }
 const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
   const [imageData, setImageData] = useState<ImageData>({
     frame: [],
     info: [],
   });
-  const [teamStates,setTeamstates ] = useState<totalTeam>({})
+  const [teamStates, setTeamstates] = useState<totalTeam>({});
   const [tab, SetTab] = useState<number>(0);
   const [slider, setSlider] = useState<number>(1);
   const [team1, setTeamColors1] = useState<number[]>([]);
@@ -41,28 +40,27 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
     if (socket) {
       socket.on("message_from_server", (data) => {
         for (let i = 0; i < data.info.length; i++) {
-          
-          if(data.info[i].team===0){
-            if(team1.length===0){
-              setTeamColors1(data.info[i].color)
-            } 
-            if(teamStates[data.info[i].tracker_id]){
-              teamStates[data.info[i].tracker_id].team1+=1
-            }else{
-              teamStates[data.info[i].tracker_id]={team1:1,team2:0}
+          if (data.info[i].team === 0) {
+            if (team1.length === 0) {
+              setTeamColors1(data.info[i].color);
             }
-          }else if (data.info[i].team===1){
-            if(team2.length===0){
-              setTeamColors2(data.info[i].color)
-            } 
-            if(teamStates[data.info[i].tracker_id]){
-              teamStates[data.info[i].tracker_id].team2+=1
-            }else{
-              teamStates[data.info[i].tracker_id]={team1:0,team2:1}
+            if (teamStates[data.info[i].tracker_id]) {
+              teamStates[data.info[i].tracker_id].team1 += 1;
+            } else {
+              teamStates[data.info[i].tracker_id] = { team1: 1, team2: 0 };
+            }
+          } else if (data.info[i].team === 1) {
+            if (team2.length === 0) {
+              setTeamColors2(data.info[i].color);
+            }
+            if (teamStates[data.info[i].tracker_id]) {
+              teamStates[data.info[i].tracker_id].team2 += 1;
+            } else {
+              teamStates[data.info[i].tracker_id] = { team1: 0, team2: 1 };
             }
           }
         }
-        console.log(data.info)
+        console.log(data.info);
         setImageData((prevState) => ({
           frame: [...prevState.frame, `data:image/jpeg;base64, ${data.frame}`],
           info: [...prevState.info, data.info],
@@ -119,7 +117,12 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               {imageData.info[slider - 1] !== undefined ? (
-                <Soccerfield data={imageData.info[slider - 1]} details={teamStates} team1={team1} team2={team2} />
+                <Soccerfield
+                  data={imageData.info[slider - 1]}
+                  details={teamStates}
+                  team1={team1}
+                  team2={team2}
+                />
               ) : (
                 <div></div>
               )}
@@ -215,52 +218,86 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
         </Grid>
         <Grid item xs={1} md={3}></Grid>
 
-        {tab === 1 && <IndividualTracking info={imageData.info} team1={team1} team2={team2} details={teamStates}/>}
-        
+        {tab === 1 && (
+          <IndividualTracking
+            info={imageData.info}
+            team1={team1}
+            team2={team2}
+            details={teamStates}
+          />
+        )}
       </Grid>
       <Grid container spacing={0}>
-      {tab === 0 && (
-            <Grid
-              item
-              xs={12}
-              md={6}
-              sx={{
-                minHeight: "320px",
-                width: "100%",
-                padding: "10px",
-              }}
-            >
-              {imageData.info[slider - 1] !== undefined &&(
+        {tab === 0 && (
+          <Grid
+            item
+            xs={12}
+            md={6}
+            sx={{
+              minHeight: "320px",
+              width: "100%",
+              padding: "10px",
+            }}
+          >
+            {imageData.info[slider - 1] !== undefined && (
+              <div>
+                <h1>Team 1</h1>
+                <div
+                  style={{
+                    height: "1em",
+                    width: "100px",
+                    backgroundColor: `rgb(${team1[2]}, ${team1[1]}, ${team1[0]})`,
+                    margin: "10px",
+                  }}
+                ></div>
                 <DensityPlot
                   data={imageData.info[slider - 1].filter(
-                    (item) => teamStates[item.tracker_id].team1>teamStates[item.tracker_id].team2
+                    (item) =>
+                      teamStates[item.tracker_id].team1 >
+                      teamStates[item.tracker_id].team2
                   )}
                   color="red"
                   levels={10}
-                />)}
-              </Grid>
-              )}
-            
-            {tab === 0 && (<Grid
-              item
-              xs={12}
-              md={6}
-              sx={{
-                minHeight: "320px",
-                width: "100%",
-                padding: "10px",
-              }}
-            >
-              {imageData.info[slider - 1] !== undefined && (
+                />
+              </div>
+            )}
+          </Grid>
+        )}
+
+        {tab === 0 && (
+          <Grid
+            item
+            xs={12}
+            md={6}
+            sx={{
+              minHeight: "320px",
+              width: "100%",
+              padding: "10px",
+            }}
+          >
+            {imageData.info[slider - 1] !== undefined && (
+              <div>
+                <h1>Team 2</h1>
+                <div
+                  style={{
+                    height: "1em",
+                    width: "100px",
+                    backgroundColor: `rgb(${team2[2]}, ${team2[1]}, ${team2[0]})`,
+                    margin: "10px",
+                  }}
+                ></div>
                 <DensityPlot
                   data={imageData.info[slider - 1].filter(
-                    (item) => teamStates[item.tracker_id].team1<teamStates[item.tracker_id].team2
+                    (item) =>
+                      teamStates[item.tracker_id].team1 <
+                      teamStates[item.tracker_id].team2
                   )}
                   color="blue"
                   levels={10}
                 />
-              ) }
-            </Grid>
+              </div>
+            )}
+          </Grid>
         )}
       </Grid>
     </div>
