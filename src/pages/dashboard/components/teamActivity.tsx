@@ -1,9 +1,14 @@
-import { Button, Grid, Slider } from "@mui/material";
+import { Button, Grid, IconButton, Slider, Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import Soccerfield from "./soccerfield";
 import DensityPlot from "./kdePlot";
 import IndividualTracking from "./individualPlayers";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import PauseCircleIcon from "@mui/icons-material/PauseCircle";
+import NavigationIcon from "@mui/icons-material/Navigation";
+import FastForwardIcon from "@mui/icons-material/FastForward";
+import FastRewindIcon from "@mui/icons-material/FastRewind";
 
 interface TeamActivityProps {
   socket: Socket | null;
@@ -23,6 +28,7 @@ interface TeamStates {
   team1: number;
   team2: number;
 }
+
 export interface totalTeam {
   [key: number]: TeamStates;
 }
@@ -36,6 +42,9 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
   const [slider, setSlider] = useState<number>(1);
   const [team1, setTeamColors1] = useState<number[]>([]);
   const [team2, setTeamColors2] = useState<number[]>([]);
+  const [play, setPlay] = useState<boolean>(false);
+  const [markers, setMarkers] = useState<number[]>([]);
+
   useEffect(() => {
     if (socket) {
       socket.on("message_from_server", (data) => {
@@ -60,7 +69,6 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
             }
           }
         }
-        console.log(data.info);
         setImageData((prevState) => ({
           frame: [...prevState.frame, `data:image/jpeg;base64, ${data.frame}`],
           info: [...prevState.info, data.info],
@@ -71,6 +79,19 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
       });
     }
   }, [socket]);
+
+  useEffect(() => {
+    if (play) {
+      const interval = setInterval(() => {
+        if (slider < imageData.frame.length) {
+          setSlider(slider + 1);
+        } else {
+          setPlay(false);
+        }
+      }, 100);
+      return () => clearInterval(interval);
+    }
+  }, [play, slider]);
 
   useEffect(() => {}, [imageData.info]);
 
@@ -203,10 +224,12 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
         >
           {imageData.info.length !== 0 && (
             <Slider
-              aria-label="Temperature"
               defaultValue={slider}
               value={slider}
-              valueLabelDisplay="auto"
+              valueLabelDisplay="off"
+              marks={markers.map((value) => ({
+                value: value
+              }))}
               step={1}
               min={1}
               max={imageData.frame.length}
@@ -214,6 +237,68 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
                 setSlider(Number(val));
               }}
             />
+          )}
+          {imageData.info.length !== 0 && (
+            <Stack
+              direction="row"
+              flexWrap="wrap"
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                fontSize: "50px",
+                color: "black",
+                height: "50px",
+                padding: "10px",
+                "&>*": {
+                  cursor: "pointer",
+                  ":hover": {
+                    color: "#42a5f5",
+                  },
+                },
+              }}
+            >
+              <IconButton
+                onClick={() => {
+                  const previousMarker = markers.filter(
+                    (item) => item < slider
+                  );
+                  if (previousMarker.length > 0) {
+                    setSlider(previousMarker[previousMarker.length - 1]);
+                  }
+                }}
+              >
+                <FastRewindIcon />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  setPlay(!play);
+                }}
+              >
+                {play ? <PauseCircleIcon /> : <PlayCircleIcon />}
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  if (!markers.includes(slider)) {
+                    setMarkers([...markers, slider]);
+                  } else {
+                    setMarkers(markers.filter((item) => item !== slider));
+                  }
+                }}
+              >
+                <NavigationIcon />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  const nextMarker = markers.filter((item) => item > slider);
+                  if (nextMarker.length > 0) {
+                    setSlider(nextMarker[0]);
+                  }
+                }}
+              >
+                <FastForwardIcon />
+              </IconButton>
+            </Stack>
           )}
         </Grid>
         <Grid item xs={1} md={3}></Grid>
@@ -241,7 +326,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
           >
             {imageData.info[slider - 1] !== undefined && (
               <div>
-                <h1>Team 1</h1>
+                <h2>Team 1</h2>
                 <div
                   style={{
                     height: "1em",
@@ -277,7 +362,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
           >
             {imageData.info[slider - 1] !== undefined && (
               <div>
-                <h1>Team 2</h1>
+                <h2>Team 2</h2>
                 <div
                   style={{
                     height: "1em",

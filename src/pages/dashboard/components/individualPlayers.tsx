@@ -87,7 +87,7 @@ const IndividualTracking: React.FC<localizationData> = ({ info,team1,team2,detai
             padding: "10px",
           }}
         >
-          <DensityPlot data={playerData} color={"red"} levels={15} />
+          <DensityPlot data={playerData} color={"red"} levels={5} />
         </Grid>
       </Grid>
     </div>
