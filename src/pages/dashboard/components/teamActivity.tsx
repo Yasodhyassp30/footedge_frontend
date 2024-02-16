@@ -1,4 +1,4 @@
-import { Button, Grid, IconButton, Slider, Stack } from "@mui/material";
+import { Button, CircularProgress, Container, Grid, IconButton, Slider, Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import Soccerfield from "./soccerfield";
@@ -9,6 +9,8 @@ import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 import NavigationIcon from "@mui/icons-material/Navigation";
 import FastForwardIcon from "@mui/icons-material/FastForward";
 import FastRewindIcon from "@mui/icons-material/FastRewind";
+import SettingsIcon from '@mui/icons-material/Settings';
+import VideoSettings from "./videoSettings";
 
 interface TeamActivityProps {
   socket: Socket | null;
@@ -42,12 +44,18 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
   const [slider, setSlider] = useState<number>(1);
   const [team1, setTeamColors1] = useState<number[]>([]);
   const [team2, setTeamColors2] = useState<number[]>([]);
+  const [teamNames, setTeamNames] = useState<string[]>(['Team 1','Team 2']);
   const [play, setPlay] = useState<boolean>(false);
   const [markers, setMarkers] = useState<number[]>([]);
+  const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (socket) {
       socket.on("message_from_server", (data) => {
+        if (loading) {
+          setLoading(false);
+        }
         for (let i = 0; i < data.info.length; i++) {
           if (data.info[i].team === 0) {
             if (team1.length === 0) {
@@ -103,6 +111,14 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
   }, [url]);
   return (
     <div>
+      {loading && socket && <div style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: "50px",
+      }}> <CircularProgress/></div>}
+
+      <Container maxWidth="lg">
       <Grid container spacing={0}>
         <Grid
           item
@@ -228,7 +244,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
               value={slider}
               valueLabelDisplay="off"
               marks={markers.map((value) => ({
-                value: value
+                value: value,
               }))}
               step={1}
               min={1}
@@ -298,10 +314,20 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
               >
                 <FastForwardIcon />
               </IconButton>
+              <IconButton onClick={()=>{
+                setSettingsOpen(!settingsOpen);
+              }}>
+                <SettingsIcon />
+              </IconButton>
             </Stack>
           )}
         </Grid>
         <Grid item xs={1} md={3}></Grid>
+        <Grid item xs={1} lg={2}></Grid>
+        <Grid item xs={10} lg={8}>
+          {settingsOpen && <VideoSettings/>}
+        </Grid>
+        <Grid item xs={1} lg={2}></Grid>
 
         {tab === 1 && (
           <IndividualTracking
@@ -314,6 +340,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
       </Grid>
       <Grid container spacing={0}>
         {tab === 0 && (
+          <>
           <Grid
             item
             xs={12}
@@ -326,7 +353,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
           >
             {imageData.info[slider - 1] !== undefined && (
               <div>
-                <h2>Team 1</h2>
+                <h2>{teamNames[0]}</h2>
                 <div
                   style={{
                     height: "1em",
@@ -347,9 +374,6 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
               </div>
             )}
           </Grid>
-        )}
-
-        {tab === 0 && (
           <Grid
             item
             xs={12}
@@ -362,7 +386,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
           >
             {imageData.info[slider - 1] !== undefined && (
               <div>
-                <h2>Team 2</h2>
+                <h2>{teamNames[1]}</h2>
                 <div
                   style={{
                     height: "1em",
@@ -383,8 +407,11 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
               </div>
             )}
           </Grid>
+          </>
         )}
+
       </Grid>
+      </Container>
     </div>
   );
 };

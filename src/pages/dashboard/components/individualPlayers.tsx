@@ -3,7 +3,7 @@ import { players,totalTeam } from "./teamActivity";
 import { Grid, MenuItem, Select } from "@mui/material";
 import DensityPlot from "./kdePlot";
 
-interface localizationData {
+export interface localizationData {
   info: players[][];
   team1: number[];
   team2: number[];
