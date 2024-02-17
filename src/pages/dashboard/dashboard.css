@@ -1,23 +1,28 @@
-.dashboard_main {
-    min-height: 100vh;
+.dashboard_main{
+    height: 100%;
     padding: 10px;
- }
+}
 
- .upload_section {
+.upload_section{
+    display: block;
+    width: calc(100% - px);
     border-radius: 10px;
     border: solid 5px lightblue;
-    padding: 10px;
-    display: flex;
-    justify-content: center; 
-    align-items: center;
- }
- 
- 
- .video_section {
-    display: flex; /* Keep using flexbox */
+    min-height: 100px;
     justify-content: center;
+    align-items: center;
     padding: 10px;
- }
+    
+}
+
+
+.video_section{
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+}
 
 .video_details{
     text-align: start;
@@ -27,8 +32,8 @@
     align-items: start;
 }
 
-.result_image {
+.result_image{
     width: 100%;
     height: auto;
     min-height: 320px;
- }
+}
