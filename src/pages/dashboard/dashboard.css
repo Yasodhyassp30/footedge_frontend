@@ -1,28 +1,23 @@
-.dashboard_main{
-    height: 100%;
+.dashboard_main {
+    min-height: 100vh;
     padding: 10px;
-}
+ }
 
-.upload_section{
-    display: block;
-    width: calc(100% - px);
+ .upload_section {
     border-radius: 10px;
     border: solid 5px lightblue;
-    min-height: 100px;
-    justify-content: center;
-    align-items: center;
     padding: 10px;
-    
-}
-
-
-.video_section{
     display: flex;
+    justify-content: center; 
+    align-items: center;
+ }
+ 
+ 
+ .video_section {
+    display: flex; /* Keep using flexbox */
     justify-content: center;
-    height: 100%;
-    width: 100%;
     padding: 10px;
-}
+ }
 
 .video_details{
     text-align: start;
@@ -32,8 +27,8 @@
     align-items: start;
 }
 
-.result_image{
+.result_image {
     width: 100%;
     height: auto;
     min-height: 320px;
-}
+ }
