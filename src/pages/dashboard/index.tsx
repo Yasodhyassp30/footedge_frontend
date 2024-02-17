@@ -90,7 +90,7 @@ function Dashboard() {
             const newSocket = io(`http://localhost:5000/`);
             newSocket.on("connect", () => {
               newSocket.emit("join_room", { roomId: receivedId });
-              newSocket.emit("start_processing", { video_path: receivedId });
+              newSocket.emit("start_processing", { video_path: receivedId,  type: 'TACTICAL'  });
               console.log(
                 `Connected to Socket.IO channel for ID: ${receivedId}`
               );
