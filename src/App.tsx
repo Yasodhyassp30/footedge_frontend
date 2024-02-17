@@ -4,6 +4,7 @@ import Navbar from './pages/navbar/navbar';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import { Routes, Route } from 'react-router-dom';
+import ScoutingDashboard from './pages/scouting/ScoutingDashBoard';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/scouting" element={<ScoutingDashboard />} />
         </Routes>
       </div>
     </div>

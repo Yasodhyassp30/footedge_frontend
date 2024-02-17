@@ -1,0 +1,65 @@
+.dashboard_main {
+  min-height: 100vh; /* If desired for full viewport  */
+  padding: 10px;
+  padding-top: 90px; /* Make this slightly greater than navbar height */
+}
+
+.upload_section {
+  border-radius: 10px;
+  border: solid 5px lightblue;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.video_section {
+  display: flex; /* Keep using flexbox */
+  justify-content: center;
+  padding: 10px;
+}
+
+.video_details {
+  text-align: start;
+  padding: 10px;
+  display: block;
+  justify-content: start;
+  align-items: start;
+}
+
+.result_image {
+  width: 100%;
+  height: auto;
+  min-height: 320px;
+}
+
+.grid-container-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .grid-item-main {
+    height: 100px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+  }
+  
+  .grid-content-main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .title-main {
+    margin: 0;
+    font-size: 16px;
+  }
+  
+  .tooltip-main {
+    display: block;
+    font-size: 14px;
+    margin-top: 5px;
+  }
