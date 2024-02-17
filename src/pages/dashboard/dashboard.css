@@ -1,7 +1,9 @@
-.dashboard_main {
-    min-height: 100vh;
-    padding: 10px;
- }
+.dashboard_main { 
+    min-height: 100vh; /* If desired for full viewport  */
+    padding: 10px;   
+    padding-top: 90px; /* Make this slightly greater than navbar height */
+}
+
 
  .upload_section {
     border-radius: 10px;
