@@ -53,7 +53,7 @@ function Navbar() {
             {!isLoginPage && !isRegisterPage && (
               <li className="navbar-toggle">
                 <Link to="#" className="menu-bars">
-                  <AiIcons.AiOutlineClose />
+                  <AiIcons.AiOutlineClose className={sidebar ? 'close-icon-black' : ''} />
                 </Link>
               </li>
             )}

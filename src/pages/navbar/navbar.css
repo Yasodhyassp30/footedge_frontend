@@ -22,22 +22,22 @@
  }
  
  .nav-menu {
-    background-color: #151a21;
-    width: 250px;
-    height: 100vh; /* Full height sidebar */
-    display: flex;
-    justify-content: center;
-    position: fixed;
-    top: 0;
-    left: -100%; /* Hide offscreen initially */
-    transition: 850ms; /* Smooth slide transition */
-    z-index: 10; 
- }
- 
- .nav-menu.active {
-    left: 0;
-    transition: 350ms;
-    background-color: #151A21; /* Match your sidebar background color */
+   background-color: #151a21; /* Match your desired background color */
+   width: 250px;
+   height: 100vh; /* Full height sidebar */
+   display: flex;
+   justify-content: center;
+   position: fixed;
+   top: 0;
+   left: -100%; /* Hide offscreen initially */
+   transition: 850ms; /* Smooth slide transition */
+   z-index: 10;
+}
+
+.nav-menu.active {
+   left: 0;
+   transition: 350ms;
+   background-color: #151A21; /* Change the background color when sidebar is active */
 }
 
  
@@ -74,3 +74,6 @@
     margin: 0; /* Reset default body margin */
   }
   
+  .close-icon-black {
+   color: black; /* Change the color of the close icon to black */
+}
