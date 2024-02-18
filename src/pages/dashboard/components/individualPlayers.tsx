@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { players,teamPlayers,totalTeam } from "./teamActivity";
-import { Button, Grid, IconButton, MenuItem, Select, TextField } from "@mui/material";
+import { Button, Grid, IconButton, MenuItem, Paper, Select, TextField } from "@mui/material";
 import DensityPlot from "./kdePlot";
 import SaveIcon from '@mui/icons-material/Save';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export interface localizationData {
   info: players[][];
@@ -10,10 +11,11 @@ export interface localizationData {
   team2: number[];
   details : totalTeam;
   players:{[key:number]:teamPlayers}
-  setNames: any
+  setNames: any,
+  deleteTracker: any
 }
 
-const IndividualTracking: React.FC<localizationData> = ({ info,team1,team2,details,players,setNames }) => {
+const IndividualTracking: React.FC<localizationData> = ({ info,team1,team2,details,players,setNames,deleteTracker }) => {
   const [trackers, setTrackers] = useState<number[]>([]);
   const [selectedPlayer, setSelectedPlayer] = useState<number>(0);
   const [playerData, setPlayerData] = useState<players[]>([]);
@@ -64,6 +66,7 @@ const IndividualTracking: React.FC<localizationData> = ({ info,team1,team2,detai
             alignItems: "start",
           }}
         >
+          <Paper sx={{ padding: "10px" }}>
           <Select
             defaultValue={selectedPlayer}
             value={selectedPlayer}
@@ -100,11 +103,20 @@ const IndividualTracking: React.FC<localizationData> = ({ info,team1,team2,detai
               }}>
                 <SaveIcon/> Save
               </Button>
+{/*               <Button variant="outlined" color ="error" sx={{
+                marginLeft: "10px",
+              
+              }} onClick={()=>{
+                deleteTracker(selectedPlayer);
+              }}>
+                <DeleteIcon/> Delete Tracker
+              </Button> */}
 
             </div>
           
           
           )}
+          </Paper>
         </Grid>
         <Grid
           item

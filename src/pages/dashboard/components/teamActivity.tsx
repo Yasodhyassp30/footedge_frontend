@@ -11,6 +11,7 @@ import FastForwardIcon from "@mui/icons-material/FastForward";
 import FastRewindIcon from "@mui/icons-material/FastRewind";
 import SettingsIcon from '@mui/icons-material/Settings';
 import VideoSettings from "./videoSettings";
+import { info } from "console";
 
 interface TeamActivityProps {
   socket: Socket | null;
@@ -44,8 +45,9 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
     frame: [],
     info: [],
   });
+  const [deletedTrackers, setDeletedTrackers] = useState<number[]>([]);
   const [teamStates, setTeamstates] = useState<totalTeam>({});
-  const [playerdetails,setpalyerDetails] = useState<{[key:number]:teamPlayers}>({});
+  const [playerdetails,setplayerDetails] = useState<{[key:number]:teamPlayers}>({});
   const [tab, SetTab] = useState<number>(0);
   const [slider, setSlider] = useState<number>(1);
   const [team1, setTeamColors1] = useState<number[]>([]);
@@ -55,12 +57,27 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
   const [markers, setMarkers] = useState<number[]>([]);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+
   function setNames(id:number,name:string){
-    setpalyerDetails((prevState) => ({
+    setplayerDetails((prevState) => ({
       ...prevState,
       [id]: { name: name, color: [0,0,0] },
     }))
   
+  }
+
+  function deleteTrackers(id: number) {
+    setDeletedTrackers([...deletedTrackers, id]);
+    delete playerdetails[id];
+    setplayerDetails(playerdetails);
+    const playerRemoved = imageData.info.map((frame) =>{
+      return frame.filter((player) => player.tracker_id !== id);
+    }
+    )
+    setImageData((prevState) => ({
+      frame: prevState.frame,
+      info: playerRemoved,
+    }));  
   }
   useEffect(() => {
     if (socket) {
@@ -69,8 +86,8 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
           setLoading(false);
         }
         for (let i = 0; i < data.info.length; i++) {
-          if (!(data.info[i].tracker_id in setpalyerDetails)) {
-            setpalyerDetails((prevState) => ({
+          if (!(data.info[i].tracker_id in setplayerDetails)) {
+            setplayerDetails((prevState) => ({
               ...prevState,
               [data.info[i].tracker_id]: { name: `Player ${data.info[i].tracker_id}`, color: data.info[i].color },
             }))
@@ -363,6 +380,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
             details={teamStates}
             players={playerdetails}
             setNames={setNames}
+            deleteTracker={deleteTrackers}
           />
         )}
       </Grid>
