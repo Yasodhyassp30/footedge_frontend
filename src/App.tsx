@@ -11,8 +11,7 @@ function App() {
   return (
     <div className="App">
       <Navbar />
-      {/* {      <Dashboard/>} */}
-      {/* {      <ScoutingDashboard />} */}
+     <Dashboard/>
     </div>
   );
 }

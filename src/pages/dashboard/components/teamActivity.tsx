@@ -30,6 +30,11 @@ interface TeamStates {
   team1: number;
   team2: number;
 }
+export interface teamPlayers {
+  name: string;
+  color: number[];
+}
+
 
 export interface totalTeam {
   [key: number]: TeamStates;
@@ -40,6 +45,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
     info: [],
   });
   const [teamStates, setTeamstates] = useState<totalTeam>({});
+  const [playerdetails,setpalyerDetails] = useState<{[key:number]:teamPlayers}>({});
   const [tab, SetTab] = useState<number>(0);
   const [slider, setSlider] = useState<number>(1);
   const [team1, setTeamColors1] = useState<number[]>([]);
@@ -49,7 +55,13 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
   const [markers, setMarkers] = useState<number[]>([]);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-
+  function setNames(id:number,name:string){
+    setpalyerDetails((prevState) => ({
+      ...prevState,
+      [id]: { name: name, color: [0,0,0] },
+    }))
+  
+  }
   useEffect(() => {
     if (socket) {
       socket.on("message_from_server", (data) => {
@@ -57,24 +69,25 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
           setLoading(false);
         }
         for (let i = 0; i < data.info.length; i++) {
+          if (!(data.info[i].tracker_id in setpalyerDetails)) {
+            setpalyerDetails((prevState) => ({
+              ...prevState,
+              [data.info[i].tracker_id]: { name: `Player ${data.info[i].tracker_id}`, color: data.info[i].color },
+            }))
+          }
           if (data.info[i].team === 0) {
             if (team1.length === 0) {
               setTeamColors1(data.info[i].color);
             }
-            if (teamStates[data.info[i].tracker_id]) {
-              teamStates[data.info[i].tracker_id].team1 += 1;
-            } else {
-              teamStates[data.info[i].tracker_id] = { team1: 1, team2: 0 };
-            }
+            teamStates[data.info[i].tracker_id] = { team1: 1, team2: 0 };
+
           } else if (data.info[i].team === 1) {
             if (team2.length === 0) {
               setTeamColors2(data.info[i].color);
             }
-            if (teamStates[data.info[i].tracker_id]) {
-              teamStates[data.info[i].tracker_id].team2 += 1;
-            } else {
+
               teamStates[data.info[i].tracker_id] = { team1: 0, team2: 1 };
-            }
+            
           }
         }
         setImageData((prevState) => ({
@@ -87,6 +100,19 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
       });
     }
   }, [socket]);
+
+  useEffect(() => {
+    setTeamColors1([])
+    setTeamColors2([])
+    setTeamNames(['Team 1','Team 2'])
+    setTeamstates({})
+    setImageData({
+      frame: [],
+      info: [],
+    });
+    setSlider(1);
+    setMarkers([]);
+  },[url])
 
   useEffect(() => {
     if (play) {
@@ -335,6 +361,8 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
             team1={team1}
             team2={team2}
             details={teamStates}
+            players={playerdetails}
+            setNames={setNames}
           />
         )}
       </Grid>
