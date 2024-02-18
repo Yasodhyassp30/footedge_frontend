@@ -9,6 +9,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@material-tailwind/react": "^2.1.9",
     "@mui/icons-material": "^5.15.0",
     "@mui/material": "^5.15.0",
     "@testing-library/jest-dom": "^5.17.0",
@@ -27,8 +28,10 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
-    "react-player": "^2.14.0",
+    "react-player": "^2.14.1",
+    "react-router-dom": "^6.22.0",
     "react-scripts": "5.0.1",
+    "socket.io-client": "^4.7.4",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
@@ -59,5 +62,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
   }
 }
