@@ -1,6 +1,9 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import LinearProgress, {
+  linearProgressClasses,
+} from "@mui/material/LinearProgress";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { styled } from "@mui/material/styles";
 import { default as _ReactPlayer } from "react-player/lazy";
@@ -10,9 +13,23 @@ import "./dashboard.css";
 import axios, { AxiosResponse, CancelTokenSource } from "axios";
 import io, { Socket } from "socket.io-client";
 import { Container } from "@mui/material";
-import DarkContrastGrid from "./components/ScoutingContentGrid";
+import NullIndicator from "./components/NullIndicator";
+import ScoutingResultsGridComponent from "./components/ScoutingResultGrid";
+import ScoutingOptionsGridComponent from "./components/ScoutingContentMainGrid";
 
 const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
+
+interface PlayerStat {
+  [key: string]: {
+    overall: number;
+    offsets: {
+      left: number;
+      right: number;
+      up: number;
+      down: number;
+    };
+  };
+}
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -26,61 +43,115 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
+const playerSkills = ["Dribbling", "Agility", "Creativity"];
+
 const temp = [
   {
-    id: 1,
-    imageUrl:
-      "https://pngimg.com/uploads/football_player/football_player_PNG30.png",
-    title: "Tile 1",
-    tooltip: "Tooltip for Tile 1",
+    id: 0,
+    imageUrl: "",
+    title: "",
+    tooltip: "",
+    stats: [],
+    link: "",
+    videoUrl: "",
   },
   {
     id: 1,
     imageUrl:
       "https://pngimg.com/uploads/football_player/football_player_PNG30.png",
-    title: "Tile 1",
-    tooltip: "Tooltip for Tile 1",
+    link: "https://www.youtube.com/watch?v=MNWKSpZRTgU&t=304s",
+    videoUrl: "../../assets/scouting/videos/knee_juggling_once-twice.mp4",
+    title: "Knee Juggling - Once and Twice Repeat",
+    description:
+      "Master the art of dribbling using your knees. This skill involves precise control and maneuvering of the ball using the player's knees, adding a unique flair to on-field dribbling.",
+    tooltip: "Dribble with finesse using your knees.",
+    stats: [
+      {
+        name: "Player 1",
+        overallRating: 85,
+        bestMatch: "Championship Final",
+        skillRatings: {
+          dribbling: 90,
+          agility: 85,
+          creativity: 80,
+        },
+      },
+      {
+        name: "Player 2",
+        overallRating: 85,
+        bestMatch: "Championship Final",
+        skillRatings: {
+          dribbling: 90,
+          agility: 85,
+          creativity: 80,
+        },
+      },
+      // Add more players as needed
+    ],
   },
   {
-    id: 1,
+    id: 2,
     imageUrl:
       "https://pngimg.com/uploads/football_player/football_player_PNG30.png",
-    title: "Tile 2",
-    tooltip: "Tooltip for Tile 2",
+    title: "Goalkeeping",
+    link: "https://www.youtube.com/watch?v=MNWKSpZRTgU&t=304s",
+    videoUrl: "",
+
+    description:
+      "Become a reliable guardian of the goalpost, blocking shots with precision. Goalkeeping is a crucial skill that requires exceptional shot-stopping abilities, strategic positioning, and efficient distribution.",
+    tooltip: "Guard the goalpost with unwavering skill.",
+    stats: [
+      {
+        name: "Goalkeeper Legend",
+        overallRating: 92,
+        bestMatch: "World Cup Final",
+        skillRatings: {
+          shotStopping: 95,
+          positioning: 90,
+          distribution: 88,
+        },
+      },
+      // Add more players as needed
+    ],
   },
-  {
-    id: 1,
-    imageUrl:
-      "https://pngimg.com/uploads/football_player/football_player_PNG30.png",
-    title: "Tile 3",
-    tooltip: "Tooltip for Tile 3",
-  },
-  {
-    id: 1,
-    imageUrl:
-      "https://pngimg.com/uploads/football_player/football_player_PNG30.png",
-    title: "Tile 1",
-    tooltip: "Tooltip for Tile 1",
-  },
-  {
-    id: 1,
-    imageUrl:
-      "https://pngimg.com/uploads/football_player/football_player_PNG30.png",
-    title: "Tile 2",
-    tooltip: "Tooltip for Tile 2",
-  },
-  {
-    id: 1,
-    imageUrl:
-      "https://pngimg.com/uploads/football_player/football_player_PNG30.png",
-    title: "Tile 3",
-    tooltip: "Tooltip for Tile 3",
-  },
-  // Add more data as needed
+  // Add more items for different skills
 ];
+
+const sampleData = {
+  totalFrames: 1500,
+  timeTaken: 30,
+  confidenceValue: 85,
+  overallRank: 1,
+};
+
+const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+  height: 10,
+  borderRadius: 5,
+  [`&.${linearProgressClasses.colorPrimary}`]: {
+    backgroundColor:
+      theme.palette.grey[theme.palette.mode === "light" ? 200 : 800],
+  },
+  [`& .${linearProgressClasses.bar}`]: {
+    borderRadius: 5,
+    backgroundColor: theme.palette.mode === "light" ? "#1a90ff" : "#308fe8",
+  },
+}));
+
+interface VideoFrame {
+  // Define the structure of your video frame elements here
+  // For example, if each element is a number, you can use number
+  // If it's an object, define the object structure
+  // Adjust according to the actual structure of your data
+  value: number;
+}
 
 function ScoutingDashboard() {
   const [selectedTypeId, setSelectedTypeId] = useState<number | null>(null);
+  const [videoFrame, setVideoFrame] = useState<VideoFrame[] | null>(null);
+  const [scoutingProgress, setScoutingProgress] = useState<number | null>(null);
+  const [frameCount, setFrameCount] = useState<number | null>(null);
+  const [scoutingProgressPlayerStat, setScoutingProgressPlayerStat] =
+    useState<PlayerStat | null>(null);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
   const [videoDetails, setVideoDetails] = useState({
@@ -93,11 +164,25 @@ function ScoutingDashboard() {
 
   useEffect(() => {
     if (socket) {
-      socket.on("final_message_from_server", (data) => {
+      // Listen for 'payload_received' event from the server
+      socket.on("payload_received", (payload) => {
+        setScoutingProgress(payload.index);
+        setScoutingProgressPlayerStat(payload.playerStat);
+        setVideoFrame(payload.video);
+        setFrameCount(payload.frameCount)
+      });
+
+      // Listen for 'final_message_from_server' event from the server
+      socket.on("final_message_from_server", () => {
+        console.log("Received final message from the server");
+        // Add your logic to handle the final message here
+        // Disconnect the socket if needed
         socket.disconnect();
         setSocket(null);
       });
+
       return () => {
+        // Clean up event listeners when component is unmounted
         socket.disconnect();
       };
     }
@@ -146,8 +231,9 @@ function ScoutingDashboard() {
               newSocket.emit("start_processing", {
                 video_path: receivedId,
                 type: "SCOUTING",
-                videoType: selectedTypeId
+                videoType: selectedTypeId,
               });
+              setScoutingProgress(0);
               console.log(
                 `Connected to Socket.IO channel for ID: ${receivedId}`
               );
@@ -177,8 +263,34 @@ function ScoutingDashboard() {
     setSelectedTypeId(index + 1);
   };
 
+  interface Player {
+    name: string;
+    overallRating: number;
+    bestMatch: string;
+    skillRatings: Record<string, number>; // Dynamic keys based on playerSkills
+  }
+
+  const renderPlayerStats = (player: Player) => {
+    return (
+      <div key={player.name} className="player-stats-container">
+        <h3>{player.name}</h3>
+        <p>Overall Rating: {player.overallRating}</p>
+        <p>Best Match: {player.bestMatch}</p>
+        <p>Skill Ratings:</p>
+        <ul>
+          {playerSkills.map((skill) => (
+            <li key={skill}>
+              {skill}: {player.skillRatings[skill]}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+
+  console.log(videoFrame?.length, videoFrame);
   return (
-    <Container maxWidth="lg">
+    <Container>
       <div className="dashboard_main">
         <div className="upload_section">
           {videoSrc && (
@@ -193,6 +305,9 @@ function ScoutingDashboard() {
                 <h2>Details</h2>
                 <h4>Filename: {videoDetails.fileName}</h4>
                 <h4>File size: {videoDetails.fileSize}MB</h4>
+                {selectedTypeId ? (
+                  <h4>Traget Skill: {temp[selectedTypeId].title}</h4>
+                ) : null}
                 {uploadProgress > 0 && uploadProgress < 100 && (
                   <div
                     style={{
@@ -212,21 +327,25 @@ function ScoutingDashboard() {
             </div>
           )}
 
-          <Button
-            component="label"
-            variant="contained"
-            startIcon={<CloudUploadIcon />}
-            disabled={(uploadProgress > 0 && uploadProgress < 100) || !selectedTypeId}
-          >
-            Upload file
-            <VisuallyHiddenInput
-              type="file"
-              accept="video/mp4"
-              onChange={(event) => {
-                handleFileChange(event);
-              }}
-            />
-          </Button>
+          {scoutingProgress === null && (
+            <Button
+              component="label"
+              variant="contained"
+              startIcon={<CloudUploadIcon />}
+              disabled={
+                (uploadProgress > 0 && uploadProgress < 100) || !selectedTypeId
+              }
+            >
+              Upload file
+              <VisuallyHiddenInput
+                type="file"
+                accept="video/mp4"
+                onChange={(event) => {
+                  handleFileChange(event);
+                }}
+              />
+            </Button>
+          )}
           {uploadProgress > 0 && uploadProgress < 100 && (
             <Button
               sx={{
@@ -241,48 +360,87 @@ function ScoutingDashboard() {
             </Button>
           )}
         </div>
-        <div>
-          <div className="grid-container-main">
-            {selectedTypeId && (
-              <div className="grid-container">
-                <div
-                  onClick={() => setSelectedTypeId(0)}
-                  className="grid-item"
-                  style={{
-                    backgroundImage: `url(${temp[selectedTypeId].imageUrl})`,
-                  }}
-                >
-                  <div className="grid-content">
-                    <h3 className="title">{temp[selectedTypeId].title}</h3>
-                    <span className="tooltip">
-                      {temp[selectedTypeId].tooltip}
-                    </span>
-                  </div>
-                </div>
-                <div onClick={() => setSelectedTypeId(0)} className="grid-item">
-                  <div className="grid-content">
-                    <h3 className="title">{temp[selectedTypeId].title}</h3>
-                    <span className="tooltip">
-                      {temp[selectedTypeId].tooltip}
-                    </span>
-                  </div>
-                </div>
-                <div onClick={() => setSelectedTypeId(0)} className="grid-item">
-                  <div className="grid-content">
-                    <h3 className="title">{temp[selectedTypeId].title}</h3>
-                    <span className="tooltip">
-                      {temp[selectedTypeId].tooltip}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
+
+        {selectedTypeId && scoutingProgress !== null ? (
+          <div className="progress-bar-main">
+            <BorderLinearProgress
+              variant="determinate"
+              value={scoutingProgress}
+            />
+            <div className="progress-bar-main value">{scoutingProgress}%</div>
           </div>
+        ) : null}
+        <div>
+          {videoFrame && (
+            // Render the video frame in your React component
+            <img
+              src={`data:image/png;base64,${videoFrame[0]}`}
+              alt="Video Frame"
+              style={{ width: "1000px", height: "auto" }}
+            />
+          )}
         </div>
-        <DarkContrastGrid
-          tilesData={temp.slice(1)}
-          onItemSelect={onItemSelect}
-        />
+
+        <div className="grid-container-main">
+          {selectedTypeId ? (
+            <div
+              className="grid-item-main"
+              onClick={() => setSelectedTypeId(0)}
+              onKeyDown={(e) => console.log(e)}
+              style={{
+                backgroundImage: `url(${temp[selectedTypeId].imageUrl})`,
+              }}
+            >
+              <div className="grid-content-main">
+                <h3 className="title-main">{temp[selectedTypeId].title}</h3>
+                <span className="tooltip-main">
+                  {temp[selectedTypeId].tooltip}
+                </span>
+              </div>
+            </div>
+          ) : (
+            <NullIndicator
+              message="Nothing to show"
+              subMessage="Please select an item from below to start scouting."
+            />
+          )}
+        </div>
+
+        {scoutingProgressPlayerStat ? (
+          <div className="grid-container-main">
+            <div className="grid-item">
+              <div className="grid-content">
+                <h3 className="title">Analytics</h3>
+                <span className="tooltip">
+                  Total Number of Frames: {frameCount}
+                </span>
+                <span className="tooltip">
+                  Time Taken: {sampleData.timeTaken} seconds
+                </span>
+                <span className="tooltip">
+                  Confidence Value: {sampleData.confidenceValue}%
+                </span>
+                <span className="tooltip">
+                  Overall Rank: {sampleData.overallRank}
+                </span>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        {!selectedTypeId && (
+          <ScoutingOptionsGridComponent
+            tilesData={temp.slice(1)}
+            onItemSelect={onItemSelect}
+          />
+        )}
+
+        {scoutingProgressPlayerStat && (
+          <ScoutingResultsGridComponent
+            playerStat={scoutingProgressPlayerStat}
+            onItemSelect={onItemSelect}
+          />
+        )}
       </div>
     </Container>
   );

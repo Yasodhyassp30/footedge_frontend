@@ -10,7 +10,7 @@ import ScoutingDashboard from "./pages/scouting/ScoutingDashBoard";
 function App() {
   return (
     <div className="App">
-      <Navbar />
+     <Navbar />
      <Dashboard/>
     </div>
   );
