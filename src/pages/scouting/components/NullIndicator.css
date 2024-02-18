@@ -1,0 +1,19 @@
+.null-indicator {
+    color: #888;
+    font-style: italic;
+    padding: 16px;
+    border: 1px solid #ccc;
+    background-color: #f7f7f7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .null-indicator-message {
+    margin-bottom: 8px;
+  }
+  
+  .null-indicator-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
