@@ -9,12 +9,14 @@ import DensityPlot from './pages/dashboard/components/kdePlot';
 import Navbar from './pages/navbar';
 import AnnotationComponent from './pages/annotation';
 import ScoutingDashboard from "./pages/scouting/ScoutingDashBoard";
+import Sidebar from './pages/sidebar/sidebar';
 
 function App() {
   return (
     <div className="App">
       <Router>
         <Navbar/>
+        <Sidebar/>
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/annotate" element={<AnnotationComponent />} />
