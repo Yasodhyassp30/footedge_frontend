@@ -1,0 +1,65 @@
+.dark-contrast-grid {
+    background-color: #0a6e7e;
+    color: #fff;
+    width: 100%;
+    height: 60vh;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .grid-container {
+    margin-top: 200px;
+    width: 800px;
+    max-height: 700px;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-auto-rows: 200px;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .grid-item {
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .grid-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  .title {
+    margin: 0;
+    font-size: 16px;
+  }
+  
+  .tooltip {
+    display: block;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+
+  .tooltip-link {
+    font-size: 10px;
+  }
+  
+  .video-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the video covers the entire container */
+    z-index: -1; /* Places the video behind other content */
+  }

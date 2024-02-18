@@ -8,6 +8,7 @@ import Soccerfield from './pages/dashboard/components/soccerfield';
 import DensityPlot from './pages/dashboard/components/kdePlot';
 import Navbar from './pages/navbar';
 import AnnotationComponent from './pages/annotation';
+import ScoutingDashboard from "./pages/scouting/ScoutingDashBoard";
 
 function App() {
   return (
@@ -20,8 +21,6 @@ function App() {
           </Routes>
 
       </Router>
-      
-      
     </div>
   );
 }

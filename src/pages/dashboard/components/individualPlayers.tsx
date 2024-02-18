@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { players,totalTeam } from "./teamActivity";
-import { Grid, MenuItem, Select } from "@mui/material";
+import { players,teamPlayers,totalTeam } from "./teamActivity";
+import { Button, Grid, IconButton, MenuItem, Paper, Select, TextField } from "@mui/material";
 import DensityPlot from "./kdePlot";
+import SaveIcon from '@mui/icons-material/Save';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-interface localizationData {
+export interface localizationData {
   info: players[][];
   team1: number[];
   team2: number[];
   details : totalTeam;
+  players:{[key:number]:teamPlayers}
+  setNames: any,
+  deleteTracker: any
 }
 
-const IndividualTracking: React.FC<localizationData> = ({ info,team1,team2,details }) => {
+const IndividualTracking: React.FC<localizationData> = ({ info,team1,team2,details,players,setNames,deleteTracker }) => {
   const [trackers, setTrackers] = useState<number[]>([]);
   const [selectedPlayer, setSelectedPlayer] = useState<number>(0);
   const [playerData, setPlayerData] = useState<players[]>([]);
+  const [tempName, setTempName] = useState<string>("");
   useEffect(() => {
     let temp: number[] = [];
     info.forEach((frame) => {
@@ -54,14 +60,17 @@ const IndividualTracking: React.FC<localizationData> = ({ info,team1,team2,detai
           md={6}
           sx={{
             padding: "10px",
-            display: "flex",
+            display: "block",
             justifyContent: "center",
+            textAlign: "start",
             alignItems: "start",
           }}
         >
+          <Paper sx={{ padding: "10px" }}>
           <Select
             defaultValue={selectedPlayer}
             value={selectedPlayer}
+            size="small"
             onChange={(e) => setSelectedPlayer(Number(e.target.value))}
             sx={{
               width: "100%",
@@ -71,11 +80,43 @@ const IndividualTracking: React.FC<localizationData> = ({ info,team1,team2,detai
               Select Player
             </MenuItem>
             {trackers.map((player, index) => (
-              <MenuItem key={index + 1} value={player}>
-                {player}
+              <MenuItem key={index + 1} value={player} >
+                { (players[player].name=="")? "Player " + player: players[player].name}
               </MenuItem>
             ))}
           </Select>
+
+          {selectedPlayer !== 0 && (
+            <div style={
+              {
+                marginTop: "10px",
+              }
+            }>
+              <TextField size="small" label="Change Name" sx={{
+                display: "block",
+                marginBottom: "10px",
+              }} value={tempName} onChange={(e)=>{
+                setTempName(e.target.value);
+              }}/>
+              <Button variant="outlined" onClick={()=>{
+                setNames(selectedPlayer,tempName);
+              }}>
+                <SaveIcon/> Save
+              </Button>
+{/*               <Button variant="outlined" color ="error" sx={{
+                marginLeft: "10px",
+              
+              }} onClick={()=>{
+                deleteTracker(selectedPlayer);
+              }}>
+                <DeleteIcon/> Delete Tracker
+              </Button> */}
+
+            </div>
+          
+          
+          )}
+          </Paper>
         </Grid>
         <Grid
           item
@@ -87,7 +128,7 @@ const IndividualTracking: React.FC<localizationData> = ({ info,team1,team2,detai
             padding: "10px",
           }}
         >
-          <DensityPlot data={playerData} color={"red"} levels={15} />
+          <DensityPlot data={playerData} color={"red"} levels={5} />
         </Grid>
       </Grid>
     </div>

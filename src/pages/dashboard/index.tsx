@@ -10,6 +10,7 @@ import "./dashboard.css";
 import axios, { AxiosResponse, CancelTokenSource } from "axios";
 import io, { Socket } from "socket.io-client";
 import TeamActivity from "./components/teamActivity";
+import { Container } from "@mui/material";
 
 
 const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
@@ -89,7 +90,7 @@ function Dashboard() {
             const newSocket = io(`http://localhost:5000/`);
             newSocket.on("connect", () => {
               newSocket.emit("join_room", { roomId: receivedId });
-              newSocket.emit("start_processing", { video_path: receivedId });
+              newSocket.emit("start_processing", { video_path: receivedId,  type: 'TACTICAL'  });
               console.log(
                 `Connected to Socket.IO channel for ID: ${receivedId}`
               );
@@ -115,6 +116,7 @@ function Dashboard() {
     setUploadProgress(0);
   };
   return (
+    <Container maxWidth="lg">
     <div className="dashboard_main">
       <div className="upload_section">
         {videoSrc && (
@@ -172,8 +174,10 @@ function Dashboard() {
           </Button>
         )}
       </div>
+
       <TeamActivity socket={socket} url={videoSrc} />
     </div>
+    </Container>
   );
 }
 

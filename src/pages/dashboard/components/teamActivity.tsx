@@ -1,9 +1,17 @@
-import { Button, Grid, Slider } from "@mui/material";
+import { Button, CircularProgress, Container, Grid, IconButton, Slider, Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import Soccerfield from "./soccerfield";
 import DensityPlot from "./kdePlot";
 import IndividualTracking from "./individualPlayers";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import PauseCircleIcon from "@mui/icons-material/PauseCircle";
+import NavigationIcon from "@mui/icons-material/Navigation";
+import FastForwardIcon from "@mui/icons-material/FastForward";
+import FastRewindIcon from "@mui/icons-material/FastRewind";
+import SettingsIcon from '@mui/icons-material/Settings';
+import VideoSettings from "./videoSettings";
+import { info } from "console";
 
 interface TeamActivityProps {
   socket: Socket | null;
@@ -23,6 +31,12 @@ interface TeamStates {
   team1: number;
   team2: number;
 }
+export interface teamPlayers {
+  name: string;
+  color: number[];
+}
+
+
 export interface totalTeam {
   [key: number]: TeamStates;
 }
@@ -31,36 +45,68 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
     frame: [],
     info: [],
   });
+  const [deletedTrackers, setDeletedTrackers] = useState<number[]>([]);
   const [teamStates, setTeamstates] = useState<totalTeam>({});
+  const [playerdetails,setplayerDetails] = useState<{[key:number]:teamPlayers}>({});
   const [tab, SetTab] = useState<number>(0);
   const [slider, setSlider] = useState<number>(1);
   const [team1, setTeamColors1] = useState<number[]>([]);
   const [team2, setTeamColors2] = useState<number[]>([]);
+  const [teamNames, setTeamNames] = useState<string[]>(['Team 1','Team 2']);
+  const [play, setPlay] = useState<boolean>(false);
+  const [markers, setMarkers] = useState<number[]>([]);
+  const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  function setNames(id:number,name:string){
+    setplayerDetails((prevState) => ({
+      ...prevState,
+      [id]: { name: name, color: [0,0,0] },
+    }))
+  
+  }
+
+  function deleteTrackers(id: number) {
+    setDeletedTrackers([...deletedTrackers, id]);
+    delete playerdetails[id];
+    setplayerDetails(playerdetails);
+    const playerRemoved = imageData.info.map((frame) =>{
+      return frame.filter((player) => player.tracker_id !== id);
+    }
+    )
+    setImageData((prevState) => ({
+      frame: prevState.frame,
+      info: playerRemoved,
+    }));  
+  }
   useEffect(() => {
     if (socket) {
       socket.on("message_from_server", (data) => {
+        if (loading) {
+          setLoading(false);
+        }
         for (let i = 0; i < data.info.length; i++) {
+          if (!(data.info[i].tracker_id in setplayerDetails)) {
+            setplayerDetails((prevState) => ({
+              ...prevState,
+              [data.info[i].tracker_id]: { name: `Player ${data.info[i].tracker_id}`, color: data.info[i].color },
+            }))
+          }
           if (data.info[i].team === 0) {
             if (team1.length === 0) {
               setTeamColors1(data.info[i].color);
             }
-            if (teamStates[data.info[i].tracker_id]) {
-              teamStates[data.info[i].tracker_id].team1 += 1;
-            } else {
-              teamStates[data.info[i].tracker_id] = { team1: 1, team2: 0 };
-            }
+            teamStates[data.info[i].tracker_id] = { team1: 1, team2: 0 };
+
           } else if (data.info[i].team === 1) {
             if (team2.length === 0) {
               setTeamColors2(data.info[i].color);
             }
-            if (teamStates[data.info[i].tracker_id]) {
-              teamStates[data.info[i].tracker_id].team2 += 1;
-            } else {
+
               teamStates[data.info[i].tracker_id] = { team1: 0, team2: 1 };
-            }
+            
           }
         }
-        console.log(data.info);
         setImageData((prevState) => ({
           frame: [...prevState.frame, `data:image/jpeg;base64, ${data.frame}`],
           info: [...prevState.info, data.info],
@@ -72,6 +118,32 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
     }
   }, [socket]);
 
+  useEffect(() => {
+    setTeamColors1([])
+    setTeamColors2([])
+    setTeamNames(['Team 1','Team 2'])
+    setTeamstates({})
+    setImageData({
+      frame: [],
+      info: [],
+    });
+    setSlider(1);
+    setMarkers([]);
+  },[url])
+
+  useEffect(() => {
+    if (play) {
+      const interval = setInterval(() => {
+        if (slider < imageData.frame.length) {
+          setSlider(slider + 1);
+        } else {
+          setPlay(false);
+        }
+      }, 100);
+      return () => clearInterval(interval);
+    }
+  }, [play, slider]);
+
   useEffect(() => {}, [imageData.info]);
 
   useEffect(() => {
@@ -82,6 +154,14 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
   }, [url]);
   return (
     <div>
+      {loading && socket && <div style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: "50px",
+      }}> <CircularProgress/></div>}
+
+      <Container maxWidth="lg">
       <Grid container spacing={0}>
         <Grid
           item
@@ -203,10 +283,12 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
         >
           {imageData.info.length !== 0 && (
             <Slider
-              aria-label="Temperature"
               defaultValue={slider}
               value={slider}
-              valueLabelDisplay="auto"
+              valueLabelDisplay="off"
+              marks={markers.map((value) => ({
+                value: value,
+              }))}
               step={1}
               min={1}
               max={imageData.frame.length}
@@ -215,8 +297,80 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
               }}
             />
           )}
+          {imageData.info.length !== 0 && (
+            <Stack
+              direction="row"
+              flexWrap="wrap"
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                fontSize: "50px",
+                color: "black",
+                height: "50px",
+                padding: "10px",
+                "&>*": {
+                  cursor: "pointer",
+                  ":hover": {
+                    color: "#42a5f5",
+                  },
+                },
+              }}
+            >
+              <IconButton
+                onClick={() => {
+                  const previousMarker = markers.filter(
+                    (item) => item < slider
+                  );
+                  if (previousMarker.length > 0) {
+                    setSlider(previousMarker[previousMarker.length - 1]);
+                  }
+                }}
+              >
+                <FastRewindIcon />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  setPlay(!play);
+                }}
+              >
+                {play ? <PauseCircleIcon /> : <PlayCircleIcon />}
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  if (!markers.includes(slider)) {
+                    setMarkers([...markers, slider]);
+                  } else {
+                    setMarkers(markers.filter((item) => item !== slider));
+                  }
+                }}
+              >
+                <NavigationIcon />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  const nextMarker = markers.filter((item) => item > slider);
+                  if (nextMarker.length > 0) {
+                    setSlider(nextMarker[0]);
+                  }
+                }}
+              >
+                <FastForwardIcon />
+              </IconButton>
+              <IconButton onClick={()=>{
+                setSettingsOpen(!settingsOpen);
+              }}>
+                <SettingsIcon />
+              </IconButton>
+            </Stack>
+          )}
         </Grid>
         <Grid item xs={1} md={3}></Grid>
+        <Grid item xs={1} lg={2}></Grid>
+        <Grid item xs={10} lg={8}>
+          {settingsOpen && <VideoSettings/>}
+        </Grid>
+        <Grid item xs={1} lg={2}></Grid>
 
         {tab === 1 && (
           <IndividualTracking
@@ -224,11 +378,15 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
             team1={team1}
             team2={team2}
             details={teamStates}
+            players={playerdetails}
+            setNames={setNames}
+            deleteTracker={deleteTrackers}
           />
         )}
       </Grid>
       <Grid container spacing={0}>
         {tab === 0 && (
+          <>
           <Grid
             item
             xs={12}
@@ -241,7 +399,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
           >
             {imageData.info[slider - 1] !== undefined && (
               <div>
-                <h1>Team 1</h1>
+                <h2>{teamNames[0]}</h2>
                 <div
                   style={{
                     height: "1em",
@@ -262,9 +420,6 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
               </div>
             )}
           </Grid>
-        )}
-
-        {tab === 0 && (
           <Grid
             item
             xs={12}
@@ -277,7 +432,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
           >
             {imageData.info[slider - 1] !== undefined && (
               <div>
-                <h1>Team 2</h1>
+                <h2>{teamNames[1]}</h2>
                 <div
                   style={{
                     height: "1em",
@@ -298,8 +453,11 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
               </div>
             )}
           </Grid>
+          </>
         )}
+
       </Grid>
+      </Container>
     </div>
   );
 };
