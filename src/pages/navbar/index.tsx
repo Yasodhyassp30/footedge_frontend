@@ -9,10 +9,10 @@ function Navbar() {
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
+    marginLeft: '50px', 
   };
 
   const logoStyle = {
-    
     marginRight: '10px',
     height: '20px',
     fit: 'stretch',

@@ -1,0 +1,82 @@
+.navbar {
+    background-color: rgba(32, 37, 48, 0); /* Use RGBA color with an alpha value of 0 for full transparency */
+    height: 80px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+}
+
+
+
+ 
+ .navbar-toggle {
+    margin-left: 20px;
+ }
+ 
+ .menu-bars {
+    font-size: 2rem;
+    color:  #151a21;
+    cursor: pointer;
+ }
+ 
+ .nav-menu {
+   background-color: #151a21; /* Match your desired background color */
+   width: 250px;
+   height: 100vh; /* Full height sidebar */
+   display: flex;
+   justify-content: center;
+   position: fixed;
+   top: 0;
+   left: -100%; /* Hide offscreen initially */
+   transition: 850ms; /* Smooth slide transition */
+   z-index: 10;
+}
+
+.nav-menu.active {
+   left: 0;
+   transition: 350ms;
+   background-color: #151A21; /* Change the background color when sidebar is active */
+}
+
+ 
+ .nav-text {
+    display: flex;
+    align-items: center;
+    padding: 8px 0px 8px 16px;
+    list-style: none;
+    height: 60px;
+ }
+ 
+ .nav-text a {
+    text-decoration: none;
+    color: #f5f5f5;
+    font-size: 18px;
+    width: 95%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    border-radius: 4px;
+ }
+ 
+ .nav-text a:hover {
+    background-color: #1a83ff;
+ }
+ 
+ .nav-menu-items {
+    width: 100%;
+ }
+ 
+
+ body {
+    margin: 0; /* Reset default body margin */
+  }
+  
+  .close-icon-black {
+   color: black; /* Change the color of the close icon to black */
+}
