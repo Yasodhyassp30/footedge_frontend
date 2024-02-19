@@ -10,6 +10,7 @@ import Navbar from './pages/navbar';
 import AnnotationComponent from './pages/annotation';
 import ScoutingDashboard from "./pages/scouting/ScoutingDashBoard";
 import Sidebar from './pages/sidebar/sidebar';
+import Report from './pages/report/ReportDashboard';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/annotate" element={<AnnotationComponent />} />
             <Route path="/scouting" element={<ScoutingDashboard />} />
+            <Route path="/reports" element={<Report />} />
           </Routes>
 
       </Router>
