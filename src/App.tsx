@@ -9,6 +9,7 @@ import DensityPlot from './pages/dashboard/components/kdePlot';
 import Navbar from './pages/navbar';
 import AnnotationComponent from './pages/annotation';
 import ScoutingDashboard from "./pages/scouting/ScoutingDashBoard";
+import Report from "./pages/report/ReportDashboard";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/annotate" element={<AnnotationComponent />} />
+            <Route path="/reports" element={<Report />} />
           </Routes>
 
       </Router>
