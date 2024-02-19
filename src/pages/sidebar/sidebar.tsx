@@ -22,8 +22,8 @@ const SidebarData = [
     cName: "nav-text",
   },
   {
-    title: "Events",
-    path: "/events",
+    title: "Annotate",
+    path: "/annotate",
     icon: <GiIcons.GiSoccerKick />,
     cName: "nav-text",
   },
@@ -60,7 +60,11 @@ function Sidebar() {
                 <li key={index} className={item.cName}>
                   <Link to={item.path}>
                     {item.icon}
-                    <span>{item.title}</span>
+                    <span style={{
+                      marginLeft: "10px",
+                      fontSize: "20px",
+                    
+                    }}>{item.title}</span>
                   </Link>
                 </li>
               );

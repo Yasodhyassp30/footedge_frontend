@@ -144,7 +144,14 @@ function Dashboard() {
             </div>
           </div>
         )}
-
+        
+      </div>
+      <div style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: "20px",
+        }}>
         <Button
           component="label"
           variant="contained"
@@ -173,7 +180,7 @@ function Dashboard() {
             Cancel
           </Button>
         )}
-      </div>
+        </div>
 
       <TeamActivity socket={socket} url={videoSrc} />
     </div>

@@ -27,7 +27,7 @@
 .video_details{
     text-align: start;
     padding: 10px;
-    display: block;
+    display: flex;
     justify-content: start;
     align-items: start;
 }

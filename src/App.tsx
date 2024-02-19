@@ -20,6 +20,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/annotate" element={<AnnotationComponent />} />
+            <Route path="/scouting" element={<ScoutingDashboard />} />
           </Routes>
 
       </Router>
