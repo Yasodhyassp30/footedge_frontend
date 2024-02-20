@@ -68,6 +68,7 @@ function Dashboard() {
 
         const formData = new FormData();
         formData.append("file", file);
+        formData.append("type", "TACTICAL");  
 
         try {
           const response: AxiosResponse = await axios.post(

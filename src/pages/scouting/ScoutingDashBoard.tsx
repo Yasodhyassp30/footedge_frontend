@@ -209,7 +209,7 @@ function ScoutingDashboard() {
 
         try {
           const response: AxiosResponse = await axios.post(
-            "http://localhost:5000/api/upload",
+            "http://localhost:5000/api/uploadScouting",
             formData,
             {
               onUploadProgress: (progressEvent) => {
