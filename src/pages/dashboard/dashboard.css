@@ -6,8 +6,6 @@
 .upload_section{
     display: block;
     width: calc(100% - px);
-    border-radius: 10px;
-    border: solid 5px lightblue;
     min-height: 100px;
     justify-content: center;
     align-items: center;

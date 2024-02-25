@@ -10,8 +10,10 @@ import "./dashboard.css";
 import axios, { AxiosResponse, CancelTokenSource } from "axios";
 import io, { Socket } from "socket.io-client";
 import TeamActivity from "./components/teamActivity";
-import { Container } from "@mui/material";
-
+import { Container, IconButton, Stack, Tooltip } from "@mui/material";
+import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
+import PeopleIcon from "@mui/icons-material/People";
+import AppsIcon from "@mui/icons-material/Apps";
 
 const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
 
@@ -41,11 +43,11 @@ function Dashboard() {
   useEffect(() => {
     if (socket) {
       socket.on("final_message_from_server", (data) => {
-        socket.disconnect()
-        setSocket(null)
+        socket.disconnect();
+        setSocket(null);
       });
       return () => {
-        socket.disconnect()
+        socket.disconnect();
       };
     }
   }, [socket]);
@@ -68,7 +70,7 @@ function Dashboard() {
 
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("type", "TACTICAL");  
+        formData.append("type", "TACTICAL");
 
         try {
           const response: AxiosResponse = await axios.post(
@@ -91,7 +93,10 @@ function Dashboard() {
             const newSocket = io(`http://localhost:5000/`);
             newSocket.on("connect", () => {
               newSocket.emit("join_room", { roomId: receivedId });
-              newSocket.emit("start_processing", { video_path: receivedId,  type: 'TACTICAL'  });
+              newSocket.emit("start_processing", {
+                video_path: receivedId,
+                type: "TACTICAL",
+              });
               console.log(
                 `Connected to Socket.IO channel for ID: ${receivedId}`
               );
@@ -118,73 +123,114 @@ function Dashboard() {
   };
   return (
     <Container maxWidth="lg">
-    <div className="dashboard_main">
-      <div className="upload_section">
-        {videoSrc && (
-          <div className="video_section">
-            <ReactPlayer url={videoSrc} controls width="640px" height="auto" />
-            <div className="video_details">
-              <h2>Details</h2>
-              <h4>Filename: {videoDetails.fileName}</h4>
-              <h4>File size: {videoDetails.fileSize}MB</h4>
-              {uploadProgress > 0 && uploadProgress < 100 && (
-                <div
-                  style={{
-                    position: "relative",
-                    textAlign: "center",
-                    alignItems: "start",
-                    display: "flex",
-                  }}
-                >
-                  <CircularProgress
-                    variant="determinate"
-                    value={uploadProgress}
-                  />
-                </div>
-              )}
+      <div className="dashboard_main">
+        <div className="upload_section">
+          {videoSrc && (
+            <div className="video_section">
+              <ReactPlayer
+                url={videoSrc}
+                controls
+                width="640px"
+                height="auto"
+              />
+              <div className="video_details">
+                <h2>Details</h2>
+                <h4>Filename: {videoDetails.fileName}</h4>
+                <h4>File size: {videoDetails.fileSize}MB</h4>
+                {uploadProgress > 0 && uploadProgress < 100 && (
+                  <div
+                    style={{
+                      position: "relative",
+                      textAlign: "center",
+                      alignItems: "start",
+                      display: "flex",
+                    }}
+                  >
+                    <CircularProgress
+                      variant="determinate"
+                      value={uploadProgress}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        )}
-        
-      </div>
-      <div style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: "20px",
-        }}>
-        <Button
-          component="label"
-          variant="contained"
-          startIcon={<CloudUploadIcon />}
-          disabled={uploadProgress > 0 && uploadProgress < 100}
+          )}
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "20px",
+          }}
         >
-          Upload file
-          <VisuallyHiddenInput
-            type="file"
-            accept="video/mp4"
-            onChange={(event) => {
-              handleFileChange(event);
-            }}
-          />
-        </Button>
-        {uploadProgress > 0 && uploadProgress < 100 && (
           <Button
-            sx={{
-              margin: "10px",
-            }}
             component="label"
             variant="contained"
-            startIcon={<CancelIcon />}
-            color="error"
+            startIcon={<CloudUploadIcon />}
+            disabled={uploadProgress > 0 && uploadProgress < 100}
           >
-            Cancel
+            Upload file
+            <VisuallyHiddenInput
+              type="file"
+              accept="video/mp4"
+              onChange={(event) => {
+                handleFileChange(event);
+              }}
+            />
           </Button>
-        )}
+          {uploadProgress > 0 && uploadProgress < 100 && (
+            <Button
+              sx={{
+                margin: "10px",
+              }}
+              component="label"
+              variant="contained"
+              startIcon={<CancelIcon />}
+              color="error"
+              onClick={handleCancelUpload}
+            >
+              Cancel
+            </Button>
+          )}
         </div>
 
-      <TeamActivity socket={socket} url={videoSrc} />
-    </div>
+        <Stack
+          direction="row"
+          flexWrap="wrap"
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "20px",
+            "&>*": {
+              borderRadius: "50%",
+              backgroundColor: "white",
+              border: "2px solid gray",
+              margin: "10px",
+              padding: "10px",
+              "&:hover": {
+                color: "#08a4ff",
+                border: "5px solid #0883ff",
+              },
+            },
+          }}
+        >
+          <Tooltip title="KDE Plots" placement="bottom">
+            <IconButton>
+              <LocalFireDepartmentIcon />
+            </IconButton>
+          </Tooltip>
+          <IconButton>
+            <PeopleIcon />
+          </IconButton>
+          <IconButton>
+            <AppsIcon />
+          </IconButton>
+        </Stack>
+
+        <TeamActivity socket={socket} url={videoSrc} />
+      </div>
     </Container>
   );
 }

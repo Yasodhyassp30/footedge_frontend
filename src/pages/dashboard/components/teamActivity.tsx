@@ -93,20 +93,6 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
               [data.info[i].tracker_id]: { name: `Player ${data.info[i].tracker_id}`, color: data.info[i].color },
             }))
           }
-          if (data.info[i].team === 0) {
-            if (team1.length === 0) {
-              setTeamColors1(data.info[i].color);
-            }
-            teamStates[data.info[i].tracker_id] = { team1: 1, team2: 0 };
-
-          } else if (data.info[i].team === 1) {
-            if (team2.length === 0) {
-              setTeamColors2(data.info[i].color);
-            }
-
-              teamStates[data.info[i].tracker_id] = { team1: 0, team2: 1 };
-            
-          }
           data.info[i].coordinates = [data.info[i].coordinates[0] /1680 *100, data.info[i].coordinates[1] /1080 *100]
         }
         setImageData((prevState) => ({
@@ -413,8 +399,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
                 <DensityPlot
                   data={imageData.info[slider - 1].filter(
                     (item) =>
-                      teamStates[item.tracker_id].team1 >
-                      teamStates[item.tracker_id].team2
+                      item.team===0
                   )}
                   color="red"
                   levels={10}
@@ -446,8 +431,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
                 <DensityPlot
                   data={imageData.info[slider - 1].filter(
                     (item) =>
-                      teamStates[item.tracker_id].team1 <
-                      teamStates[item.tracker_id].team2
+                      item.team===1
                   )}
                   color="blue"
                   levels={10}

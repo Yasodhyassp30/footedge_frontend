@@ -116,7 +116,7 @@ const Soccerfield: React.FC<SoccerfieldProps> = ({ data,details,team1,team2 }) =
         .attr("cx", (d) => `${d.coordinates[0]}%`)
         .attr("cy", (d) => `${d.coordinates[1]}%`)
         .attr("r", 10)
-        .attr("fill", (d) => (details[d.tracker_id].team1>details[d.tracker_id].team2) ? `rgb(${team1[2]}, ${team1[1]}, ${team1[0]})`: `rgb(${team2[2]}, ${team2[1]}, ${team2[0]})`)
+        .attr("fill", (d) => (`rgb(${d.color[2]}, ${d.color[1]}, ${d.color[0]})`))
         .attr("stroke", "white")
         .attr("stroke-width", 10);
     }
