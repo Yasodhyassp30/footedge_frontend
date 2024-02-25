@@ -12,6 +12,7 @@ import FastRewindIcon from "@mui/icons-material/FastRewind";
 import SettingsIcon from '@mui/icons-material/Settings';
 import VideoSettings from "./videoSettings";
 import { info } from "console";
+import PresenceMaps from "./presenceMaps";
 
 interface TeamActivityProps {
   socket: Socket | null;
@@ -106,6 +107,7 @@ const TeamActivity: React.FC<TeamActivityProps> = ({ socket, url }) => {
               teamStates[data.info[i].tracker_id] = { team1: 0, team2: 1 };
             
           }
+          data.info[i].coordinates = [data.info[i].coordinates[0] /1680 *100, data.info[i].coordinates[1] /1080 *100]
         }
         setImageData((prevState) => ({
           frame: [...prevState.frame, `data:image/jpeg;base64, ${data.frame}`],

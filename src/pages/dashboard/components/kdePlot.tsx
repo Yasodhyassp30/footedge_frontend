@@ -116,13 +116,11 @@ const DensityPlot: React.FC<DensityPlotProps> = ({data,color,levels }) => {
         .y((d) => d[1]);
   
       const transformedData: [number, number][] = data.map((d) => [
-        (d.coordinates[0]/1680)*480,
-        (d.coordinates[1]/1080)*320,
+        d.coordinates[0]/100*480,
+        d.coordinates[1]/100*320,
       ]);
   
-  
       const densityData =  kde.thresholds(levels)(transformedData);;
-  
   
       svg
         .selectAll('path')
