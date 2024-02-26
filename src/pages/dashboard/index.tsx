@@ -36,9 +36,39 @@ function Dashboard() {
     fileName: "",
     fileSize: "",
   });
-
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const cancelSourceRef = useRef<CancelTokenSource | null>(null);
+  const [view, setView] = useState<{[key:string]:boolean}>({
+    "kde_plots": false,
+    "formations": false,
+    "presence_maps": false
+  })
+
+  const setViewHandler = (functionName: string) => {
+    setView({
+      ...view,
+      [functionName]: !view[functionName]
+    })
+  }
+  const subPlots = [{
+    id: 1,
+    title: "KDE Plots",
+    icon: <LocalFireDepartmentIcon />,
+    function: "kde_plots"
+  },,
+  {
+    id: 2,
+    title: "Formations",
+    icon: <PeopleIcon />,
+    function: "formations"
+  },
+  {
+    id: 3,
+    title: "Presence Maps",
+    icon: <AppsIcon />,
+    function: "presence_maps"
+  }
+]
 
   useEffect(() => {
     if (socket) {
@@ -216,17 +246,16 @@ function Dashboard() {
             },
           }}
         >
-          <Tooltip title="KDE Plots" placement="bottom">
-            <IconButton>
-              <LocalFireDepartmentIcon />
-            </IconButton>
-          </Tooltip>
-          <IconButton>
-            <PeopleIcon />
-          </IconButton>
-          <IconButton>
-            <AppsIcon />
-          </IconButton>
+
+          {subPlots.map((plot:any) => {
+            return (
+              <Tooltip title={plot.title} placement="bottom">
+                <IconButton onClick={() => setViewHandler(plot.function)}>
+                  {plot.icon}
+                </IconButton>
+              </Tooltip>
+            );
+          })}
         </Stack>
 
         <TeamActivity socket={socket} url={videoSrc} />

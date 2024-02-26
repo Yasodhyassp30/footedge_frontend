@@ -24,7 +24,7 @@ export interface players {
   coordinates: number[];
   tracker_id: number;
 }
-interface ImageData {
+export interface ImageData {
   frame: string[];
   info: players[][];
 }
