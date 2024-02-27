@@ -15,6 +15,7 @@ import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import PeopleIcon from "@mui/icons-material/People";
 import AppsIcon from "@mui/icons-material/Apps";
 import FrameSlider from "./components/frameSlider";
+import PresenceMaps from "./components/presenceMaps";
 
 const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
 
@@ -266,7 +267,24 @@ function Dashboard() {
         <FrameSlider/>
           {view.kde_plots && <div>KDE Plots</div>}
           {view.formations && <div>Formations</div>}
-          {view.presence_maps && <div>Presence Maps</div>}
+          {view.presence_maps && <div style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          }}>
+            <div style={{
+              padding: "10px",
+              width: "50%"
+            }}>
+            <PresenceMaps data={[]}/>
+            </div>
+            <div style={{
+              padding: "10px",
+              width: "50%"
+            }}>
+            <PresenceMaps data={[]}/>
+            </div>
+            </div>}
           
           
         <TeamActivity socket={socket} url={videoSrc} />
