@@ -14,6 +14,7 @@ import { Container, IconButton, Stack, Tooltip } from "@mui/material";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import PeopleIcon from "@mui/icons-material/People";
 import AppsIcon from "@mui/icons-material/Apps";
+import FrameSlider from "./components/frameSlider";
 
 const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
 
@@ -238,10 +239,9 @@ function Dashboard() {
               backgroundColor: "white",
               border: "2px solid gray",
               margin: "10px",
-              padding: "10px",
               "&:hover": {
                 color: "#08a4ff",
-                border: "5px solid #0883ff",
+                border: "2px solid #0883ff",
               },
             },
           }}
@@ -250,14 +250,25 @@ function Dashboard() {
           {subPlots.map((plot:any) => {
             return (
               <Tooltip title={plot.title} placement="bottom">
-                <IconButton onClick={() => setViewHandler(plot.function)}>
+                <IconButton onClick={() => setViewHandler(plot.function)} sx={{
+                  color: view[plot.function] ? "#0883ff" : "black",
+                  border: view[plot.function] ? "2px solid #0883ff" : "2px solid gray",
+                  margin: "10px",
+                  padding: "10px",
+                
+                }}>
                   {plot.icon}
                 </IconButton>
               </Tooltip>
             );
           })}
         </Stack>
-
+        <FrameSlider/>
+          {view.kde_plots && <div>KDE Plots</div>}
+          {view.formations && <div>Formations</div>}
+          {view.presence_maps && <div>Presence Maps</div>}
+          
+          
         <TeamActivity socket={socket} url={videoSrc} />
       </div>
     </Container>
