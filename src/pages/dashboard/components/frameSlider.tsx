@@ -5,44 +5,25 @@ import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 import NavigationIcon from "@mui/icons-material/Navigation";
 import FastForwardIcon from "@mui/icons-material/FastForward";
 import FastRewindIcon from "@mui/icons-material/FastRewind";
+import { useSelector, useDispatch } from 'react-redux';
+import { AppDispatch } from '../../..';
+import { RootState } from '../../../reducers/combinedReducers';
+import { tacticalAnalysisSlice } from '../../../reducers/tacticalAnalysis';
 
 export default function FrameSlider() {
-    const [slider,setSlider] = useState<number>(1);
+    const dispatch = useDispatch<AppDispatch>();
+    const slider = useSelector((state:RootState) => state.tacticalAnalysis.slider);
+    const markers = useSelector((state:RootState) => state.tacticalAnalysis.markers);
+    const length = useSelector((state:RootState) => state.tacticalAnalysis.info.length);
     const [play,setPlay] = useState<boolean>(false);
-    const [markers, setMarkers] = useState<number[]>([]);
-
-    const setMarkersHandler = () => {
-        if (!markers.includes(slider)) {
-            setMarkers([...markers, slider]);
-        } else {
-            setMarkers(markers.filter((item) => item !== slider));
-        }
-    }
-
-    const nextMarkerHandler = () => {
-        const nextMarker = markers.filter((item) => item > slider);
-        if (nextMarker.length > 0) {
-            setSlider(nextMarker[0]);
-        }
-    }
-
-    const previousMarkerHandler = () => {
-        const previousMarker = markers.filter(
-            (item) => item < slider
-          );
-          if (previousMarker.length > 0) {
-            setSlider(previousMarker[previousMarker.length - 1]);
-          }
-    }
 
     const playHandler = () => {
         setPlay(!play);
     }
-
     const controllerButtons =[
       {
         icon: <FastRewindIcon />,
-        handler: previousMarkerHandler
+        handler: () => dispatch(tacticalAnalysisSlice.actions.nextMarker())
       },
       {
         icon: play ? <PauseCircleIcon /> : <PlayCircleIcon />,
@@ -50,18 +31,18 @@ export default function FrameSlider() {
       },
       {
         icon: <NavigationIcon />,
-        handler: setMarkersHandler
+        handler: () => dispatch(tacticalAnalysisSlice.actions.setMarkers())
       },
       {
         icon: <FastForwardIcon />,
-        handler: nextMarkerHandler
+        handler: () => dispatch(tacticalAnalysisSlice.actions.previousMarker())
       }
     ]
     useEffect(() => {
       if (play) {
         const interval = setInterval(() => {
-          if (slider < 100) {
-            setSlider(slider + 1);
+          if (slider < length) {
+            dispatch(tacticalAnalysisSlice.actions.setSlider(slider + 1));
           } else {
             setPlay(false);
           }
@@ -69,6 +50,7 @@ export default function FrameSlider() {
         return () => clearInterval(interval);
       }
     }, [play, slider]);
+    
   return (
     <div style={{
         display:"flex",
@@ -83,13 +65,13 @@ export default function FrameSlider() {
               value={slider}
               valueLabelDisplay="off"
               marks={markers.map((value) => ({
-                value: value,
+                value: value as number,
               }))}
               step={1}
               min={1}
-              max={100}
+              max={length}
               onChange={(e, val) => {
-                setSlider(Number(val));
+                dispatch(tacticalAnalysisSlice.actions.setSlider(val));
               }}
               sx={{
                 width: "60%",

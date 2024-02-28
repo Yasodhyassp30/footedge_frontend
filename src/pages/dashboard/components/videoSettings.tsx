@@ -1,14 +1,12 @@
 import { Button, Grid, IconButton, MenuItem, Paper, Select, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { players, totalTeam } from "./teamActivity";
-import { localizationData } from "./individualPlayers";
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 function VideoSettings() {
   const [trackers, setTrackers] = useState<number[]>([]);
   const [selectedPlayer, setSelectedPlayer] = useState<number>(0);
-  const [playerData, setPlayerData] = useState<players[]>([]);
 
   return (
     <div>

@@ -4,7 +4,6 @@ import * as d3 from 'd3';
 import { players } from "./teamActivity";
 
 interface DensityPlotProps {
-
   data:players[]
   color:string,
   levels:number

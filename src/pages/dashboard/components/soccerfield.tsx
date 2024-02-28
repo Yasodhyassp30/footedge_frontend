@@ -6,12 +6,9 @@ import { players,totalTeam } from "./teamActivity";
 
 interface SoccerfieldProps {
   data: players[];
-  details : totalTeam;
-  team1:number[];
-  team2:number[];
 }
 
-const Soccerfield: React.FC<SoccerfieldProps> = ({ data,details,team1,team2 }) => {
+const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {

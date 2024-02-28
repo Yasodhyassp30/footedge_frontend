@@ -3,19 +3,14 @@ import { players,teamPlayers,totalTeam } from "./teamActivity";
 import { Button, Grid, IconButton, MenuItem, Paper, Select, TextField } from "@mui/material";
 import DensityPlot from "./kdePlot";
 import SaveIcon from '@mui/icons-material/Save';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { useSelector,useDispatch } from "react-redux";
+import { tacticalAnalysisSlice } from "../../../reducers/tacticalAnalysis";
+import { RootState } from "../../../reducers/combinedReducers";
 
-export interface localizationData {
-  info: players[][];
-  team1: number[];
-  team2: number[];
-  details : totalTeam;
-  players:{[key:number]:teamPlayers}
-  setNames: any,
-  deleteTracker: any
-}
-
-const IndividualTracking: React.FC<localizationData> = ({ info,team1,team2,details,players,setNames,deleteTracker }) => {
+const IndividualTracking = () => {
+  const info = useSelector((state: RootState) => state.tacticalAnalysis.info);
+  const players = useSelector((state: RootState) => state.tacticalAnalysis.players);
+  const dispatch = useDispatch();
   const [trackers, setTrackers] = useState<number[]>([]);
   const [selectedPlayer, setSelectedPlayer] = useState<number>(0);
   const [playerData, setPlayerData] = useState<players[]>([]);
@@ -99,7 +94,7 @@ const IndividualTracking: React.FC<localizationData> = ({ info,team1,team2,detai
                 setTempName(e.target.value);
               }}/>
               <Button variant="outlined" onClick={()=>{
-                setNames(selectedPlayer,tempName);
+                dispatch(tacticalAnalysisSlice.actions.setNames({tracker_id:selectedPlayer,name:tempName}));
               }}>
                 <SaveIcon/> Save
               </Button>
