@@ -14,8 +14,19 @@ import { Container, IconButton, Stack, Tooltip } from "@mui/material";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import PeopleIcon from "@mui/icons-material/People";
 import AppsIcon from "@mui/icons-material/Apps";
+import FrameSlider from "./components/frameSlider";
+import PresenceMaps from "./components/presenceMaps";
+import Soccerfield from "./components/soccerfield";
+import DensityPlot from "./components/kdePlot";
+import { useSelector,useDispatch } from "react-redux";
+import { RootState } from "../../reducers/combinedReducers";
+import { tacticalAnalysisSlice } from "../../reducers/tacticalAnalysis";
+import TimelineIcon from '@mui/icons-material/Timeline';
+import IndividualTracking from "./components/individualPlayers";
+
 
 const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
+
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -31,6 +42,11 @@ const VisuallyHiddenInput = styled("input")({
 
 function Dashboard() {
   const [socket, setSocket] = useState<Socket | null>(null);
+  const length = useSelector((state:RootState) => state.tacticalAnalysis.info.length);
+  const dispatch = useDispatch();
+  const loading = useSelector((state:RootState) => state.tacticalAnalysis.loading);
+  const info = useSelector((state:RootState) => state.tacticalAnalysis.info);
+  const slider = useSelector((state:RootState) => state.tacticalAnalysis.slider);
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
   const [videoDetails, setVideoDetails] = useState({
     fileName: "",
@@ -38,49 +54,75 @@ function Dashboard() {
   });
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const cancelSourceRef = useRef<CancelTokenSource | null>(null);
-  const [view, setView] = useState<{[key:string]:boolean}>({
-    "kde_plots": false,
-    "formations": false,
-    "presence_maps": false
-  })
+  const [view, setView] = useState<{ [key: string]: boolean }>({
+    kde_plots: false,
+    formations: false,
+    presence_maps: false,
+    individual: false,
+  });
 
   const setViewHandler = (functionName: string) => {
     setView({
       ...view,
-      [functionName]: !view[functionName]
-    })
-  }
-  const subPlots = [{
-    id: 1,
-    title: "KDE Plots",
-    icon: <LocalFireDepartmentIcon />,
-    function: "kde_plots"
-  },,
-  {
-    id: 2,
-    title: "Formations",
-    icon: <PeopleIcon />,
-    function: "formations"
-  },
-  {
-    id: 3,
-    title: "Presence Maps",
-    icon: <AppsIcon />,
-    function: "presence_maps"
-  }
-]
+      [functionName]: !view[functionName],
+    });
+  };
+  const subPlots = [
+    {
+      id: 1,
+      title: "KDE Plots",
+      icon: <LocalFireDepartmentIcon />,
+      function: "kde_plots",
+    },
+    ,
+    {
+      id: 2,
+      title: "Formations",
+      icon: <TimelineIcon />,
+      function: "formations",
+    },
+    {
+      id: 3,
+      title: "Presence Maps",
+      icon: <AppsIcon />,
+      function: "presence_maps",
+    },
+    {
+      id: 4,
+      title: "Individual",
+      icon: <PeopleIcon />,
+      function: "individual",
+    }
+  ];
 
   useEffect(() => {
     if (socket) {
+      
       socket.on("final_message_from_server", (data) => {
         socket.disconnect();
         setSocket(null);
+      });
+      socket.on("message_from_server", (data) => {
+        if (loading) {
+          dispatch(tacticalAnalysisSlice.actions.setLoading(false));
+        }
+        for (let i = 0; i < data.info.length; i++) {
+          data.info[i].coordinates = [data.info[i].coordinates[0] /1680 *100, data.info[i].coordinates[1] /1080 *100]
+        }
+        dispatch(tacticalAnalysisSlice.actions.addFrames({frame:`data:image/jpeg;base64, ${data.frame}`,info:data.info}));
+        if (length === 1) {
+          dispatch(tacticalAnalysisSlice.actions.setSlider(1));
+        }
       });
       return () => {
         socket.disconnect();
       };
     }
   }, [socket]);
+
+  useEffect(() => {
+    dispatch(tacticalAnalysisSlice.actions.reset());
+  },[videoSrc])
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -119,6 +161,7 @@ function Dashboard() {
 
           if (response.status === 200) {
             console.log("File uploaded successfully");
+            dispatch(tacticalAnalysisSlice.actions.setLoading(true));
             const receivedId = response.data.id;
             const newSocket = io(`http://localhost:5000/`);
             newSocket.on("connect", () => {
@@ -145,6 +188,8 @@ function Dashboard() {
       setVideoSrc(null);
     }
   };
+
+  
   const handleCancelUpload = () => {
     if (cancelSourceRef.current) {
       cancelSourceRef.current.cancel("Upload canceled by user");
@@ -224,7 +269,17 @@ function Dashboard() {
             </Button>
           )}
         </div>
+        {loading && socket && <div style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: "20px",
+      }}> <CircularProgress/></div>}
+        <div>
+        <TeamActivity/>
+        </div>
 
+      {length !== 0 && (<div>
         <Stack
           direction="row"
           flexWrap="wrap"
@@ -238,27 +293,121 @@ function Dashboard() {
               backgroundColor: "white",
               border: "2px solid gray",
               margin: "10px",
-              padding: "10px",
               "&:hover": {
                 color: "#08a4ff",
-                border: "5px solid #0883ff",
+                border: "2px solid #0883ff",
               },
             },
           }}
         >
-
-          {subPlots.map((plot:any) => {
+          {subPlots.map((plot: any) => {
             return (
               <Tooltip title={plot.title} placement="bottom">
-                <IconButton onClick={() => setViewHandler(plot.function)}>
+                <IconButton
+                  onClick={() => setViewHandler(plot.function)}
+                  sx={{
+                    color: view[plot.function] ? "#0883ff" : "black",
+                    border: view[plot.function]
+                      ? "2px solid #0883ff"
+                      : "2px solid gray",
+                    margin: "10px",
+                    padding: "10px",
+                  }}
+                >
                   {plot.icon}
                 </IconButton>
               </Tooltip>
             );
           })}
         </Stack>
+        <FrameSlider />
+        {view.kde_plots && (
+          <div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <div
+                style={{
+                  padding: "10px",
+                  width: "50%",
+                }}
+              >
+                <DensityPlot data={info[slider-1].filter((item)=>item.team===0)} color="red" levels={10} />
+              </div>
+              <div
+                style={{
+                  padding: "10px",
+                  width: "50%",
+                }}
+              >
+                <DensityPlot data={info[slider-1].filter((item)=>item.team===1)} color="blue" levels={10} />
+              </div>
+            </div>
+          </div>
+        )}
+        {view.formations && (
+          <div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <div
+                style={{
+                  padding: "10px",
+                  width: "50%",
+                }}
+              >
+                <Soccerfield data={info[slider-1].filter((item)=>item.team===0)} />
+              </div>
+              <div
+                style={{
+                  padding: "10px",
+                  width: "50%",
+                }}
+              >
+                <Soccerfield data={info[slider-1].filter((item)=>item.team===1)} />
+              </div>
+            </div>
+          </div>
+        )}
+        {view.presence_maps && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                padding: "10px",
+                width: "50%",
+              }}
+            >
+              <PresenceMaps data={info[slider-1].filter((item)=>item.team===0)} />
+            </div>
+            <div
+              style={{
+                padding: "10px",
+                width: "50%",
+              }}
+            >
+              <PresenceMaps data={info[slider-1].filter((item)=>item.team===1)} />
+            </div>
+          </div>
+        )}
 
-        <TeamActivity socket={socket} url={videoSrc} />
+        {view.individual && (<IndividualTracking/>)}
+
+       
+      </div>)}
       </div>
     </Container>
   );

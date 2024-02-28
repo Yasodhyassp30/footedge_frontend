@@ -5,17 +5,25 @@ import './index.css';
 import './input.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { AnalyticsProvider } from './appcontext/AppContext';
+import { Provider } from 'react-redux';
+import { rootReducer } from './reducers/combinedReducers';
+import { configureStore } from '@reduxjs/toolkit';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
+export const store = configureStore({
+  reducer: rootReducer,
+});
+export type AppDispatch = typeof store.dispatch;
+
+
 root.render(
   <React.StrictMode>
-    <AnalyticsProvider>
-    <App />
-  </AnalyticsProvider>
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>
 );
 

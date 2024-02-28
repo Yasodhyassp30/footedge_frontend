@@ -324,7 +324,7 @@ const PresenceMaps:React.FC<PresenceMapsProps> = ({data}) => {
   }, []);
 
   useEffect(() => {
-    if (svgRef.current) {
+    if (svgRef.current && data.length > 0) {
       const svg = d3.select(svgRef.current);
 
       svg.selectAll("text").remove();
