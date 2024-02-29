@@ -23,6 +23,7 @@ import { RootState } from "../../reducers/combinedReducers";
 import { tacticalAnalysisSlice } from "../../reducers/tacticalAnalysis";
 import TimelineIcon from '@mui/icons-material/Timeline';
 import IndividualTracking from "./components/individualPlayers";
+import TeamDetails from "./components/teamDetails";
 
 
 const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
@@ -199,7 +200,7 @@ function Dashboard() {
   return (
     <Container maxWidth="lg">
       <div className="dashboard_main">
-        <div className="upload_section">
+        <div>
           {videoSrc && (
             <div className="video_section">
               <ReactPlayer
@@ -278,7 +279,7 @@ function Dashboard() {
         <div>
         <TeamActivity/>
         </div>
-
+        
       {length !== 0 && (<div>
         <Stack
           direction="row"
@@ -321,6 +322,8 @@ function Dashboard() {
           })}
         </Stack>
         <FrameSlider />
+
+        <TeamDetails/>
         {view.kde_plots && (
           <div>
             <div
