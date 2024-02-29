@@ -9,8 +9,10 @@ const initialState = {
     frame:[] as string[],
     loading: false,
     slider: 0,
-    markers:[] as Number[],
+    markers:[] as number[],
     players:{} as {[key:number]:teamPlayers},
+    teams:["",""] as string[],
+    colors:[[],[]] as number[][]
 };
 
 export const tacticalAnalysisSlice = createSlice({
@@ -47,9 +49,19 @@ export const tacticalAnalysisSlice = createSlice({
                 name: "",
                 color: player.color,
               };
+              if (!state.colors.includes(player.color)) {
+               if (player.team === 0) {
+                 state.colors[0]=(player.color);
+               } else {
+                 state.colors[1]=(player.color);
+               }
+              }
             }
           });
         });
+      },
+      setTeamNames: (state, action) => {
+        state.teams[action.payload.team] = action.payload.name;
       },
       setNames: (state, action) => {
         state.players[action.payload.tracker_id].name = action.payload.name;
