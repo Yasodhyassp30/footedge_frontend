@@ -7,6 +7,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { rootReducer } from './reducers/combinedReducers';
+import { BrowserRouter } from "react-router-dom";
 import { configureStore } from '@reduxjs/toolkit';
 
 const root = ReactDOM.createRoot(
@@ -22,7 +23,9 @@ export type AppDispatch = typeof store.dispatch;
 root.render(
   <React.StrictMode>
     <Provider store={store}>
+      <BrowserRouter>
       <App />
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>
 );

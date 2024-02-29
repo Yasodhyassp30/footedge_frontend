@@ -11,7 +11,6 @@ import Report from './pages/report/ReportDashboard';
 function App() {
   return (
     <div className="App">
-      <Router>
         <Navbar/>
         <Sidebar/>
           <Routes>
@@ -20,8 +19,6 @@ function App() {
             <Route path="/scouting" element={<ScoutingDashboard />} />
             <Route path="/reports" element={<Report />} />
           </Routes>
-
-      </Router>
     </div>
   );
 }

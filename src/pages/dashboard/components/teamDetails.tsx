@@ -1,5 +1,4 @@
 import { Divider, Paper, TextField } from "@mui/material";
-import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../reducers/combinedReducers";
 import { tacticalAnalysisSlice } from "../../../reducers/tacticalAnalysis";

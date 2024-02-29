@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { players,teamPlayers,totalTeam } from "./teamActivity";
-import { Button, Grid, IconButton, MenuItem, Paper, Select, TextField } from "@mui/material";
+import { players } from "./teamActivity";
+import {
+  Button,
+  Grid,
+  MenuItem,
+  Paper,
+  Select,
+  TextField,
+} from "@mui/material";
 import DensityPlot from "./kdePlot";
-import SaveIcon from '@mui/icons-material/Save';
-import { useSelector,useDispatch } from "react-redux";
+import SaveIcon from "@mui/icons-material/Save";
+import { useSelector, useDispatch } from "react-redux";
 import { tacticalAnalysisSlice } from "../../../reducers/tacticalAnalysis";
 import { RootState } from "../../../reducers/combinedReducers";
 
 const IndividualTracking = () => {
   const info = useSelector((state: RootState) => state.tacticalAnalysis.info);
-  const players = useSelector((state: RootState) => state.tacticalAnalysis.players);
+  const players = useSelector(
+    (state: RootState) => state.tacticalAnalysis.players
+  );
   const dispatch = useDispatch();
   const [trackers, setTrackers] = useState<number[]>([]);
   const [selectedPlayer, setSelectedPlayer] = useState<number>(0);
@@ -50,7 +59,7 @@ const IndividualTracking = () => {
     >
       <Grid container spacing={0}>
         <Grid
-        item
+          item
           xs={12}
           md={6}
           sx={{
@@ -62,43 +71,59 @@ const IndividualTracking = () => {
           }}
         >
           <Paper sx={{ padding: "10px" }}>
-          <Select
-            defaultValue={selectedPlayer}
-            value={selectedPlayer}
-            size="small"
-            onChange={(e) => setSelectedPlayer(Number(e.target.value))}
-            sx={{
-              width: "100%",
-            }}
-          >
-            <MenuItem value={0} disabled>
-              Select Player
-            </MenuItem>
-            {trackers.map((player, index) => (
-              <MenuItem key={index + 1} value={player} >
-                { (players[player].name=="")? "Player " + player: players[player].name}
+            <Select
+              defaultValue={selectedPlayer}
+              value={selectedPlayer}
+              size="small"
+              onChange={(e) => setSelectedPlayer(Number(e.target.value))}
+              sx={{
+                width: "100%",
+              }}
+            >
+              <MenuItem value={0} disabled>
+                Select Player
               </MenuItem>
-            ))}
-          </Select>
+              {trackers.map((player, index) => (
+                <MenuItem key={index + 1} value={player}>
+                  {players[player].name == ""
+                    ? "Player " + player
+                    : players[player].name}
+                </MenuItem>
+              ))}
+            </Select>
 
-          {selectedPlayer !== 0 && (
-            <div style={
-              {
-                marginTop: "10px",
-              }
-            }>
-              <TextField size="small" label="Change Name" sx={{
-                display: "block",
-                marginBottom: "10px",
-              }} value={tempName} onChange={(e)=>{
-                setTempName(e.target.value);
-              }}/>
-              <Button variant="outlined" onClick={()=>{
-                dispatch(tacticalAnalysisSlice.actions.setNames({tracker_id:selectedPlayer,name:tempName}));
-              }}>
-                <SaveIcon/> Save
-              </Button>
-{/*               <Button variant="outlined" color ="error" sx={{
+            {selectedPlayer !== 0 && (
+              <div
+                style={{
+                  marginTop: "10px",
+                }}
+              >
+                <TextField
+                  size="small"
+                  label="Change Name"
+                  sx={{
+                    display: "block",
+                    marginBottom: "10px",
+                  }}
+                  value={tempName}
+                  onChange={(e) => {
+                    setTempName(e.target.value);
+                  }}
+                />
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    dispatch(
+                      tacticalAnalysisSlice.actions.setNames({
+                        tracker_id: selectedPlayer,
+                        name: tempName,
+                      })
+                    );
+                  }}
+                >
+                  <SaveIcon /> Save
+                </Button>
+                {/*               <Button variant="outlined" color ="error" sx={{
                 marginLeft: "10px",
               
               }} onClick={()=>{
@@ -106,11 +131,8 @@ const IndividualTracking = () => {
               }}>
                 <DeleteIcon/> Delete Tracker
               </Button> */}
-
-            </div>
-          
-          
-          )}
+              </div>
+            )}
           </Paper>
         </Grid>
         <Grid
