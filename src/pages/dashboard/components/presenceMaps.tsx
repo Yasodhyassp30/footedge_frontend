@@ -336,6 +336,7 @@ const PresenceMaps:React.FC<PresenceMapsProps> = ({data}) => {
       })
 
       assingValue(convertedData);
+      
 
         svg.selectAll("text").data(keyAreas)
           .enter()

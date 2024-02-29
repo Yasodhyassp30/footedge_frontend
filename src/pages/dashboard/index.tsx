@@ -10,7 +10,7 @@ import "./dashboard.css";
 import axios, { AxiosResponse, CancelTokenSource } from "axios";
 import io, { Socket } from "socket.io-client";
 import TeamActivity from "./components/teamActivity";
-import { Container, IconButton, Stack, Tooltip } from "@mui/material";
+import { Box, Container, IconButton, Stack, Tooltip } from "@mui/material";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import PeopleIcon from "@mui/icons-material/People";
 import AppsIcon from "@mui/icons-material/Apps";
@@ -18,16 +18,14 @@ import FrameSlider from "./components/frameSlider";
 import PresenceMaps from "./components/presenceMaps";
 import Soccerfield from "./components/soccerfield";
 import DensityPlot from "./components/kdePlot";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../reducers/combinedReducers";
 import { tacticalAnalysisSlice } from "../../reducers/tacticalAnalysis";
-import TimelineIcon from '@mui/icons-material/Timeline';
+import TimelineIcon from "@mui/icons-material/Timeline";
 import IndividualTracking from "./components/individualPlayers";
 import TeamDetails from "./components/teamDetails";
 
-
 const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
-
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -43,11 +41,17 @@ const VisuallyHiddenInput = styled("input")({
 
 function Dashboard() {
   const [socket, setSocket] = useState<Socket | null>(null);
-  const length = useSelector((state:RootState) => state.tacticalAnalysis.info.length);
+  const length = useSelector(
+    (state: RootState) => state.tacticalAnalysis.info.length
+  );
   const dispatch = useDispatch();
-  const loading = useSelector((state:RootState) => state.tacticalAnalysis.loading);
-  const info = useSelector((state:RootState) => state.tacticalAnalysis.info);
-  const slider = useSelector((state:RootState) => state.tacticalAnalysis.slider);
+  const loading = useSelector(
+    (state: RootState) => state.tacticalAnalysis.loading
+  );
+  const info = useSelector((state: RootState) => state.tacticalAnalysis.info);
+  const slider = useSelector(
+    (state: RootState) => state.tacticalAnalysis.slider
+  );
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
   const [videoDetails, setVideoDetails] = useState({
     fileName: "",
@@ -93,12 +97,11 @@ function Dashboard() {
       title: "Individual",
       icon: <PeopleIcon />,
       function: "individual",
-    }
+    },
   ];
 
   useEffect(() => {
     if (socket) {
-      
       socket.on("final_message_from_server", (data) => {
         socket.disconnect();
         setSocket(null);
@@ -108,9 +111,17 @@ function Dashboard() {
           dispatch(tacticalAnalysisSlice.actions.setLoading(false));
         }
         for (let i = 0; i < data.info.length; i++) {
-          data.info[i].coordinates = [data.info[i].coordinates[0] /1680 *100, data.info[i].coordinates[1] /1080 *100]
+          data.info[i].coordinates = [
+            (data.info[i].coordinates[0] / 1680) * 100,
+            (data.info[i].coordinates[1] / 1080) * 100,
+          ];
         }
-        dispatch(tacticalAnalysisSlice.actions.addFrames({frame:`data:image/jpeg;base64, ${data.frame}`,info:data.info}));
+        dispatch(
+          tacticalAnalysisSlice.actions.addFrames({
+            frame: `data:image/jpeg;base64, ${data.frame}`,
+            info: data.info,
+          })
+        );
         if (length === 1) {
           dispatch(tacticalAnalysisSlice.actions.setSlider(1));
         }
@@ -123,7 +134,7 @@ function Dashboard() {
 
   useEffect(() => {
     dispatch(tacticalAnalysisSlice.actions.reset());
-  },[videoSrc])
+  }, [videoSrc]);
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -190,7 +201,6 @@ function Dashboard() {
     }
   };
 
-  
   const handleCancelUpload = () => {
     if (cancelSourceRef.current) {
       cancelSourceRef.current.cancel("Upload canceled by user");
@@ -270,147 +280,179 @@ function Dashboard() {
             </Button>
           )}
         </div>
-        {loading && socket && <div style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: "20px",
-      }}> <CircularProgress/></div>}
-        <div>
-        <TeamActivity/>
-        </div>
-        
-      {length !== 0 && (<div>
-        <Stack
-          direction="row"
-          flexWrap="wrap"
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: "20px",
-            "&>*": {
-              borderRadius: "50%",
-              backgroundColor: "white",
-              border: "2px solid gray",
-              margin: "10px",
-              "&:hover": {
-                color: "#08a4ff",
-                border: "2px solid #0883ff",
-              },
-            },
-          }}
-        >
-          {subPlots.map((plot: any) => {
-            return (
-              <Tooltip title={plot.title} placement="bottom">
-                <IconButton
-                  onClick={() => setViewHandler(plot.function)}
-                  sx={{
-                    color: view[plot.function] ? "#0883ff" : "black",
-                    border: view[plot.function]
-                      ? "2px solid #0883ff"
-                      : "2px solid gray",
-                    margin: "10px",
-                    padding: "10px",
-                  }}
-                >
-                  {plot.icon}
-                </IconButton>
-              </Tooltip>
-            );
-          })}
-        </Stack>
-        <FrameSlider />
-
-        <TeamDetails/>
-        {view.kde_plots && (
-          <div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <div
-                style={{
-                  padding: "10px",
-                  width: "50%",
-                }}
-              >
-                <DensityPlot data={info[slider-1].filter((item)=>item.team===0)} color="red" levels={10} />
-              </div>
-              <div
-                style={{
-                  padding: "10px",
-                  width: "50%",
-                }}
-              >
-                <DensityPlot data={info[slider-1].filter((item)=>item.team===1)} color="blue" levels={10} />
-              </div>
-            </div>
-          </div>
-        )}
-        {view.formations && (
-          <div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <div
-                style={{
-                  padding: "10px",
-                  width: "50%",
-                }}
-              >
-                <Soccerfield data={info[slider-1].filter((item)=>item.team===0)} />
-              </div>
-              <div
-                style={{
-                  padding: "10px",
-                  width: "50%",
-                }}
-              >
-                <Soccerfield data={info[slider-1].filter((item)=>item.team===1)} />
-              </div>
-            </div>
-          </div>
-        )}
-        {view.presence_maps && (
+        {loading && socket && (
           <div
             style={{
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              marginTop: "20px",
             }}
           >
-            <div
-              style={{
-                padding: "10px",
-                width: "50%",
-              }}
-            >
-              <PresenceMaps data={info[slider-1].filter((item)=>item.team===0)} />
-            </div>
-            <div
-              style={{
-                padding: "10px",
-                width: "50%",
-              }}
-            >
-              <PresenceMaps data={info[slider-1].filter((item)=>item.team===1)} />
-            </div>
+            {" "}
+            <CircularProgress />
           </div>
         )}
+        <div>
+          <TeamActivity />
+        </div>
 
-        {view.individual && (<IndividualTracking/>)}
+        {length !== 0 && (
+          <div>
+            <Stack
+              direction="row"
+              flexWrap="wrap"
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: "20px",
+                "&>*": {
+                  borderRadius: "50%",
+                  backgroundColor: "white",
+                  border: "2px solid gray",
+                  margin: "10px",
+                  "&:hover": {
+                    color: "#08a4ff",
+                    border: "2px solid #0883ff",
+                  },
+                },
+              }}
+            >
+              {subPlots.map((plot: any) => {
+                return (
+                  <Tooltip title={plot.title} placement="bottom">
+                    <IconButton
+                      onClick={() => setViewHandler(plot.function)}
+                      sx={{
+                        color: view[plot.function] ? "#0883ff" : "black",
+                        border: view[plot.function]
+                          ? "2px solid #0883ff"
+                          : "2px solid gray",
+                        margin: "10px",
+                        padding: "10px",
+                      }}
+                    >
+                      {plot.icon}
+                    </IconButton>
+                  </Tooltip>
+                );
+              })}
+            </Stack>
+            <FrameSlider />
 
-       
-      </div>)}
+            <TeamDetails />
+            {view.kde_plots && (
+              <div>
+               <Box component="fieldset">
+                <legend>KDE Plots</legend>
+               <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      padding: "10px",
+                      width: "50%",
+                    }}
+                  >
+                    <DensityPlot
+                      data={info[slider - 1].filter((item) => item.team === 0)}
+                      color="red"
+                      levels={10}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      padding: "10px",
+                      width: "50%",
+                    }}
+                  >
+                    <DensityPlot
+                      data={info[slider - 1].filter((item) => item.team === 1)}
+                      color="blue"
+                      levels={10}
+                    />
+                  </div>
+                </div>
+               </Box>
+              </div>
+            )}
+            {view.formations && (
+              <div>
+                <Box component="fieldset">
+                  <legend>Formations</legend>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      padding: "10px",
+                      width: "50%",
+                    }}
+                  >
+                    <Soccerfield
+                      data={info[slider - 1].filter((item) => item.team === 0)}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      padding: "10px",
+                      width: "50%",
+                    }}
+                  >
+                    <Soccerfield
+                      data={info[slider - 1].filter((item) => item.team === 1)}
+                    />
+                  </div>
+                </div>
+                </Box>
+              </div>
+            )}
+            {view.presence_maps && (
+              <Box component="fieldset">
+                <legend>Presence Maps</legend>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <div
+                  style={{
+                    padding: "10px",
+                    width: "50%",
+                  }}
+                >
+                  <PresenceMaps
+                    data={info[slider - 1].filter((item) => item.team === 0)}
+                  />
+                </div>
+                <div
+                  style={{
+                    padding: "10px",
+                    width: "50%",
+                  }}
+                >
+                  <PresenceMaps
+                    data={info[slider - 1].filter((item) => item.team === 1)}
+                  />
+                </div>
+              </div>
+              </Box>
+            )}
+
+            {view.individual && <IndividualTracking />}
+          </div>
+        )}
       </div>
     </Container>
   );
