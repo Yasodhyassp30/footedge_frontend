@@ -52,12 +52,12 @@ export const tacticalAnalysisSlice = createSlice({
         posession.Tcoordinates = [(posession.Tcoordinates[0]/1680)*100,(posession.Tcoordinates[1]/1080)*100];
         if (previousID===-1){
           previousID = posession.tracker_id;
-          state.ball.push(posession as posessions);
+          state.ball.push(posession);
         }else if ( previousID===posession.tracker_id){
           state.ball[state.ball.length-1].Tcoordinates = posession.Tcoordinates;
         
         }else if (previousID!==posession.tracker_id){
-            state.ball.push(posession as posessions);
+            state.ball.push(posession);
             previousID = posession.tracker_id;
           }
       });

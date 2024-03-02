@@ -108,10 +108,10 @@ export default function PassingNetwork() {
             .enter()
             .append("line")
             .attr("class", "connection")
-            .attr("x1", (d) => `${d.Tcoordinates[0]/1680*100}%`)
-            .attr("y1", (d) => `${d.Tcoordinates[1]/1080*100}%`)
-            .attr("x2", (d, i) => `${data[i + 1].Tcoordinates[0]/1680*100}%`) 
-            .attr("y2", (d, i) => `${data[i + 1].Tcoordinates[1]/1080*100}%`) 
+            .attr("x1", (d) => `${d.Tcoordinates[0]}%`)
+            .attr("y1", (d) => `${d.Tcoordinates[1]}%`)
+            .attr("x2", (d, i) => `${data[i + 1].Tcoordinates[0]}%`) 
+            .attr("y2", (d, i) => `${data[i + 1].Tcoordinates[1]}%`) 
             .attr("stroke", "black")
             .attr("stroke-width", 5);
             svg.selectAll("circle.point")
@@ -119,8 +119,8 @@ export default function PassingNetwork() {
                 .enter()
                 .append("circle")
                 .attr("class", "point")
-                .attr("cx", (d) => `${d.Tcoordinates[0]/1680*100}%`)
-                .attr("cy", (d) => `${d.Tcoordinates[1]/1080*100}%`)
+                .attr("cx", (d) => `${d.Tcoordinates[0]}%`)
+                .attr("cy", (d) => `${d.Tcoordinates[1]}%`)
                 .attr("r", 10)
                 .attr("fill", (d) => (`rgb(${d.color[2]}, ${d.color[1]}, ${d.color[0]})`)).raise();
             
