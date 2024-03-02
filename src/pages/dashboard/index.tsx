@@ -24,6 +24,8 @@ import { tacticalAnalysisSlice } from "../../reducers/tacticalAnalysis";
 import TimelineIcon from "@mui/icons-material/Timeline";
 import IndividualTracking from "./components/individualPlayers";
 import TeamDetails from "./components/teamDetails";
+import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
+import PassingNetwork from "./components/passingNetwork";
 
 const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
 
@@ -64,6 +66,7 @@ function Dashboard() {
     formations: false,
     presence_maps: false,
     individual: false,
+    passings: false,
   });
 
   const setViewHandler = (functionName: string) => {
@@ -79,7 +82,6 @@ function Dashboard() {
       icon: <LocalFireDepartmentIcon />,
       function: "kde_plots",
     },
-    ,
     {
       id: 2,
       title: "Formations",
@@ -98,6 +100,12 @@ function Dashboard() {
       icon: <PeopleIcon />,
       function: "individual",
     },
+    {
+      id: 5,
+      title: "Passings",
+      icon: <SportsSoccerIcon />,
+      function: "passings",
+    }
   ];
 
   useEffect(() => {
@@ -107,6 +115,9 @@ function Dashboard() {
         setSocket(null);
       });
       socket.on("message_from_server", (data) => {
+        if(data.ball.length !== 0){
+          dispatch(tacticalAnalysisSlice.actions.setPosessions(data.ball));
+        }
         if (loading) {
           dispatch(tacticalAnalysisSlice.actions.setLoading(false));
         }
@@ -321,7 +332,7 @@ function Dashboard() {
             >
               {subPlots.map((plot: any) => {
                 return (
-                  <Tooltip title={plot.title} placement="bottom">
+                  <Tooltip title={plot.title} key ={plot.id} placement="bottom">
                     <IconButton
                       onClick={() => setViewHandler(plot.function)}
                       sx={{
@@ -449,7 +460,35 @@ function Dashboard() {
               </div>
               </Box>
             )}
-
+            {view.passings && (
+              <Box component="fieldset">
+              <legend>Passings and Posessions</legend>
+             <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <div
+                  style={{
+                    padding: "10px",
+                    width: "50%",
+                  }}
+                >
+                  <PassingNetwork/>
+                </div>
+                <div
+                  style={{
+                    padding: "10px",
+                    width: "50%",
+                  }}
+                >
+                 <PassingNetwork/>
+                </div>
+              </div>
+             </Box>
+            )}
             {view.individual && <IndividualTracking />}
           </div>
         )}

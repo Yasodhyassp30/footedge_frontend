@@ -2,7 +2,13 @@ import { slider } from "@material-tailwind/react";
 import { createSlice } from "@reduxjs/toolkit";
 import { players, teamPlayers } from "../pages/dashboard/components/teamActivity";
 
+interface posessions{
+  tracker_id:number,
+  color:number[],
+  Tcoordinates:number[]
 
+
+}
 const initialState = {
 
     info:[] as players[][],
@@ -12,7 +18,8 @@ const initialState = {
     markers:[] as number[],
     players:{} as {[key:number]:teamPlayers},
     teams:["",""] as string[],
-    colors:[[],[]] as number[][]
+    colors:[[],[]] as number[][],
+    ball:[] as posessions[]
 };
 
 export const tacticalAnalysisSlice = createSlice({
@@ -39,6 +46,22 @@ export const tacticalAnalysisSlice = createSlice({
           state.slider = Number(nextMarker[0]);
         }
       },
+    setPosessions: (state, action) => {
+      let previousID = state.ball.length>0?state.ball[state.ball.length-1].tracker_id:-1;
+      action.payload.forEach((posession:posessions) => {
+        posession.Tcoordinates = [(posession.Tcoordinates[0]/1680)*100,(posession.Tcoordinates[1]/1080)*100];
+        if (previousID===-1){
+          previousID = posession.tracker_id;
+          state.ball.push(posession as posessions);
+        }else if ( previousID===posession.tracker_id){
+          state.ball[state.ball.length-1].Tcoordinates = posession.Tcoordinates;
+        
+        }else if (previousID!==posession.tracker_id){
+            state.ball.push(posession as posessions);
+            previousID = posession.tracker_id;
+          }
+      });
+    },
       addFrames: (state, action) => {
         state.frame.push(action.payload.frame);
         state.info.push(action.payload.info);

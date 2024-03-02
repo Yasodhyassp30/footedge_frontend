@@ -23,19 +23,23 @@ export default function FrameSlider() {
     const controllerButtons =[
       {
         icon: <FastRewindIcon />,
-        handler: () => dispatch(tacticalAnalysisSlice.actions.nextMarker())
+        handler: () => dispatch(tacticalAnalysisSlice.actions.nextMarker()),
+        id:1
       },
       {
         icon: play ? <PauseCircleIcon /> : <PlayCircleIcon />,
-        handler: playHandler
+        handler: playHandler,
+        id:2
       },
       {
         icon: <NavigationIcon />,
-        handler: () => dispatch(tacticalAnalysisSlice.actions.setMarkers())
+        handler: () => dispatch(tacticalAnalysisSlice.actions.setMarkers()),
+        id:3
       },
       {
         icon: <FastForwardIcon />,
-        handler: () => dispatch(tacticalAnalysisSlice.actions.previousMarker())
+        handler: () => dispatch(tacticalAnalysisSlice.actions.previousMarker()),
+        id:4
       }
     ]
     useEffect(() => {
@@ -98,7 +102,7 @@ export default function FrameSlider() {
             >
               {controllerButtons.map((button) => {
                 return (
-                  <IconButton
+                  <IconButton key={button.id}
                     onClick={button.handler}>
                     {button.icon}
                   </IconButton>
