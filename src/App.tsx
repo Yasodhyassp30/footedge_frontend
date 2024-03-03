@@ -12,7 +12,6 @@ function App() {
   return (
     <div className="App">
         <Navbar/>
-        <Sidebar/>
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/annotate" element={<AnnotationComponent />} />
