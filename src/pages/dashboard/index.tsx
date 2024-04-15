@@ -43,6 +43,7 @@ const VisuallyHiddenInput = styled("input")({
 
 function Dashboard() {
   const [socket, setSocket] = useState<Socket | null>(null);
+  const [frames,setFrames] = useState<string[]>([]);
   const length = useSelector(
     (state: RootState) => state.tacticalAnalysis.info.length
   );
@@ -127,9 +128,9 @@ function Dashboard() {
             (data.info[i].coordinates[1] / 1080) * 100,
           ];
         }
+        setFrames((prevFrames) => [...prevFrames, `data:image/jpeg;base64, ${data.frame}`]);
         dispatch(
           tacticalAnalysisSlice.actions.addFrames({
-            frame: `data:image/jpeg;base64, ${data.frame}`,
             info: data.info,
           })
         );
@@ -305,7 +306,7 @@ function Dashboard() {
           </div>
         )}
         <div>
-          <TeamActivity />
+          <TeamActivity frame={frames} />
         </div>
 
         {length !== 0 && (
@@ -473,19 +474,12 @@ function Dashboard() {
                 <div
                   style={{
                     padding: "10px",
-                    width: "50%",
+                    width: "100%",
                   }}
                 >
                   <PassingNetwork/>
                 </div>
-                <div
-                  style={{
-                    padding: "10px",
-                    width: "50%",
-                  }}
-                >
-                 <PassingNetwork/>
-                </div>
+               
               </div>
              </Box>
             )}

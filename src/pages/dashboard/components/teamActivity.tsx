@@ -28,9 +28,8 @@ export interface teamPlayers {
 export interface totalTeam {
   [key: number]: TeamStates;
 }
-const TeamActivity= () => {
+const TeamActivity= ({frame}: {frame: string[]}) => {
 const length = useSelector((state: RootState) => state.tacticalAnalysis.info.length);
-const frame = useSelector((state: RootState) => state.tacticalAnalysis.frame);
 const info = useSelector((state: RootState) => state.tacticalAnalysis.info);
 const slider = useSelector((state: RootState) => state.tacticalAnalysis.slider);
   return (

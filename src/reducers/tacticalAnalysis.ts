@@ -12,7 +12,6 @@ interface posessions{
 const initialState = {
 
     info:[] as players[][],
-    frame:[] as string[],
     loading: false,
     slider: 0,
     markers:[] as number[],
@@ -63,7 +62,6 @@ export const tacticalAnalysisSlice = createSlice({
       });
     },
       addFrames: (state, action) => {
-        state.frame.push(action.payload.frame);
         state.info.push(action.payload.info);
         state.info.forEach((frame) => {
           frame.forEach((player) => {
@@ -94,7 +92,6 @@ export const tacticalAnalysisSlice = createSlice({
       },
       reset: (state) => {
         state.info = [];
-        state.frame = [];
         state.loading = false;
         state.slider = 1;
         state.markers = [];
