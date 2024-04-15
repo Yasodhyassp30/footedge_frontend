@@ -2,30 +2,31 @@ import { Button, Container, FormControl, IconButton, InputAdornment, Link, TextF
 import React, { useRef } from 'react'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Lock } from '@mui/icons-material';
+import { People } from '@mui/icons-material';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { authSlice } from '../../reducers/authReducer';
 
 
-
-
-export default function Login() {
+export default function Register() {
     const [showPassword, setShowPassword] = React.useState(false);
     const  email = useRef<HTMLInputElement>(null);
     const  password = useRef<HTMLInputElement>(null);
+    const confirmPassword = useRef<HTMLInputElement>(null);
     const [error, setError] = React.useState("");
-    const dispatch = useDispatch(); 
+    const dispatch = useDispatch();
 
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
     };
 
-    const handleLogin = async () => {
-        if(email.current?.value && password.current?.value){
+    const handleRegister = async () => {
+        if(password.current?.value !== confirmPassword.current?.value){
+            setError("Password does not match")
+        }else if(email.current?.value && password.current?.value && confirmPassword.current?.value){
             setError("")
            try{
-            const response = await axios.post("http://localhost:5000/api/login", {
+            const response = await axios.post("http://localhost:5000/api/register", {
                 email: email.current.value,
                 password: password.current.value
             })
@@ -39,6 +40,7 @@ export default function Login() {
         }else{
             setError("All fields are required")
         }
+            
     }
 
   return (
@@ -52,7 +54,7 @@ export default function Login() {
     }}>
         <FormControl>
             <Typography variant="h5">
-               <Lock/> Login
+               <People/> Register
             </Typography>
             <Typography variant="body2" sx={{
                 color: "red"
@@ -94,6 +96,32 @@ export default function Login() {
                 }}
             />
 
+<TextField
+                id="confirm password"
+                label="Confirm Password"
+                type={showPassword ? 'text' : 'password'}
+                variant="outlined"
+                margin="normal"
+                inputRef={confirmPassword}
+                required
+                fullWidth
+                InputProps={{
+                    endAdornment: (
+                        <InputAdornment position="end">
+                            <IconButton
+                            onClick={handleClickShowPassword}
+                                aria-label="toggle password visibility"
+                                edge="end"
+                            >
+                                {
+                                    showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />
+                                }
+                            </IconButton>
+                        </InputAdornment>
+                    ),
+                }}
+            />
+
             <Button
                 variant="contained"
                 color="primary"
@@ -101,14 +129,14 @@ export default function Login() {
                 sx={{
                     marginTop: "1rem",
                 }}
-                onClick={handleLogin}
+                onClick={handleRegister}
             >
-                Login
+                Register 
             </Button>
             <Link href="/register" sx={{
                 textDecoration: "none",
                 marginTop: "1rem",
-            }}>Don't have an account? Register</Link>
+            }}>Already User? Login</Link>
             
         </FormControl>
         
