@@ -1,0 +1,70 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 100px;
+    width: 800px;
+
+    .arrow-button {
+      background-color: transparent;
+      border: none;
+      width:50px;
+      height: 50px;
+      font-size: 30px;
+      font-style: bold;
+      cursor: pointer;
+      line-height: 1
+    }
+    .content-button {
+      background-color: #282c34;
+      color: white;
+      width: 300px;
+      height: 50px;
+      border-radius: 15px;
+    }
+  }
+  .page-content {
+    margin-top: 30px;
+
+    .skill-configuration-container {
+      display: flex;
+      align-items: flex-start;
+
+      .skill-form {
+        flex: 1;
+        margin-right: 20px;
+
+        .custom-button {
+          background-color: #1890ff;
+          border-color: #1890ff;
+          margin-top: 10px;
+
+          &:hover {
+            background-color: #40a9ff;
+            border-color: #40a9ff;
+        }
+      }
+      
+
+      }
+      
+    }
+
+    .skill-list {
+      width: 300px; /* Adjust width as needed */
+    }
+    
+    .skill-list ul {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .skill-list ul li {
+      margin-bottom: 5px; /* Add space between skill items */
+    }
+  }
+}
