@@ -1,6 +1,6 @@
+import { combineReducers } from "@reduxjs/toolkit";
 import { authSlice } from "./authReducer";
 import { tacticalAnalysisSlice } from "./tacticalAnalysis";
-import { combineReducers } from "@reduxjs/toolkit";
 
 
 export const rootReducer = combineReducers({

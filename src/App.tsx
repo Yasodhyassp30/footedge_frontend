@@ -10,7 +10,7 @@ import Dashboard from './pages/dashboard';
 import Navbar from './pages/navbar';
 import Report from './pages/report/ReportDashboard';
 import ScoutingDashboard from "./pages/scouting/ScoutingDashBoard";
-import { authSlice } from './reducers/authReducer';
+import { authSlice } from './store/reducers/authReducer';
 
 function App() {
   const dispatch = useDispatch();

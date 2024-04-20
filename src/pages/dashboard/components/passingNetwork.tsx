@@ -1,8 +1,8 @@
-import * as d3 from "d3";
-import React, { useEffect, useRef } from 'react'
-import { useSelector } from "react-redux";
-import { RootState } from "../../../reducers/combinedReducers";
 import { Slider } from "@mui/material";
+import * as d3 from "d3";
+import React, { useEffect, useRef } from 'react';
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/reducers";
 
 export default function PassingNetwork() {
     const svgRef = useRef<SVGSVGElement | null>(null);

@@ -1,6 +1,6 @@
 import { slider } from "@material-tailwind/react";
 import { createSlice } from "@reduxjs/toolkit";
-import { players, teamPlayers } from "../pages/dashboard/components/teamActivity";
+import { players, teamPlayers } from "../../pages/dashboard/components/teamActivity";
 
 interface posessions{
   tracker_id:number,

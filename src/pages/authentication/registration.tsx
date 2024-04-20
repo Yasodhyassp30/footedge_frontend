@@ -1,11 +1,11 @@
-import { Button, Container, FormControl, IconButton, InputAdornment, Link, TextField, Typography } from '@mui/material'
-import React, { useRef } from 'react'
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import { People } from '@mui/icons-material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { Button, Container, FormControl, IconButton, InputAdornment, Link, TextField, Typography } from '@mui/material';
 import axios from 'axios';
+import React, { useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { authSlice } from '../../reducers/authReducer';
+import { authSlice } from '../../store/reducers/authReducer';
 
 
 export default function Register() {

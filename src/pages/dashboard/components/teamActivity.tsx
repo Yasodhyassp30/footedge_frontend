@@ -1,8 +1,7 @@
 import { Container, Grid } from "@mui/material";
-import { Socket } from "socket.io-client";
-import Soccerfield from "./soccerfield";
-import { RootState } from "../../../reducers/combinedReducers";
 import { useSelector } from "react-redux";
+import { RootState } from "../../../store/reducers";
+import Soccerfield from "./soccerfield";
 
 
 export interface players {

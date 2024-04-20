@@ -1,7 +1,7 @@
 import { Divider, Paper, TextField } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../../reducers/combinedReducers";
-import { tacticalAnalysisSlice } from "../../../reducers/tacticalAnalysis";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../store/reducers";
+import { tacticalAnalysisSlice } from "../../../store/reducers/tacticalAnalysis";
 
 export default function TeamDetails() {
   const dispatch = useDispatch();

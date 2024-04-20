@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { players } from "./teamActivity";
-import {
-  Button,
-  Grid,
-  MenuItem,
-  Paper,
-  Select,
-  TextField,
-} from "@mui/material";
-import DensityPlot from "./kdePlot";
 import SaveIcon from "@mui/icons-material/Save";
-import { useSelector, useDispatch } from "react-redux";
-import { tacticalAnalysisSlice } from "../../../reducers/tacticalAnalysis";
-import { RootState } from "../../../reducers/combinedReducers";
+import {
+    Button,
+    Grid,
+    MenuItem,
+    Paper,
+    Select,
+    TextField,
+} from "@mui/material";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../store/reducers";
+import { tacticalAnalysisSlice } from "../../../store/reducers/tacticalAnalysis";
+import DensityPlot from "./kdePlot";
+import { players } from "./teamActivity";
 
 const IndividualTracking = () => {
   const info = useSelector((state: RootState) => state.tacticalAnalysis.info);

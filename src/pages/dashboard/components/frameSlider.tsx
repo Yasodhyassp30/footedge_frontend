@@ -1,14 +1,14 @@
-import { Grid, IconButton, Slider, Stack } from '@mui/material';
-import React, { useEffect, useState } from 'react'
-import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import PauseCircleIcon from "@mui/icons-material/PauseCircle";
-import NavigationIcon from "@mui/icons-material/Navigation";
 import FastForwardIcon from "@mui/icons-material/FastForward";
 import FastRewindIcon from "@mui/icons-material/FastRewind";
-import { useSelector, useDispatch } from 'react-redux';
+import NavigationIcon from "@mui/icons-material/Navigation";
+import PauseCircleIcon from "@mui/icons-material/PauseCircle";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import { Grid, IconButton, Slider, Stack } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../..';
-import { RootState } from '../../../reducers/combinedReducers';
-import { tacticalAnalysisSlice } from '../../../reducers/tacticalAnalysis';
+import { RootState } from '../../../store/reducers';
+import { tacticalAnalysisSlice } from '../../../store/reducers/tacticalAnalysis';
 
 export default function FrameSlider() {
     const dispatch = useDispatch<AppDispatch>();
