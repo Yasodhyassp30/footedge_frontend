@@ -1,18 +1,18 @@
 
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Provider, useDispatch, useSelector } from 'react-redux';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
-import Dashboard from './pages/dashboard';
-import Navbar from './pages/navbar';
 import AnnotationComponent from './pages/annotation';
-import ScoutingDashboard from "./pages/scouting/ScoutingDashBoard";
-import Sidebar from './pages/sidebar/sidebar';
-import Report from './pages/report/ReportDashboard';
 import Login from './pages/authentication/login';
 import Register from './pages/authentication/registration';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import Dashboard from './pages/dashboard';
+import Navbar from './pages/navbar';
+import Report from './pages/report/ReportDashboard';
+import ScoutingDashboard from './pages/scouting/ScoutingDashBoard';
 import { authSlice } from './reducers/authReducer';
 import { RootState } from './reducers/combinedReducers';
+import store from './store/store';
 
 function App() {
   const dispatch = useDispatch();
@@ -22,6 +22,7 @@ function App() {
   },[])
   
   return (
+    <Provider store={store}>
     <div className="App">
         <Navbar/>
           <Routes>
@@ -33,6 +34,7 @@ function App() {
             <Route path="/register" element={user.token?<Navigate to="/"/>:<Register />} />
           </Routes>
     </div>
+    </Provider>
   );
 }
 

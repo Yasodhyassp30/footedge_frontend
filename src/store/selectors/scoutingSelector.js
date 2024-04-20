@@ -1,0 +1,1 @@
+export const getScoutingData = (state) => state.scouting;
