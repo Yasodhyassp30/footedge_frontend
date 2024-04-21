@@ -1,0 +1,85 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 100px;
+    width: 800px;
+
+    .arrow-button {
+      background-color: transparent;
+      border: none;
+      width: 50px;
+      height: 50px;
+      font-size: 30px;
+      font-style: bold;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .content-button {
+      background-color: #282c34;
+      color: white;
+      width: 300px;
+      height: 50px;
+      border-radius: 15px;
+    }
+  }
+  .page-content {
+    margin-top: 100px;
+
+    .skill-configuration-container {
+      display: flex;
+      align-items: flex-start;
+
+      .skill-form {
+        flex: 1;
+        margin-right: 200px;
+        width: 500px;
+        
+        .form-title {
+          font-size: 24px;
+          font-weight: bold;
+          margin-bottom: 16px;
+        }
+
+        .custom-button {
+          background-color: #1890ff;
+          border-color: #1890ff;
+          margin: 10px 10px 10px 10px;
+
+          &:hover {
+            background-color: #40a9ff;
+            border-color: #40a9ff;
+          }
+        }
+      }
+      .skill-list {
+        width: 500px;
+
+        .skill-search {
+          margin-bottom: 16px;
+        }
+
+        .scrollable-list {
+          max-height: 50vh;
+          overflow-y: auto;
+
+          .skill-card {
+            .add-more-button {
+              font-size: 13px;
+              color: tomato;
+                font-style: underline;
+
+              &:hover {
+                color: red;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
