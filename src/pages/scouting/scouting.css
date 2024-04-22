@@ -38,7 +38,7 @@
         flex: 1;
         margin-right: 200px;
         width: 500px;
-        
+
         .form-title {
           font-size: 24px;
           font-weight: bold;
@@ -71,12 +71,123 @@
             .add-more-button {
               font-size: 13px;
               color: tomato;
-                font-style: underline;
+              font-style: underline;
 
               &:hover {
                 color: red;
               }
             }
+          }
+        }
+      }
+
+      .file-list {
+        .upload-button {
+          color: black;
+        }
+      }
+    }
+
+    .scout-configuration-container {
+      display: flex;
+      align-items: flex-start;
+
+      .scout-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 16px;
+      }
+
+      .scout-sub-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 16px;
+      }
+
+      .scout-config-back{
+        color: red;
+      }
+
+      .skill-list {
+        width: 500px;
+
+        .skill-search {
+          margin-bottom: 16px;
+        }
+
+        .scrollable-list {
+          max-height: 50vh;
+          overflow-y: auto;
+
+          .skill-card {
+            .add-more-button {
+              font-size: 13px;
+              color: tomato;
+              font-style: underline;
+
+              &:hover {
+                color: red;
+              }
+            }
+          }
+        }
+      }
+
+      .file-list {
+        .upload-button {
+          color: black;
+        }
+      }
+    }
+
+    .scout-result-container {
+      .progress-container {
+        margin-bottom: 20px;
+        width: 1400px;
+      }
+
+      .parameter-cards-container {
+        display: flex;
+        flex-wrap: wrap;
+        width: 1200px;
+
+        .container-body {
+          flex: 1; /* Take remaining space */
+          .parameter-card {
+            width: 200px;
+            margin: 0 10px 20px;
+            border: 1px solid #e8e8e8;
+            border-radius: 5px;
+          }
+
+          .parameter-card:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          }
+
+          .parameter-card .ant-card-body {
+            padding: 16px;
+          }
+
+          .parameter-card .ant-card-head {
+            background-color: #fafafa;
+            border-bottom: 1px solid #e8e8e8;
+          }
+
+          .parameter-card .ant-card-head-title {
+            font-size: 16px;
+          }
+
+          .parameter-detail {
+            margin-bottom: 8px;
+          }
+        }
+
+        .container-footer {
+          width: 100%;
+          margin-top: 20px;
+          text-align: center;
+          .scout-config-back {
+            color: #1890ff;
           }
         }
       }

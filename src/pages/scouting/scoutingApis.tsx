@@ -70,13 +70,14 @@ export const deleteData = async (skillName: string, url: string) => {
     }
 };
 
-export const uploadFiles = async (formData: FormData, skill: any, url: string) => {
+export const uploadFiles = async (formData: FormData, skill: any, url: string, type: string) => {
     try {
         const headers = {
             'Authorization': 'Bearer your_access_token_here'
         };
 
         formData.append('skill', JSON.stringify(skill));
+        formData.append('type', JSON.stringify(type));
 
         await api(url, {
             method: 'POST',

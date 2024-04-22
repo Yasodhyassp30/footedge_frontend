@@ -135,7 +135,7 @@ const SkillConfiguration: React.FC = () => {
     try {
       setLoading(true);
       const url = `${SCOUTING_SERVICE_URL}/files`;
-      await uploadFiles(formData, uploadModalRequest, url);
+      await uploadFiles(formData, uploadModalRequest, url, 'TRAINING');
     } catch (error) {
       console.error("File upload failed:", error);
     } finally {
@@ -237,6 +237,7 @@ const SkillConfiguration: React.FC = () => {
           visible={!!uploadModalRequest}
           onCancel={onUploadModelClose}
           onUpload={onUpload}
+          skill={uploadModalRequest}
         />
       </div>
     </Spin>

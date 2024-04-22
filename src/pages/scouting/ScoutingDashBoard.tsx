@@ -1,6 +1,8 @@
 import { Button } from "antd";
 import { useState } from "react";
 import { SCOUTING_PAGE_NAMES } from "../../constants/scoutingConstants";
+import ScoutConfiguration from "./scoutPage/ScoutConfiguration";
+import ScoutResult from "./scoutResultPage/ScoutResult";
 import "./scouting.css";
 import SkillConfiguration from "./skillPage/SkillConfiguration";
 
@@ -23,9 +25,9 @@ const ScoutingDashboard = () => {
       case 0:
         return <SkillConfiguration />;
       case 1:
-        return <SkillConfiguration />;
+        return <ScoutConfiguration />;
       case 2:
-        return <></>;
+        return <ScoutResult />;
       default:
         return null;
     }

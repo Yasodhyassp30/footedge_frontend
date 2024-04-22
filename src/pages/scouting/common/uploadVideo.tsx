@@ -3,11 +3,13 @@ import { Button, Modal, Upload } from "antd";
 import { RcFile, UploadChangeParam, UploadFile } from "antd/lib/upload";
 import React, { useState } from "react";
 import { FileUploadModalProps } from "../../../types/scoutingTypes";
+import "../scouting.css";
 
 const FileUploadModal: React.FC<FileUploadModalProps> = ({
   visible,
   onCancel,
   onUpload,
+  skill,
 }) => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
@@ -17,52 +19,60 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({
 
   const handleUpload = async () => {
     const formData = new FormData();
-    fileList.forEach((file: UploadFile) => {
-      if (file.originFileObj) {
-        formData.append("file", file.originFileObj);
+    if (fileList[0]?.originFileObj && fileList[1]?.originFileObj) {
+      formData.append("file1", fileList[0].originFileObj);
+      formData.append("file2", fileList[1].originFileObj);
+      if (onUpload) {
+        onUpload(formData);
       }
-    });
-
-    if (onUpload) {
-      onUpload(formData);
+    } else {
+      alert("Please select two files to upload");
     }
+
     setFileList([]);
   };
 
   const onUploadRequestCancel = () => {
     setFileList([]);
     onCancel();
-  }
+  };
 
   return (
-    <Modal
-      title="Upload File"
-      visible={visible}
-      onCancel={onCancel}
-      footer={[
-        <Button key="cancel" onClick={onUploadRequestCancel}>
-          Cancel
-        </Button>,
-        <Button
-          key="upload"
-          type="primary"
-          onClick={handleUpload}
-          disabled={fileList.length === 0}
-        >
-          Upload
-        </Button>,
-      ]}
-    >
-      <Upload
-        accept="video/mp4" // Restricts uploads only to .mp4 files
-        disabled={fileList.length > 0}
-        fileList={fileList}
-        onChange={handleFileChange}
-        beforeUpload={(file: RcFile) => false} // Prevent auto-uploading
+    <div className="file-list">
+      <Modal
+        title={`Upload 2 Skills file for ${skill?.name ?? "processing"}`}
+        open={visible}
+        onCancel={onUploadRequestCancel}
+        footer={[
+          <Button key="cancel" onClick={onUploadRequestCancel}>
+            Cancel
+          </Button>,
+          <Button
+            className="upload-button"
+            key="upload"
+            type="primary"
+            onClick={handleUpload}
+            style={{ backgroundColor: "#1890ff" }}
+            disabled={fileList.length !== 2}
+          >
+            Upload
+          </Button>,
+        ]}
       >
-        <Button icon={<UploadOutlined />}>Select File</Button>
-      </Upload>
-    </Modal>
+        <h4>
+          <strong>Note: </strong>2 synchronized files are mandatory.
+        </h4>
+        <Upload
+          accept="video/mp4" // Restricts uploads only to .mp4 files
+          disabled={fileList.length > 2}
+          fileList={fileList}
+          onChange={handleFileChange}
+          beforeUpload={(file: RcFile) => false} // Prevent auto-uploading
+        >
+          <Button icon={<UploadOutlined />}>Select File</Button>
+        </Upload>
+      </Modal>
+    </div>
   );
 };
 
