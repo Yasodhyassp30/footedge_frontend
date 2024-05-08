@@ -70,7 +70,6 @@ const IndividualTracking = () => {
             alignItems: "start",
           }}
         >
-          <Paper sx={{ padding: "10px" }}>
             <Select
               defaultValue={selectedPlayer}
               value={selectedPlayer}
@@ -96,6 +95,7 @@ const IndividualTracking = () => {
               <div
                 style={{
                   marginTop: "10px",
+                  marginBottom: "10px",
                 }}
               >
                 <TextField
@@ -131,9 +131,10 @@ const IndividualTracking = () => {
               }}>
                 <DeleteIcon/> Delete Tracker
               </Button> */}
+              
               </div>
             )}
-          </Paper>
+            <DensityPlot data={playerData} color={"red"} levels={5} />
         </Grid>
         <Grid
           item
@@ -145,7 +146,7 @@ const IndividualTracking = () => {
             padding: "10px",
           }}
         >
-          <DensityPlot data={playerData} color={"red"} levels={5} />
+          
         </Grid>
       </Grid>
     </div>
