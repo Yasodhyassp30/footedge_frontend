@@ -3,6 +3,7 @@ import { players } from "./teamActivity";
 import {
   Button,
   Grid,
+  Grow,
   MenuItem,
   Paper,
   Select,
@@ -13,6 +14,8 @@ import SaveIcon from "@mui/icons-material/Save";
 import { useSelector, useDispatch } from "react-redux";
 import { tacticalAnalysisSlice } from "../../../reducers/tacticalAnalysis";
 import { RootState } from "../../../reducers/combinedReducers";
+import axios from "axios";
+import DensityPlotTless from "./kdeTransformless";
 
 const IndividualTracking = () => {
   const info = useSelector((state: RootState) => state.tacticalAnalysis.info);
@@ -24,6 +27,39 @@ const IndividualTracking = () => {
   const [selectedPlayer, setSelectedPlayer] = useState<number>(0);
   const [playerData, setPlayerData] = useState<players[]>([]);
   const [tempName, setTempName] = useState<string>("");
+  const user = useSelector((state: RootState) => state.auth);
+  const [analysis, setAnalysis] = useState<any>([]);
+  const [selectAnalysis, setSelectAnalysis] = useState<number>(-1);
+  const [anaysisPlayers, setAnalysisPlayers] = useState<any>([]);
+  const [selectAnalysisPlayer, setSelectAnalysisPlayer] = useState<number>(-1);
+  useEffect(() => { 
+    const fetchData = async () => {
+      try{
+        const response = await axios.get(`http://localhost:5000/api/analysis/users/${user.id}`,{})
+        setAnalysis(response.data);
+      }catch(e){
+        console.log(e);
+      }
+    }
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    setSelectAnalysisPlayer(-1);
+    const fetchData = async () => {
+      try{
+        const response = await axios.get(`http://localhost:5000/api/analysis/players/${analysis[selectAnalysis]._id.$oid}`,{})
+        setAnalysisPlayers(response.data.analysis.players);
+        
+      }catch(e){
+        console.log(e);
+      }
+    }
+    if(selectAnalysis !== -1){
+      fetchData();
+    }
+  }, [selectAnalysis]);
+
   useEffect(() => {
     let temp: number[] = [];
     info.forEach((frame) => {
@@ -95,7 +131,8 @@ const IndividualTracking = () => {
               <div
                 style={{
                   marginTop: "10px",
-                  marginBottom: "10px",
+                  display: "flex",
+                  flexDirection: "row",
                 }}
               >
                 <TextField
@@ -103,7 +140,7 @@ const IndividualTracking = () => {
                   label="Change Name"
                   sx={{
                     display: "block",
-                    marginBottom: "10px",
+                    marginright: "10px",
                   }}
                   value={tempName}
                   onChange={(e) => {
@@ -112,6 +149,10 @@ const IndividualTracking = () => {
                 />
                 <Button
                   variant="outlined"
+                  sx={{
+                    marginLeft: "10px",
+                  
+                  }}
                   onClick={() => {
                     dispatch(
                       tacticalAnalysisSlice.actions.setNames({
@@ -146,7 +187,56 @@ const IndividualTracking = () => {
             padding: "10px",
           }}
         >
-          
+         {selectedPlayer !== 0 ? <Grow in={true}>
+          <div>
+         <Select
+              defaultValue={selectAnalysis}
+              value={selectAnalysis}
+              size="small"
+              onChange={(e) => setSelectAnalysis(Number(e.target.value))}
+              sx={{
+                width: "100%",
+              }}
+            >
+              <MenuItem value={-1} disabled>
+                Select Previous
+              </MenuItem>
+              {analysis.map((single: any, index:number) => {
+                return (
+                  <MenuItem key={index + 1} value={index}>
+                    {single.name}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+            {selectAnalysis !== -1 && (
+               <Select
+               defaultValue={selectAnalysisPlayer}
+               value={selectAnalysisPlayer}
+               size="small"
+               onChange={(e) => setSelectAnalysisPlayer(Number(e.target.value))}
+               sx={{
+                 width: "100%",
+                 marginTop: "10px",
+                 marginBottom: "90px",
+               }}
+             >
+               <MenuItem value={-1} disabled>
+                 Select Player
+               </MenuItem>
+               {anaysisPlayers.map((single: any, index:number) => {
+                 return (
+                   <MenuItem key={index + 1} value={index}>
+                     {(single.name === "") ? "Player " + single.id : single.name}
+                   </MenuItem>
+                 );
+               })}
+             </Select>
+            )}
+
+             {selectAnalysisPlayer !== -1 && <DensityPlotTless posistions={anaysisPlayers[selectAnalysisPlayer]} color={"blue"} levels={5} />}
+            </div>
+          </Grow> : <></>}
         </Grid>
       </Grid>
     </div>
