@@ -10,7 +10,7 @@ import "./dashboard.css";
 import axios, { AxiosResponse, CancelTokenSource } from "axios";
 import io, { Socket } from "socket.io-client";
 import TeamActivity from "./components/teamActivity";
-import { Box, Container, IconButton, Stack, Tooltip, Typography } from "@mui/material";
+import { Box, Container, Grow, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import PeopleIcon from "@mui/icons-material/People";
 import AppsIcon from "@mui/icons-material/Apps";
@@ -361,6 +361,7 @@ function Dashboard() {
             <TeamDetails />
             {view.kde_plots && (
               <div>
+               <Grow in={view.kde_plots}>
                <Box component="fieldset">
                 <legend>KDE Plots</legend>
                <div
@@ -396,10 +397,12 @@ function Dashboard() {
                   </div>
                 </div>
                </Box>
+                </Grow>
               </div>
             )}
             {view.formations && (
               <div>
+                <Grow in={view.formations}>
                 <Box component="fieldset">
                   <legend>Formations</legend>
                 <div
@@ -431,10 +434,12 @@ function Dashboard() {
                   </div>
                 </div>
                 </Box>
+                </Grow>
               </div>
             )}
             {view.presence_maps && (
-              <Box component="fieldset">
+              <Grow in={view.presence_maps}>
+                             <Box component="fieldset">
                 <legend>Presence Maps</legend>
               <div
                 style={{
@@ -465,9 +470,11 @@ function Dashboard() {
                 </div>
               </div>
               </Box>
+              </Grow>
             )}
             {view.passings && (
-              <Box component="fieldset">
+             <Grow in={view.passings}>
+               <Box component="fieldset">
               <legend>Passings and Posessions</legend>
              <div
                 style={{
@@ -487,8 +494,11 @@ function Dashboard() {
                
               </div>
              </Box>
+              </Grow>
             )}
-            {view.individual && <IndividualTracking />}
+            {view.individual && 
+            <IndividualTracking />
+            }
           </div>
         )}
       </div>

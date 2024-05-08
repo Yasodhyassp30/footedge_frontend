@@ -16,6 +16,7 @@ export default function SaveAnalysisPopup() {
     const [error,setError]  = React.useState<boolean>(false);
     const [namedcount,setNamedList] = React.useState<number>(0);
     const [open,setOpen] = React.useState(false);
+    const user = useSelector((state: RootState) => state.auth);
 
     const handleClose = () => {
         setOpen(false);
@@ -53,7 +54,8 @@ export default function SaveAnalysisPopup() {
                 },
                 passings: ball,
                 date: new Date(),
-                name: name.current?.value
+                name: name.current?.value,
+                id: user.id
         })
         setOpen(false);
         setSnackbar(true);
