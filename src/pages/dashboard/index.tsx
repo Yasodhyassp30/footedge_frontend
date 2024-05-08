@@ -10,7 +10,7 @@ import "./dashboard.css";
 import axios, { AxiosResponse, CancelTokenSource } from "axios";
 import io, { Socket } from "socket.io-client";
 import TeamActivity from "./components/teamActivity";
-import { Box, Container, IconButton, Stack, Tooltip } from "@mui/material";
+import { Box, Container, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import PeopleIcon from "@mui/icons-material/People";
 import AppsIcon from "@mui/icons-material/Apps";
@@ -232,9 +232,14 @@ function Dashboard() {
                 height="auto"
               />
               <div className="video_details">
-                <h2>Details</h2>
-                <h4>Filename: {videoDetails.fileName}</h4>
-                <h4>File size: {videoDetails.fileSize}MB</h4>
+              
+              <div>
+              <Typography variant="subtitle1">Filename: {videoDetails.fileName}</Typography>
+              </div>
+              <div>
+              <Typography variant="subtitle1">File size: {videoDetails.fileSize}MB</Typography>
+              </div>
+
                 {uploadProgress > 0 && uploadProgress < 100 && (
                   <div
                     style={{
