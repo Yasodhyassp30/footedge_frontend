@@ -1,20 +1,21 @@
 
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
 import AnnotationComponent from './pages/annotation';
 import Login from './pages/authentication/login';
 import Register from './pages/authentication/registration';
-import Dashboard from './pages/dashboard';
+import Dashboard from './pages/dashboard/index';
 import Navbar from './pages/navbar';
 import Report from './pages/report/ReportDashboard';
 import ScoutingDashboard from "./pages/scouting/ScoutingDashBoard";
 import { authSlice } from './reducers/authReducer';
+import { RootState } from './reducers/combinedReducers';
 
 function App() {
   const dispatch = useDispatch();
-  const user = {token: 23}
+  const user = useSelector((state: RootState) => state.auth)
   useEffect(() => {
     dispatch(authSlice.actions.login())
   },[])
@@ -23,7 +24,7 @@ function App() {
     <div className="App">
         <Navbar/>
           <Routes>
-            <Route path="/" element={!user.token?<Navigate to="/login"/>:<Dashboard/>} />
+            <Route path="/" element={<Dashboard/>} />
             <Route path="/annotate" element={!user.token?<Navigate to="/login"/>:<AnnotationComponent />} />
             <Route path="/scouting" element={!user.token?<Navigate to="/login"/>:<ScoutingDashboard />} />
             <Route path="/reports" element={!user.token?<Navigate to="/login"/>:<Report />} />

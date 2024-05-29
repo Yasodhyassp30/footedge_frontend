@@ -93,8 +93,13 @@ export const tacticalAnalysisSlice = createSlice({
       reset: (state) => {
         state.info = [];
         state.loading = false;
-        state.slider = 1;
+        state.slider = 0;
         state.markers = [];
+        state.players = {};
+        state.teams = ["", ""];
+        state.colors = [[], []];
+        state.ball = [];
+        state.slider = 0;
       }
   },
 

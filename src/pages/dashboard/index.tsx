@@ -129,6 +129,13 @@ function Dashboard() {
           ];
         }
         setFrames((prevFrames) => [...prevFrames, `data:image/jpeg;base64, ${data.frame}`]);
+
+        if(data.info.length === 0){
+          dispatch(
+            tacticalAnalysisSlice.actions.setSlider(0)
+          );
+        }
+        
         dispatch(
           tacticalAnalysisSlice.actions.addFrames({
             info: data.info,
@@ -146,6 +153,15 @@ function Dashboard() {
 
   useEffect(() => {
     dispatch(tacticalAnalysisSlice.actions.reset());
+    setFrames([]);
+    setUploadProgress(0);
+    setView({
+      kde_plots: false,
+      formations: false,
+      presence_maps: false,
+      individual: false,
+      passings: false,
+    });
   }, [videoSrc]);
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -169,6 +185,7 @@ function Dashboard() {
         formData.append("type", "TACTICAL");
 
         try {
+          dispatch(tacticalAnalysisSlice.actions.reset());
           const response: AxiosResponse = await axios.post(
             "http://localhost:5000/api/upload",
             formData,
