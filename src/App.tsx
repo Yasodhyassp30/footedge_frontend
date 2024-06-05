@@ -19,16 +19,18 @@ function App() {
   
   useEffect(() => {
     dispatch(authSlice.actions.login());
+    console.log("App.tsx: useEffect: dispatch(authSlice.actions.login())");
+    console.log("App.tsx: useEffect: user.token: ", user.token);
   }, [dispatch]);
 
   return (
     <div className="App">
       <Navbar />
       <Routes>
-            <Route path="/" element={<Dashboard/>} />
+            <Route path="/" element={!user.token?<Navigate to="/login"/>:<Dashboard/> } />
             <Route path="/annotate" element={!user.token?<Navigate to="/login"/>:<AnnotationComponent />} />
             <Route path="/scouting" element={!user.token?<Navigate to="/login"/>:<ScoutingDashboard />} />
-            <Route path="/reports" element={<ReportPage />} />
+            <Route path="/reports" element={!user.token?<Navigate to="/login"/>:<ReportPage/> } />
             <Route path="/login" element={user.token?<Navigate to="/"/>:<Login />} />
             <Route path="/register" element={user.token?<Navigate to="/"/>:<Register />} />
           </Routes>

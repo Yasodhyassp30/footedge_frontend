@@ -26,8 +26,8 @@ export default function Login() {
             setError("")
            try{
             const response = await axios.post("http://localhost:5000/api/login", {
-                email: email.current.value,
-                password: password.current.value
+                email: email.current.value.toString(),
+                password: password.current.value.toString()
             })
 
             localStorage.setItem("user", JSON.stringify(response.data))

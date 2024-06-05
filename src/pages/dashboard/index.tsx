@@ -130,17 +130,13 @@ function Dashboard() {
         }
         setFrames((prevFrames) => [...prevFrames, `data:image/jpeg;base64, ${data.frame}`]);
 
-        if(data.info.length === 0){
-          dispatch(
-            tacticalAnalysisSlice.actions.setSlider(0)
-          );
-        }
-        
+
         dispatch(
           tacticalAnalysisSlice.actions.addFrames({
             info: data.info,
           })
         );
+        
         if (length === 1) {
           dispatch(tacticalAnalysisSlice.actions.setSlider(1));
         }

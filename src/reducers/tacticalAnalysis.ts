@@ -13,7 +13,7 @@ const initialState = {
 
     info:[] as players[][],
     loading: false,
-    slider: 0,
+    slider: 1,
     markers:[] as number[],
     players:{} as {[key:number]:teamPlayers},
     teams:["",""] as string[],
@@ -93,13 +93,12 @@ export const tacticalAnalysisSlice = createSlice({
       reset: (state) => {
         state.info = [];
         state.loading = false;
-        state.slider = 0;
+        state.slider = 1;
         state.markers = [];
         state.players = {};
         state.teams = ["", ""];
         state.colors = [[], []];
         state.ball = [];
-        state.slider = 0;
       }
   },
 
