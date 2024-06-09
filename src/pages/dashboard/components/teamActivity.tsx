@@ -3,6 +3,10 @@ import { Socket } from "socket.io-client";
 import Soccerfield from "./soccerfield";
 import { RootState } from "../../../reducers/combinedReducers";
 import { useSelector } from "react-redux";
+import { Button } from "@mui/material";
+import { Save } from "@mui/icons-material";
+import { Typography } from "antd";
+import SaveAnalysisPopup from "./saveAnalysis";
 
 
 export interface players {
@@ -84,6 +88,7 @@ const slider = useSelector((state: RootState) => state.tacticalAnalysis.slider);
                   <div>
                     <h1>{info[slider - 1].length}</h1>
                   </div>
+                  <SaveAnalysisPopup/>
                 </div>
               ) : (
                 <div></div>
