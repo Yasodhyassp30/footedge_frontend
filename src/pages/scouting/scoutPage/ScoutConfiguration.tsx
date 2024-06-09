@@ -1,32 +1,20 @@
 import { Button } from "@material-tailwind/react";
-import { Progress, Spin } from "antd";
+import { Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import { SCOUTING_SERVICE_URL } from "../../../constants/scoutingConstants";
 import { Skill } from "../../../types/scoutingTypes";
+import { ProgressContent } from "../common/progressContent";
 import FileUploadModal from "../common/uploadVideo";
 import "../scouting.css";
 import { fetchData, uploadFiles } from "../scoutingApis";
-import ParameterCard from "./ParameterCard";
 import ScoutingSkillList from "./ScoutingSkillList";
-
-const sampleParameter = {
-  name: "Accuracy",
-  accuracy: 85,
-  total: 100,
-  correct: 85,
-  incorrect: 15,
-  offset: {
-    distance: "10 meters",
-    corner: "bottom left",
-  },
-};
 
 const ScoutConfiguration: React.FC = () => {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [files, setFiles] = useState<FormData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [validSession, setValidSession] = useState<boolean>(false);
-  const [selectedSkill, setSelectedSkill] = useState<Skill | undefined>();
+  const [selectedSkill, setSelectedSkill] = useState<String | undefined>();
   const [uploadModalVisible, setUploadModalVisible] = useState<boolean>(true);
 
   useEffect(() => {
@@ -42,11 +30,13 @@ const ScoutConfiguration: React.FC = () => {
     callAPI();
   }, []);
 
+
   const onAction = async (skill: Skill) => {
-    setSelectedSkill(skill);
     setLoading(true);
-    const url = `${SCOUTING_SERVICE_URL}/files`;
-    await uploadFiles(files[0], selectedSkill, url, 'SCOUTING');
+    const url = `${SCOUTING_SERVICE_URL}/files?type=TRAINING`;
+    const result = await uploadFiles(files[0], skill, url, 'SKILL');
+    setSelectedSkill(result.process_id);
+    setLoading(false);
   };
 
   const onUpload = async (formData: FormData) => {
@@ -94,7 +84,7 @@ const ScoutConfiguration: React.FC = () => {
           <div>
             <ScoutingSkillList
               validSession={validSession}
-              skills={skills.filter((skill) => skill.training_status === 2)}
+              skills={skills.filter((skill) => skill.training_status === 1)}
               loading={loading}
               onAction={onAction}
             />
@@ -102,28 +92,7 @@ const ScoutConfiguration: React.FC = () => {
         </>
       )}
       {selectedSkill && (
-        <div className="scout-result-container">
-          <div className="progress-container">
-            <h2>Progress</h2>
-            <Progress percent={10} />
-          </div>
-          <div className="parameter-cards-container">
-            <div className="container-body">
-              {[selectedSkill].map((parameter, index) => (
-                <ParameterCard
-                  key={sampleParameter.name}
-                  parameter={sampleParameter}
-                  progress={10}
-                />
-              ))}
-            </div>
-            <div className="container-footer">
-              <Button placeholder="Back" className="scout-config-back">
-                Back
-              </Button>
-            </div>
-          </div>
-        </div>
+      <ProgressContent selectedSkill={'jij'}/>
       )}
     </Spin>
   );

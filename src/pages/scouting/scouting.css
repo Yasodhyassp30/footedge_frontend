@@ -141,56 +141,66 @@
     }
 
     .scout-result-container {
+      display: flex; /* Add flex layout */
+      flex-direction: column; /* Set flex direction to column */
+    
       .progress-container {
         margin-bottom: 20px;
         width: 1400px;
       }
-
+    
       .parameter-cards-container {
         display: flex;
         flex-wrap: wrap;
         width: 1200px;
-
+    
         .container-body {
-          flex: 1; /* Take remaining space */
+          padding-left: 200px;
+          display: flex;
+          flex-wrap: wrap;
+          flex: 1;
+          justify-content: space-between; /* Distribute items evenly along the main axis */
+          
           .parameter-card {
             width: 200px;
-            margin: 0 10px 20px;
+            margin-bottom: 20px; /* Adjust margin */
             border: 1px solid #e8e8e8;
             border-radius: 5px;
           }
-
+    
           .parameter-card:hover {
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
           }
-
+    
           .parameter-card .ant-card-body {
             padding: 16px;
           }
-
+    
           .parameter-card .ant-card-head {
             background-color: #fafafa;
             border-bottom: 1px solid #e8e8e8;
           }
-
+    
           .parameter-card .ant-card-head-title {
             font-size: 16px;
           }
-
+    
           .parameter-detail {
             margin-bottom: 8px;
           }
         }
-
+    
         .container-footer {
           width: 100%;
-          margin-top: 20px;
-          text-align: center;
-          .scout-config-back {
-            color: #1890ff;
-          }
+          padding-left: 200px;
+          margin-bottom: 40px;
+        }
+    
+        .scout-config-back {
+          color: #1890ff;
         }
       }
     }
+    
   }
 }

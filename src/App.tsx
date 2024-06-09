@@ -14,21 +14,29 @@ import { authSlice } from './reducers/authReducer';
 
 function App() {
   const dispatch = useDispatch();
-  const user = {token: 23}
+  let user = {token: null}
+  if (localStorage.getItem("user")){
+    user = JSON.parse(localStorage.getItem("user") || "{}")
+  }
+
   useEffect(() => {
     dispatch(authSlice.actions.login())
   },[])
   
+  const invalidSession = user.token === null
+
+  console.log(localStorage.getItem("user"), invalidSession)
+
   return (
     <div className="App">
         <Navbar/>
           <Routes>
-            <Route path="/" element={!user.token?<Navigate to="/login"/>:<Dashboard/>} />
-            <Route path="/annotate" element={!user.token?<Navigate to="/login"/>:<AnnotationComponent />} />
-            <Route path="/scouting" element={!user.token?<Navigate to="/login"/>:<ScoutingDashboard />} />
-            <Route path="/reports" element={!user.token?<Navigate to="/login"/>:<Report />} />
-            <Route path="/login" element={user.token?<Navigate to="/"/>:<Login />} />
-            <Route path="/register" element={user.token?<Navigate to="/"/>:<Register />} />
+            <Route path="/" element={invalidSession ?<Navigate to="/login"/>:<Dashboard/>} />
+            <Route path="/annotate" element={invalidSession ?<Navigate to="/login"/>:<AnnotationComponent />} />
+            <Route path="/scouting" element={invalidSession ?<Navigate to="/login"/>:<ScoutingDashboard />} />
+            <Route path="/reports" element={invalidSession ?<Navigate to="/login"/>:<Report />} />
+            <Route path="/login" element={invalidSession ?<Navigate to="/"/>:<Login />} />
+            <Route path="/register" element={invalidSession ?<Navigate to="/"/>:<Register />} />
           </Routes>
     </div>
   );

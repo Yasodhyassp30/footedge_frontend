@@ -64,18 +64,27 @@ export interface FileUploadModalProps {
   onUpload: (formData: FormData) => void;
   skill?: Skill;
 }
-
 export interface ParameterCardProps {
-  progress: number;
   parameter: {
     name: string;
-    accuracy: number;
-    total: number;
-    correct: number;
-    incorrect: number;
-    offset: {
-      distance: string;
-      corner: string;
-    };
+    total_angle: number;
+    total_distance: number;
+    length: number;
   };
+}
+
+export interface ScoutRequest {
+  archived: number;
+  created: number;
+  createdBy: number;
+  modified: number;
+  modifiedBy: number;
+  request_type: string;
+  skill: string;
+  status: number;
+  _id: string;
+}
+
+export interface ProgressContentProps {
+  selectedSkill: string;
 }

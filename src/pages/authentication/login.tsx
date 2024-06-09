@@ -1,16 +1,18 @@
-import { Button, Container, FormControl, IconButton, InputAdornment, Link, TextField, Typography } from '@mui/material'
-import React, { useRef } from 'react'
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Lock } from '@mui/icons-material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { Button, Container, FormControl, IconButton, InputAdornment, Link, TextField, Typography } from '@mui/material';
 import axios from 'axios';
+import React, { useRef } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { authSlice } from '../../reducers/authReducer';
 
 
 
 
 export default function Login() {
+    const navigate = useNavigate();
     const [showPassword, setShowPassword] = React.useState(false);
     const  email = useRef<HTMLInputElement>(null);
     const  password = useRef<HTMLInputElement>(null);
@@ -25,13 +27,15 @@ export default function Login() {
         if(email.current?.value && password.current?.value){
             setError("")
            try{
-            const response = await axios.post("http://localhost:5000/api/login", {
+            const response = await axios.post("http://localhost:5000/users/login", {
                 email: email.current.value,
                 password: password.current.value
             })
 
+            console.log(response.data)
             localStorage.setItem("user", JSON.stringify(response.data))
             dispatch(authSlice.actions.login())
+            navigate('/dashboard');
            }catch(err){
                console.log(err)
            }

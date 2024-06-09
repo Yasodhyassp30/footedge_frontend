@@ -1,9 +1,9 @@
-import { Button, Container, FormControl, IconButton, InputAdornment, Link, TextField, Typography } from '@mui/material'
-import React, { useRef } from 'react'
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import { People } from '@mui/icons-material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { Button, Container, FormControl, IconButton, InputAdornment, Link, TextField, Typography } from '@mui/material';
 import axios from 'axios';
+import React, { useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { authSlice } from '../../reducers/authReducer';
 
@@ -26,7 +26,7 @@ export default function Register() {
         }else if(email.current?.value && password.current?.value && confirmPassword.current?.value){
             setError("")
            try{
-            const response = await axios.post("http://localhost:5000/api/register", {
+            const response = await axios.post("http://localhost:5000/users/register", {
                 email: email.current.value,
                 password: password.current.value
             })

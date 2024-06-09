@@ -20,8 +20,8 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({
   const handleUpload = async () => {
     const formData = new FormData();
     if (fileList[0]?.originFileObj && fileList[1]?.originFileObj) {
-      formData.append("file1", fileList[0].originFileObj);
-      formData.append("file2", fileList[1].originFileObj);
+      formData.append("files", fileList[0].originFileObj);
+      formData.append("files", fileList[1].originFileObj);
       if (onUpload) {
         onUpload(formData);
       }

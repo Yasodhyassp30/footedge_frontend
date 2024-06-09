@@ -1,7 +1,10 @@
-import { Progress, Spin } from "antd";
-import React, { useState } from "react";
+import { Spin } from "antd";
+import React, { useEffect, useState } from "react";
+import { SCOUTING_SERVICE_URL } from "../../../constants/scoutingConstants";
+import { ScoutRequest } from "../../../types/scoutingTypes";
+import { ProgressContent } from "../common/progressContent";
 import "../scouting.css";
-import ParameterCard from "./ParameterCard";
+import { fetchData } from "../scoutingApis";
 
 const sampleParameter = {
   name: "Accuracy",
@@ -17,30 +20,30 @@ const sampleParameter = {
 
 const ScoutResult: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [activeRequests, setActiveRequests] = useState<Array<ScoutRequest>>([]);
 
-  const selectedSkill = "Hello";
+  useEffect(() => {
+    setLoading(true);
+
+    const callAPI = async () => {
+      const url = `${SCOUTING_SERVICE_URL}/scout/all`;
+      const result = await fetchData(url);
+      setActiveRequests(result);
+      setLoading(false);
+    };
+
+    callAPI();
+  }, []);
 
   return (
     <Spin spinning={loading}>
-      {selectedSkill && (
+      {activeRequests.map((request) => (
         <div className="scout-result-container">
-          <div className="progress-container">
-            <h2>Progress</h2>
-            <Progress percent={10} />
-          </div>
           <div className="parameter-cards-container">
-            <div className="container-body">
-              {[selectedSkill].map((parameter, index) => (
-                <ParameterCard
-                  key={sampleParameter.name}
-                  parameter={sampleParameter}
-                  progress={10}
-                />
-              ))}
-            </div>
+            <ProgressContent selectedSkill={request.skill} />
           </div>
         </div>
-      )}
+      ))}
     </Spin>
   );
 };
