@@ -7,7 +7,7 @@ import { Slider } from "@mui/material";
 export default function PassingNetwork() {
     const svgRef = useRef<SVGSVGElement | null>(null);
     const data = useSelector((state:RootState) => state.tacticalAnalysis.ball);
-    const [slider, setSlider] = React.useState(0);
+    const slider = useSelector((state:RootState) => state.tacticalAnalysis.slider);
 
     useEffect(() => {
         if (svgRef.current) {
@@ -17,7 +17,7 @@ export default function PassingNetwork() {
               .attr("width", "100%")
               .attr("height", "100%")
               .attr("fill", "green")
-              .attr("stroke", "white")
+              .attr("stroke", "#27374D")
               .attr("stroke-width", 5);
       
             svg
@@ -26,7 +26,7 @@ export default function PassingNetwork() {
               .attr("cy", "50%")
               .attr("r", "10%")
               .attr("fill", "none")
-              .attr("stroke", "white")
+              .attr("stroke", "#27374D")
               .attr("stroke-width", 5);
       
             svg
@@ -35,7 +35,7 @@ export default function PassingNetwork() {
               .attr("cy", "50%")
               .attr("r", "10%")
               .attr("fill", "none")
-              .attr("stroke", "white")
+              .attr("stroke", "#27374D")
               .attr("stroke-width", 5);
       
             svg
@@ -44,7 +44,7 @@ export default function PassingNetwork() {
               .attr("cy", "50%")
               .attr("r", "10%")
               .attr("fill", "none")
-              .attr("stroke", "white")
+              .attr("stroke", "#27374D")
               .attr("stroke-width", 5);
       
             svg
@@ -54,7 +54,7 @@ export default function PassingNetwork() {
               .attr("width", "20%")
               .attr("height", "55%")
               .attr("fill", "green")
-              .attr("stroke", "white")
+              .attr("stroke", "#27374D")
               .attr("stroke-width", 5);
       
             svg
@@ -64,7 +64,7 @@ export default function PassingNetwork() {
               .attr("width", "20%")
               .attr("height", "55%")
               .attr("fill", "green")
-              .attr("stroke", "white")
+              .attr("stroke", "#27374D")
               .attr("stroke-width", 5);
       
             svg
@@ -74,7 +74,7 @@ export default function PassingNetwork() {
               .attr("width", "8%")
               .attr("height", "25%")
               .attr("fill", "none")
-              .attr("stroke", "white")
+              .attr("stroke", "#27374D")
               .attr("stroke-width", 5);
       
             svg
@@ -84,7 +84,7 @@ export default function PassingNetwork() {
               .attr("width", "8%")
               .attr("height", "25%")
               .attr("fill", "green")
-              .attr("stroke", "white")
+              .attr("stroke", "#27374D")
               .attr("stroke-width", 5);
       
             svg
@@ -93,14 +93,14 @@ export default function PassingNetwork() {
               .attr("y1", "0%")
               .attr("x2", "50%")
               .attr("y2", "100%")
-              .attr("stroke", "white")
+              .attr("stroke", "#27374D")
               .attr("stroke-width", 5);
           }
         }, []);
 
     useEffect(() => {
         if (svgRef.current) {
-          const newData = data.slice(0, slider + 1);
+          const newData = data.filter((d) => d.frame <= slider);
             const svg = d3.select(svgRef.current);
             
 
@@ -142,16 +142,7 @@ export default function PassingNetwork() {
         height: "100%",
         width: "100%",
        }}>
-        <Slider defaultValue={0} aria-label="Default" value={slider}
-        sx={{
-          width: "50%",
-          padding: "20px",
-          justifyContent: "center",
-          display: "flex",
-        
-        }}
-        onChange={(e, value) => setSlider(value as number)}
-        valueLabelDisplay="auto" step={1} marks min={0} max={data.length-1} />
+
          <div style={{ height: "100%",width:"100%" }}>
           <svg
             ref={svgRef}

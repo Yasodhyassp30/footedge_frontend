@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../reducers/combinedReducers';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Paper, Snackbar, SnackbarContent, TextField, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, IconButton, Paper, Snackbar, SnackbarContent, TextField, Tooltip, Typography } from '@mui/material';
 import { Save } from '@mui/icons-material';
 import axios from 'axios';
 
@@ -86,16 +86,17 @@ export default function SaveAnalysisPopup() {
           />
         </Box>
       </Snackbar>
-         <Button variant="outlined" sx={{
-                    color: "green",
-                    padding: "10px",
-                    margin: "10px",
-                    borderRadius: "10px",
-                  }} startIcon={<Save />} onClick={handleOpen}>
-                  <Typography variant='body1' sx={{
-                    fontSize: "12px",
-                  }}>Save Analysis</Typography>
-                  </Button>
+      <Tooltip title="Save" placement="bottom">
+                    <IconButton
+                      onClick={() => handleOpen()}
+                      sx={{
+                        color: "black",
+                        border:"2px solid gray",
+                      }}
+                    >
+                      <Save/>
+                    </IconButton>
+                  </Tooltip>
         <Dialog open={open} onClose={handleClose} fullWidth>
             <DialogTitle>Summery</DialogTitle>
             <DialogContent>

@@ -23,18 +23,21 @@ export default function TeamDetails() {
       <Paper
         elevation={1}
         sx={{
-          width: "100%",
-          padding: "20px",
+          width: "99%",
+          marginLeft: "10px", 
+          padding: "10px",
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
+          backgroundColor: "#DDE6ED",
+          borderRadius: "10px",
         }}
       >
         <div
             style={{
-                height: "50px",
-                width: "50px",
+                height: "40px",
+                width: "40px",
                 borderRadius: "50%",
                 backgroundColor: team1Color.length !== 0 ? `rgb(${team1Color[2]},${team1Color[1]},${team1Color[0]})` : "grey",
             }}
@@ -77,8 +80,8 @@ export default function TeamDetails() {
         />
         <div
           style={{
-            height: "50px",
-            width: "50px",
+            height: "40px",
+            width: "40px",
             borderRadius: "50%",
             backgroundColor: team2Color.length !== 0 ? `rgb(${team2Color[2]},${team2Color[1]},${team2Color[0]})` : "grey",
           }}

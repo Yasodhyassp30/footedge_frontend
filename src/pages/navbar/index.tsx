@@ -20,7 +20,7 @@ function Navbar() {
   const drawerStyle:React.CSSProperties = {
     width: '250px',
     height: 'calc(100% - 70px)',
-    backgroundColor: '#2c3e70',
+    backgroundColor: '#27374D',
     color: 'white',
     position: 'fixed',
     left: open ? '0' : '-100%',
@@ -31,7 +31,7 @@ function Navbar() {
   }
   const navbarStyle:React.CSSProperties = {
     width: '100%',
-    backgroundColor: '#2c3e50',
+    backgroundColor: '#27374D',
     color: 'white',
     padding: '15px',
     fontWeight: 'bold',

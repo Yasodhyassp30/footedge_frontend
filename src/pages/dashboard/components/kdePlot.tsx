@@ -20,7 +20,7 @@ const DensityPlot: React.FC<DensityPlotProps> = ({data,color,levels }) => {
         .attr("width", "100%")
         .attr("height", "100%")
         .attr("fill", "white")
-        .attr("stroke", "gray")
+        .attr("stroke", "#27374D")
         .attr("stroke-width", 5);
 
       svg
@@ -29,7 +29,7 @@ const DensityPlot: React.FC<DensityPlotProps> = ({data,color,levels }) => {
         .attr("cy", "50%")
         .attr("r", "10%")
         .attr("fill", "none")
-        .attr("stroke", "gray")
+        .attr("stroke", "#27374D")
         .attr("stroke-width", 5);
 
       svg
@@ -38,7 +38,7 @@ const DensityPlot: React.FC<DensityPlotProps> = ({data,color,levels }) => {
         .attr("cy", "50%")
         .attr("r", "10%")
         .attr("fill", "none")
-        .attr("stroke", "gray")
+        .attr("stroke", "#27374D")
         .attr("stroke-width", 5);
 
       svg
@@ -47,7 +47,7 @@ const DensityPlot: React.FC<DensityPlotProps> = ({data,color,levels }) => {
         .attr("cy", "50%")
         .attr("r", "10%")
         .attr("fill", "none")
-        .attr("stroke", "gray")
+        .attr("stroke", "#27374D")
         .attr("stroke-width", 5);
 
       svg
@@ -57,7 +57,7 @@ const DensityPlot: React.FC<DensityPlotProps> = ({data,color,levels }) => {
         .attr("width", "20%")
         .attr("height", "55%")
         .attr("fill", "white")
-        .attr("stroke", "gray")
+        .attr("stroke", "#27374D")
         .attr("stroke-width", 5);
 
       svg
@@ -67,7 +67,7 @@ const DensityPlot: React.FC<DensityPlotProps> = ({data,color,levels }) => {
         .attr("width", "20%")
         .attr("height", "55%")
         .attr("fill", "white")
-        .attr("stroke", "gray")
+        .attr("stroke", "#27374D")
         .attr("stroke-width", 5);
 
       svg
@@ -77,7 +77,7 @@ const DensityPlot: React.FC<DensityPlotProps> = ({data,color,levels }) => {
         .attr("width", "8%")
         .attr("height", "25%")
         .attr("fill", "none")
-        .attr("stroke", "gray")
+        .attr("stroke", "#27374D")
         .attr("stroke-width", 5);
 
       svg
@@ -87,7 +87,7 @@ const DensityPlot: React.FC<DensityPlotProps> = ({data,color,levels }) => {
         .attr("width", "8%")
         .attr("height", "25%")
         .attr("fill", "white")
-        .attr("stroke", "gray")
+        .attr("stroke", "#27374D")
         .attr("stroke-width", 5);
 
       svg
@@ -96,7 +96,7 @@ const DensityPlot: React.FC<DensityPlotProps> = ({data,color,levels }) => {
         .attr("y1", "0%")
         .attr("x2", "50%")
         .attr("y2", "100%")
-        .attr("stroke", "gray")
+        .attr("stroke", "#27374D")
         .attr("stroke-width", 5);
     }
   }, []);

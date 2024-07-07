@@ -113,6 +113,7 @@ const IndividualTracking = () => {
               onChange={(e) => setSelectedPlayer(Number(e.target.value))}
               sx={{
                 width: "100%",
+                backgroundColor: "white",
               }}
             >
               <MenuItem value={0} disabled>
@@ -196,6 +197,7 @@ const IndividualTracking = () => {
               onChange={(e) => setSelectAnalysis(Number(e.target.value))}
               sx={{
                 width: "100%",
+                backgroundColor: "white",
               }}
             >
               <MenuItem value={-1} disabled>
@@ -219,6 +221,7 @@ const IndividualTracking = () => {
                  width: "100%",
                  marginTop: "10px",
                  marginBottom: "90px",
+                 backgroundColor: "white",
                }}
              >
                <MenuItem value={-1} disabled>

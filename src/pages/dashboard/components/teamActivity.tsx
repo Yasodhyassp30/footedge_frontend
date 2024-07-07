@@ -38,8 +38,6 @@ const info = useSelector((state: RootState) => state.tacticalAnalysis.info);
 const slider = useSelector((state: RootState) => state.tacticalAnalysis.slider);
   return (
     <div>
-    
-
       <Container maxWidth="lg">
       <Grid container spacing={0}>
         <Grid
@@ -47,8 +45,10 @@ const slider = useSelector((state: RootState) => state.tacticalAnalysis.slider);
           xs={12}
           md={8}
           sx={{
+            display: "flex",
             width: "100%",
-            padding: "10px",
+            height: "100%",
+            justifyContent: "end",
           }}
         >
           {length !== 0 && (
@@ -56,6 +56,10 @@ const slider = useSelector((state: RootState) => state.tacticalAnalysis.slider);
               src={frame[slider-1]}
               className="result_image"
               alt="Received Image1"
+              style={{
+                width: "640px",
+                height: "360px",
+              }}
             />
           )}
         </Grid>
@@ -68,7 +72,6 @@ const slider = useSelector((state: RootState) => state.tacticalAnalysis.slider);
             display: "flex",
             width: "100%",
             height: "100%",
-            padding: "10px",
           }}
         >
           <Grid container spacing={2}>
@@ -83,13 +86,7 @@ const slider = useSelector((state: RootState) => state.tacticalAnalysis.slider);
             </Grid>
             <Grid item xs={12}>
               {info[slider - 1] !== undefined ? (
-                <div>
-                  Detections
-                  <div>
-                    <h1>{info[slider - 1].length}</h1>
-                  </div>
                   <SaveAnalysisPopup/>
-                </div>
               ) : (
                 <div></div>
               )}

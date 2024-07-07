@@ -6,6 +6,7 @@ interface posessions{
   tracker_id:number,
   color:number[],
   Tcoordinates:number[]
+  frame:number
 
 
 }
@@ -47,17 +48,20 @@ export const tacticalAnalysisSlice = createSlice({
       },
     setPosessions: (state, action) => {
       let previousID = state.ball.length>0?state.ball[state.ball.length-1].tracker_id:-1;
-      action.payload.forEach((posession:posessions) => {
+      action.payload.ball.forEach((posession:posessions) => {
         posession.Tcoordinates = [(posession.Tcoordinates[0]/1680)*100,(posession.Tcoordinates[1]/1080)*100];
         if (previousID===-1){
           previousID = posession.tracker_id;
           state.ball.push(posession);
+          state.ball[state.ball.length-1].frame = action.payload.frame;
         }else if ( previousID===posession.tracker_id){
           state.ball[state.ball.length-1].Tcoordinates = posession.Tcoordinates;
+          state.ball[state.ball.length-1].frame = action.payload.frame;
         
         }else if (previousID!==posession.tracker_id){
             state.ball.push(posession);
             previousID = posession.tracker_id;
+            state.ball[state.ball.length-1].frame = action.payload.frame;
           }
       });
     },

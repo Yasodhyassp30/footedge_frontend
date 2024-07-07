@@ -19,7 +19,7 @@ const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
         .attr("width", "100%")
         .attr("height", "100%")
         .attr("fill", "green")
-        .attr("stroke", "white")
+        .attr("stroke", "#27374D")
         .attr("stroke-width", 5);
 
       svg
@@ -28,7 +28,7 @@ const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
         .attr("cy", "50%")
         .attr("r", "10%")
         .attr("fill", "none")
-        .attr("stroke", "white")
+        .attr("stroke", "#27374D")
         .attr("stroke-width", 5);
 
       svg
@@ -37,7 +37,7 @@ const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
         .attr("cy", "50%")
         .attr("r", "10%")
         .attr("fill", "none")
-        .attr("stroke", "white")
+        .attr("stroke", "#27374D")
         .attr("stroke-width", 5);
 
       svg
@@ -46,7 +46,7 @@ const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
         .attr("cy", "50%")
         .attr("r", "10%")
         .attr("fill", "none")
-        .attr("stroke", "white")
+        .attr("stroke", "#27374D")
         .attr("stroke-width", 5);
 
       svg
@@ -56,7 +56,7 @@ const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
         .attr("width", "20%")
         .attr("height", "55%")
         .attr("fill", "green")
-        .attr("stroke", "white")
+        .attr("stroke", "#27374D")
         .attr("stroke-width", 5);
 
       svg
@@ -66,7 +66,7 @@ const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
         .attr("width", "20%")
         .attr("height", "55%")
         .attr("fill", "green")
-        .attr("stroke", "white")
+        .attr("stroke", "#27374D")
         .attr("stroke-width", 5);
 
       svg
@@ -76,7 +76,7 @@ const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
         .attr("width", "8%")
         .attr("height", "25%")
         .attr("fill", "none")
-        .attr("stroke", "white")
+        .attr("stroke", "#27374D")
         .attr("stroke-width", 5);
 
       svg
@@ -86,7 +86,7 @@ const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
         .attr("width", "8%")
         .attr("height", "25%")
         .attr("fill", "green")
-        .attr("stroke", "white")
+        .attr("stroke", "#27374D")
         .attr("stroke-width", 5);
 
       svg
@@ -95,7 +95,7 @@ const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
         .attr("y1", "0%")
         .attr("x2", "50%")
         .attr("y2", "100%")
-        .attr("stroke", "white")
+        .attr("stroke", "#27374D")
         .attr("stroke-width", 5);
     }
   }, []);
@@ -115,7 +115,7 @@ const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
         .attr("r", 10)
         .attr("fill", (d) => (`rgb(${d.color[2]}, ${d.color[1]}, ${d.color[0]})`))
         .attr("stroke", "white")
-        .attr("stroke-width", 10);
+        .attr("stroke-width", 5);
     }
 
     
@@ -123,7 +123,7 @@ const Soccerfield: React.FC<SoccerfieldProps> = ({ data }) => {
   
 
   return (
-    <div style={{ height: "100%",width:"100%" }}>
+    <div style={{ height: "80%",width:"100%" }}>
       <svg
         ref={svgRef}
         width="480"

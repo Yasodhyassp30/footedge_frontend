@@ -22,22 +22,32 @@ export default function FrameSlider() {
     }
     const controllerButtons =[
       {
-        icon: <FastRewindIcon />,
+        icon: <FastRewindIcon sx={{
+          color: "#DDE6ED",
+        }} />,
         handler: () => dispatch(tacticalAnalysisSlice.actions.nextMarker()),
         id:1
       },
       {
-        icon: play ? <PauseCircleIcon /> : <PlayCircleIcon />,
+        icon: play ? <PauseCircleIcon sx={{
+          color: "#DDE6ED",
+        }} /> : <PlayCircleIcon  sx={{
+          color: "#DDE6ED",
+        }}/>,
         handler: playHandler,
         id:2
       },
       {
-        icon: <NavigationIcon />,
+        icon: <NavigationIcon sx={{
+          color: "#DDE6ED",
+        }} />,
         handler: () => dispatch(tacticalAnalysisSlice.actions.setMarkers()),
         id:3
       },
       {
-        icon: <FastForwardIcon />,
+        icon: <FastForwardIcon sx={{
+          color: "#DDE6ED",
+        }} />,
         handler: () => dispatch(tacticalAnalysisSlice.actions.previousMarker()),
         id:4
       }
@@ -78,7 +88,8 @@ export default function FrameSlider() {
                 dispatch(tacticalAnalysisSlice.actions.setSlider(val));
               }}
               sx={{
-                width: "60%",
+                width: "80%",
+                color: "#DDE6ED",
               }}
             />
         <Stack
@@ -92,6 +103,7 @@ export default function FrameSlider() {
                 color: "black",
                 height: "50px",
                 padding: "10px",
+                
                 "&>*": {
                   cursor: "pointer",
                   ":hover": {
@@ -103,7 +115,7 @@ export default function FrameSlider() {
               {controllerButtons.map((button) => {
                 return (
                   <IconButton key={button.id}
-                    onClick={button.handler}>
+                    onClick={button.handler} >
                     {button.icon}
                   </IconButton>
                 );

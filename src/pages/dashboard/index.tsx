@@ -10,7 +10,7 @@ import "./dashboard.css";
 import axios, { AxiosResponse, CancelTokenSource } from "axios";
 import io, { Socket } from "socket.io-client";
 import TeamActivity from "./components/teamActivity";
-import { Box, Container, Grow, IconButton, Stack, Tooltip, Typography } from "@mui/material";
+import { Box, Container, Grid, Grow, IconButton, Paper, Stack, Tooltip, Typography } from "@mui/material";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import PeopleIcon from "@mui/icons-material/People";
 import AppsIcon from "@mui/icons-material/Apps";
@@ -26,6 +26,7 @@ import IndividualTracking from "./components/individualPlayers";
 import TeamDetails from "./components/teamDetails";
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import PassingNetwork from "./components/passingNetwork";
+import SaveAnalysisPopup from "./components/saveAnalysis";
 
 const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
 
@@ -44,6 +45,7 @@ const VisuallyHiddenInput = styled("input")({
 function Dashboard() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [frames,setFrames] = useState<string[]>([]);
+  
   const length = useSelector(
     (state: RootState) => state.tacticalAnalysis.info.length
   );
@@ -233,68 +235,45 @@ function Dashboard() {
     setUploadProgress(0);
   };
   return (
-    <Container maxWidth="lg">
-      <div className="dashboard_main">
-        <div>
+    <div style={{
+      width: "100vw",
+      height: "100vh",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "start",
+      paddingTop: "80px",
+      paddingLeft: "10px",
+      paddingRight: "10px",
+      backgroundColor:"#9DB2BF"
+    }}>
+      <Grid container spacing={0}>
+        
+        <Grid item xs={12} md={4} sx={{
+        
+        }}>
+          <Paper elevation={0} sx={{
+            height: "90vh",
+            padding: "5px",
+            backgroundColor:"#526D82",
+            borderRadius: "10px",
+          }}>
+          <Grid container spacing={0}>
+            <Grid item xs={12}>
           {videoSrc && (
-            <div className="video_section">
+            <div style={{
+              textAlign:"start",
+              fontWeight: "bold",
+              display:"flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+            }}>
               <ReactPlayer
-                url={videoSrc}
-                controls
-                width="640px"
-                height="auto"
-              />
-              <div className="video_details">
-              
-              <div>
-              <Typography variant="subtitle1">Filename: {videoDetails.fileName}</Typography>
-              </div>
-              <div>
-              <Typography variant="subtitle1">File size: {videoDetails.fileSize}MB</Typography>
-              </div>
-
-                {uploadProgress > 0 && uploadProgress < 100 && (
-                  <div
-                    style={{
-                      position: "relative",
-                      textAlign: "center",
-                      alignItems: "start",
-                      display: "flex",
-                    }}
-                  >
-                    <CircularProgress
-                      variant="determinate"
-                      value={uploadProgress}
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: "20px",
-          }}
-        >
-          <Button
-            component="label"
-            variant="contained"
-            startIcon={<CloudUploadIcon />}
-            disabled={uploadProgress > 0 && uploadProgress < 100}
-          >
-            Upload file
-            <VisuallyHiddenInput
-              type="file"
-              accept="video/mp4"
-              onChange={(event) => {
-                handleFileChange(event);
-              }}
+              url={videoSrc}
+              controls
+              width="480px"
+              height="auto"
             />
-          </Button>
           {uploadProgress > 0 && uploadProgress < 100 && (
             <Button
               sx={{
@@ -309,8 +288,23 @@ function Dashboard() {
               Cancel
             </Button>
           )}
-        </div>
-        {loading && socket && (
+          {uploadProgress > 0 && uploadProgress < 100 && (
+                  <div
+                    style={{
+                      position: "relative",
+                      textAlign: "center",
+                      alignItems: "start",
+                      display: "flex",
+                    }}
+                  >
+                    <CircularProgress
+                      variant="determinate"
+                      value={uploadProgress}
+                    />
+                  </div>
+                )}
+
+    {loading && socket && (
           <div
             style={{
               display: "flex",
@@ -323,12 +317,61 @@ function Dashboard() {
             <CircularProgress />
           </div>
         )}
-        <div>
-          <TeamActivity frame={frames} />
-        </div>
 
-        {length !== 0 && (
-          <div>
+            </div>
+
+          )
+          
+            }
+            <Button
+            component="label"
+            variant="contained"
+            startIcon={<CloudUploadIcon />}
+            disabled={uploadProgress > 0 && uploadProgress < 100}
+            sx={{
+              margin: "10px",
+            }}
+          >
+            Upload file
+            <VisuallyHiddenInput
+              type="file"
+              accept="video/mp4"
+              onChange={(event) => {
+                handleFileChange(event);
+              }}
+            />
+          </Button>
+            {length > 0 && (
+              <div style={{
+                width: "100%",
+              }}>
+              <FrameSlider />
+              
+              </div>
+            )}
+            </Grid>
+             <Grid
+          item
+          xs={12}
+          sx={{
+            display: "flex",
+            width: "100%",
+            height: "100%",
+            justifyContent: "end",
+          }}
+        >
+          {length !== 0 && (
+            <div>
+
+            <img
+              src={frames[slider-1]}
+              className="result_image"
+              alt="Received Image1"
+              style={{
+                width: "640px",
+                height: "360px",
+              }}
+            />
             <Stack
               direction="row"
               flexWrap="wrap"
@@ -336,12 +379,11 @@ function Dashboard() {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                marginTop: "20px",
+                marginTop: "5px",
                 "&>*": {
                   borderRadius: "50%",
                   backgroundColor: "white",
-                  border: "2px solid gray",
-                  margin: "10px",
+                  marginLeft: "10px",
                   "&:hover": {
                     color: "#08a4ff",
                     border: "2px solid #0883ff",
@@ -355,11 +397,12 @@ function Dashboard() {
                     <IconButton
                       onClick={() => setViewHandler(plot.function)}
                       sx={{
+                        backgroundColor: "white",
                         color: view[plot.function] ? "#0883ff" : "black",
                         border: view[plot.function]
                           ? "2px solid #0883ff"
                           : "2px solid gray",
-                        margin: "10px",
+                        margin: "5px",
                         padding: "10px",
                       }}
                     >
@@ -368,15 +411,145 @@ function Dashboard() {
                   </Tooltip>
                 );
               })}
+              <SaveAnalysisPopup/>
             </Stack>
-            <FrameSlider />
+            </div>
+          )}
+        </Grid>
+        
+        </Grid>
+        </Paper>
+          </Grid>
 
-            <TeamDetails />
-            {view.kde_plots && (
-              <div>
-               <Grow in={view.kde_plots}>
-               <Box component="fieldset">
-                <legend>KDE Plots</legend>
+          <Grid item xs={12} md={8} sx={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}>
+            {length !== 0 && (
+               <div style={
+                {
+                  height: "90vh",
+                  overflowY: "auto",
+                  overflowX: "hidden",
+                }
+               }>
+                <TeamDetails />
+              {view.kde_plots && (
+                <div>
+                 <Grow in={view.kde_plots}>
+                 <Box component="fieldset">
+                 <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        padding: "10px",
+                        width: "50%",
+                      }}
+                    >
+                      <DensityPlot
+                        data={info[slider - 1].filter((item) => item.team === 0)}
+                        color="red"
+                        levels={10}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        padding: "10px",
+                        width: "50%",
+                      }}
+                    >
+                      <DensityPlot
+                        data={info[slider - 1].filter((item) => item.team === 1)}
+                        color="blue"
+                        levels={10}
+                      />
+                    </div>
+                  </div>
+                 </Box>
+                  </Grow>
+                </div>
+              )}
+              {view.formations && (
+                <div>
+                  <Grow in={view.formations}>
+                  <Box component="fieldset">
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        padding: "10px",
+                        width: "50%",
+                      }}
+                    >
+                      <Soccerfield
+                        data={info[slider - 1].filter((item) => item.team === 0)}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        padding: "10px",
+                        width: "50%",
+                      }}
+                    >
+                      <Soccerfield
+                        data={info[slider - 1].filter((item) => item.team === 1)}
+                      />
+                    </div>
+                  </div>
+                  </Box>
+                  </Grow>
+                </div>
+              )}
+              {view.presence_maps && (
+                <Grow in={view.presence_maps}>
+                               <Box component="fieldset">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      padding: "10px",
+                      width: "50%",
+                    }}
+                  >
+                    <PresenceMaps
+                      data={info[slider - 1].filter((item) => item.team === 0)}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      padding: "10px",
+                      width: "50%",
+                    }}
+                  >
+                    <PresenceMaps
+                      data={info[slider - 1].filter((item) => item.team === 1)}
+                    />
+                  </div>
+                </div>
+                </Box>
+                </Grow>
+              )}
+              {view.passings && (
+               <Grow in={view.passings}>
+                 <Box component="fieldset">
+                
                <div
                   style={{
                     display: "flex",
@@ -387,135 +560,27 @@ function Dashboard() {
                   <div
                     style={{
                       padding: "10px",
-                      width: "50%",
+                      width: "100%",
                     }}
                   >
-                    <DensityPlot
-                      data={info[slider - 1].filter((item) => item.team === 0)}
-                      color="red"
-                      levels={10}
-                    />
+                    <PassingNetwork/>
                   </div>
-                  <div
-                    style={{
-                      padding: "10px",
-                      width: "50%",
-                    }}
-                  >
-                    <DensityPlot
-                      data={info[slider - 1].filter((item) => item.team === 1)}
-                      color="blue"
-                      levels={10}
-                    />
-                  </div>
+                 
                 </div>
                </Box>
                 </Grow>
-              </div>
+              )}
+              {view.individual && 
+              <IndividualTracking />
+              }
+           </div>
             )}
-            {view.formations && (
-              <div>
-                <Grow in={view.formations}>
-                <Box component="fieldset">
-                  <legend>Formations</legend>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <div
-                    style={{
-                      padding: "10px",
-                      width: "50%",
-                    }}
-                  >
-                    <Soccerfield
-                      data={info[slider - 1].filter((item) => item.team === 0)}
-                    />
-                  </div>
-                  <div
-                    style={{
-                      padding: "10px",
-                      width: "50%",
-                    }}
-                  >
-                    <Soccerfield
-                      data={info[slider - 1].filter((item) => item.team === 1)}
-                    />
-                  </div>
-                </div>
-                </Box>
-                </Grow>
-              </div>
-            )}
-            {view.presence_maps && (
-              <Grow in={view.presence_maps}>
-                             <Box component="fieldset">
-                <legend>Presence Maps</legend>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <div
-                  style={{
-                    padding: "10px",
-                    width: "50%",
-                  }}
-                >
-                  <PresenceMaps
-                    data={info[slider - 1].filter((item) => item.team === 0)}
-                  />
-                </div>
-                <div
-                  style={{
-                    padding: "10px",
-                    width: "50%",
-                  }}
-                >
-                  <PresenceMaps
-                    data={info[slider - 1].filter((item) => item.team === 1)}
-                  />
-                </div>
-              </div>
-              </Box>
-              </Grow>
-            )}
-            {view.passings && (
-             <Grow in={view.passings}>
-               <Box component="fieldset">
-              <legend>Passings and Posessions</legend>
-             <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <div
-                  style={{
-                    padding: "10px",
-                    width: "100%",
-                  }}
-                >
-                  <PassingNetwork/>
-                </div>
-               
-              </div>
-             </Box>
-              </Grow>
-            )}
-            {view.individual && 
-            <IndividualTracking />
-            }
-          </div>
-        )}
-      </div>
-    </Container>
+           
+          </Grid>
+
+      </Grid>
+      
+    </div>
   );
 }
 
