@@ -2,7 +2,7 @@ import { Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import { SCOUTING_SERVICE_URL } from "../../../constants/scoutingConstants";
 import { ScoutRequest } from "../../../types/scoutingTypes";
-import { ProgressContent } from "../common/progressContent";
+import ThreeDHumanPose from "../common/progressPreview";
 import "../scouting.css";
 import { fetchData } from "../scoutingApis";
 
@@ -40,7 +40,7 @@ const ScoutResult: React.FC = () => {
       {activeRequests.map((request) => (
         <div className="scout-result-container">
           <div className="parameter-cards-container">
-            <ProgressContent selectedSkill={request.skill} />
+            <ThreeDHumanPose selectedSkill={request.skill} />
           </div>
         </div>
       ))}

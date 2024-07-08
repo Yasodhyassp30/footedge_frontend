@@ -9,7 +9,7 @@ const { Search } = Input;
 const ScoutingSkillList: React.FC<ScoutSkillListProps> = ({
   skills,
   onAction,
-  validSession,
+  validSession = true,
 }) => {
   const [filteredSkills, setFilteredSkills] = useState<Skill[]>([]);
 

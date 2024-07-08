@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../reducers/combinedReducers';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, IconButton, Paper, Snackbar, SnackbarContent, TextField, Tooltip, Typography } from '@mui/material';
 import { Save } from '@mui/icons-material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Paper, Snackbar, SnackbarContent, TextField, Tooltip, Typography } from '@mui/material';
 import axios from 'axios';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../reducers/combinedReducers';
 
+// @ts-ignore
 export default function SaveAnalysisPopup() {
     const teams = useSelector((state: RootState) => state.tacticalAnalysis.teams);
     const teamPlayers = useSelector((state: RootState) => state.tacticalAnalysis.players);
@@ -79,12 +80,12 @@ export default function SaveAnalysisPopup() {
       <Snackbar open={snackbar} autoHideDuration={6000} anchorOrigin={
         { vertical: 'bottom', horizontal: 'right' }
       } onClose={() => setSnackbar(false)}>
-        <Box sx={{ width: 300 }}>
+        <div style={{ width: 300 }}>
           <SnackbarContent
             sx={{ backgroundColor: error ? "red" : "green" }}
             message={error ? "Error saving analysis" : "Analysis saved successfully"}
           />
-        </Box>
+        </div>
       </Snackbar>
       <Tooltip title="Save" placement="bottom">
                     <IconButton

@@ -1,9 +1,7 @@
-import { Button } from "@material-tailwind/react";
 import { Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import { SCOUTING_SERVICE_URL } from "../../../constants/scoutingConstants";
 import { Skill } from "../../../types/scoutingTypes";
-import { ProgressContent } from "../common/progressContent";
 import FileUploadModal from "../common/uploadVideo";
 import "../scouting.css";
 import { fetchData, uploadFiles } from "../scoutingApis";
@@ -11,10 +9,8 @@ import ScoutingSkillList from "./ScoutingSkillList";
 
 const ScoutConfiguration: React.FC = () => {
   const [skills, setSkills] = useState<Skill[]>([]);
-  const [files, setFiles] = useState<FormData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [validSession, setValidSession] = useState<boolean>(false);
-  const [selectedSkill, setSelectedSkill] = useState<String | undefined>();
+  const [selectedSkill, setSelectedSkill] = useState<Skill | undefined>();
   const [uploadModalVisible, setUploadModalVisible] = useState<boolean>(true);
 
   useEffect(() => {
@@ -30,34 +26,26 @@ const ScoutConfiguration: React.FC = () => {
     callAPI();
   }, []);
 
-
   const onAction = async (skill: Skill) => {
     setLoading(true);
-    const url = `${SCOUTING_SERVICE_URL}/files?type=TRAINING`;
-    const result = await uploadFiles(files[0], skill, url, 'SKILL');
-    setSelectedSkill(result.process_id);
+    setSelectedSkill(skill);
     setLoading(false);
   };
 
   const onUpload = async (formData: FormData) => {
-    setValidSession(true);
+    const url = `${SCOUTING_SERVICE_URL}/files`;
+    await uploadFiles(formData, selectedSkill, url, "SCOUTING");
     setUploadModalVisible(false);
-    setFiles([formData])
   };
 
   const onUploadModelClose = () => {
     setUploadModalVisible(false);
-    setValidSession(false);
+    setSelectedSkill(undefined);
   };
-
-  const onRefresh = () => {
-    setUploadModalVisible(true);
-    setValidSession(false);
-  }
 
   return (
     <Spin spinning={loading}>
-      {!selectedSkill && (
+      {selectedSkill && (
         <>
           <div className="scout-configuration-container">
             <div>
@@ -66,11 +54,6 @@ const ScoutConfiguration: React.FC = () => {
                 Upload 2 videos and Select a trained skill from the list to get
                 started
               </h1>
-              {!validSession && (
-                <Button placeholder="Back" className="scout-config-back" onClick={onRefresh}>
-                  Refresh
-                </Button>
-              )}
             </div>
           </div>
           <div>
@@ -80,19 +63,17 @@ const ScoutConfiguration: React.FC = () => {
               onUpload={onUpload}
             />
           </div>
-
-          <div>
-            <ScoutingSkillList
-              validSession={validSession}
-              skills={skills.filter((skill) => skill.training_status === 1)}
-              loading={loading}
-              onAction={onAction}
-            />
-          </div>
         </>
       )}
-      {selectedSkill && (
-      <ProgressContent selectedSkill={'jij'}/>
+      {!selectedSkill && (
+        <div>
+          <ScoutingSkillList
+            validSession
+            skills={skills.filter((skill) => skill.training_status === 2)}
+            loading={loading}
+            onAction={onAction}
+          />
+        </div>
       )}
     </Spin>
   );

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { XYPlot, VerticalRectSeries, XAxis, YAxis } from 'react-vis';
 import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { VerticalRectSeries, XAxis, XYPlot, YAxis } from 'react-vis';
 
 interface TeamTimelineChartProps {
   filteredPlayerIds: string[];

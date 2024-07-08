@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Card } from "antd";
 import { useState } from "react";
 import { SCOUTING_PAGE_NAMES } from "../../constants/scoutingConstants";
 import ScoutConfiguration from "./scoutPage/ScoutConfiguration";
@@ -9,17 +9,18 @@ import SkillConfiguration from "./skillPage/SkillConfiguration";
 const ScoutingDashboard = () => {
   const [activePage, setActivePage] = useState(0);
 
-  const handleButton1Click = () => {
+  const handlePrevButtonClick = () => {
     if (activePage > 0) {
       setActivePage(activePage - 1);
     }
   };
 
-  const handleButton3Click = () => {
+  const handleNextButtonClick = () => {
     if (activePage < Object.keys(SCOUTING_PAGE_NAMES).length - 1) {
       setActivePage(activePage + 1);
     }
   };
+
   const getPage = () => {
     switch (activePage) {
       case 0:
@@ -34,21 +35,21 @@ const ScoutingDashboard = () => {
   };
 
   return (
-    <div className="dashboard-container">
-      <div className="button-container">
-        <Button onClick={handleButton1Click} className="arrow-button">
-          &#8249;
-        </Button>
-        <Button className="content-button">
-          {SCOUTING_PAGE_NAMES[activePage]}
-        </Button>
-        <Button onClick={handleButton3Click} className="arrow-button">
-          &#8250;
-        </Button>
-      </div>
-      <div className="page-content">
-        <h1>{getPage()}</h1>
-      </div>
+    <div className="scout-dashboard-container">
+      <Card className="navigation-bar">
+        <div className="button-container">
+          <Button onClick={handlePrevButtonClick} className="arrow-button">
+            &#8249;
+          </Button>
+          <Button className="content-button">
+            {SCOUTING_PAGE_NAMES[activePage]}
+          </Button>
+          <Button onClick={handleNextButtonClick} className="arrow-button">
+            &#8250;
+          </Button>
+        </div>
+      </Card>
+      <div className="page-content">{getPage()}</div>
     </div>
   );
 };

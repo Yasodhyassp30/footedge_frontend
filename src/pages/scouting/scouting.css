@@ -1,206 +1,266 @@
-.dashboard-container {
+.scout-dashboard-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 1400px;
+  min-width: 1800px;
+  height: 100%;
+  /* background-image: url("./assets/scout-wallpaper-4.jpg"); */
+  background-color: rgb(157, 178, 191);
+  background-size: cover;
+  background-position: center;
 
-  .button-container {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 100px;
-    width: 800px;
+  .navigation-bar {
+    margin-top: 10%;
+    width: 50%;
+    border-radius: 10px;
+    border-color: transparent;
+    /* background-color: rgba(16, 25, 18, 0.3); */
+    background-color: #526D82;
 
-    .arrow-button {
-      background-color: transparent;
-      border: none;
-      width: 50px;
-      height: 50px;
-      font-size: 30px;
-      font-style: bold;
-      cursor: pointer;
-      line-height: 1;
-    }
-    .content-button {
-      background-color: #282c34;
-      color: white;
-      width: 300px;
-      height: 50px;
-      border-radius: 15px;
-    }
-  }
-  .page-content {
-    margin-top: 100px;
-
-    .skill-configuration-container {
+    .button-container {
       display: flex;
-      align-items: flex-start;
+      justify-content: space-between;
+      width: 100%;
 
-      .skill-form {
-        flex: 1;
-        margin-right: 200px;
-        width: 500px;
-
-        .form-title {
-          font-size: 24px;
-          font-weight: bold;
-          margin-bottom: 16px;
-        }
-
-        .custom-button {
-          background-color: #1890ff;
-          border-color: #1890ff;
-          margin: 10px 10px 10px 10px;
-
-          &:hover {
-            background-color: #40a9ff;
-            border-color: #40a9ff;
-          }
-        }
-      }
-      .skill-list {
-        width: 500px;
-
-        .skill-search {
-          margin-bottom: 16px;
-        }
-
-        .scrollable-list {
-          max-height: 50vh;
-          overflow-y: auto;
-
-          .skill-card {
-            .add-more-button {
-              font-size: 13px;
-              color: tomato;
-              font-style: underline;
-
-              &:hover {
-                color: red;
-              }
-            }
-          }
-        }
+      .arrow-button {
+        background-color: transparent;
+        color: black;
+        border: none;
+        font-size: 40px;
+        cursor: pointer;
+        padding-bottom: 50px;
       }
 
-      .file-list {
-        .upload-button {
-          color: black;
-        }
-      }
-    }
-
-    .scout-configuration-container {
-      display: flex;
-      align-items: flex-start;
-
-      .scout-title {
+      .content-button {
+        color: black;
+        border: none;
         font-size: 24px;
         font-weight: bold;
-        margin-bottom: 16px;
+        font-family: "Arial", sans-serif;
+        border-radius: 5px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        background: none;
       }
 
-      .scout-sub-title {
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 16px;
-      }
-
-      .scout-config-back{
-        color: red;
-      }
-
-      .skill-list {
-        width: 500px;
-
-        .skill-search {
-          margin-bottom: 16px;
-        }
-
-        .scrollable-list {
-          max-height: 50vh;
-          overflow-y: auto;
-
-          .skill-card {
-            .add-more-button {
-              font-size: 13px;
-              color: tomato;
-              font-style: underline;
-
-              &:hover {
-                color: red;
-              }
-            }
-          }
-        }
-      }
-
-      .file-list {
-        .upload-button {
-          color: black;
-        }
+      .content-button:hover {
+        color:  #526D82;
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
       }
     }
-
-    .scout-result-container {
-      display: flex; /* Add flex layout */
-      flex-direction: column; /* Set flex direction to column */
-    
-      .progress-container {
-        margin-bottom: 20px;
-        width: 1400px;
-      }
-    
-      .parameter-cards-container {
-        display: flex;
-        flex-wrap: wrap;
-        width: 1200px;
-    
-        .container-body {
-          padding-left: 200px;
-          display: flex;
-          flex-wrap: wrap;
-          flex: 1;
-          justify-content: space-between; /* Distribute items evenly along the main axis */
-          
-          .parameter-card {
-            width: 200px;
-            margin-bottom: 20px; /* Adjust margin */
-            border: 1px solid #e8e8e8;
-            border-radius: 5px;
-          }
-    
-          .parameter-card:hover {
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-          }
-    
-          .parameter-card .ant-card-body {
-            padding: 16px;
-          }
-    
-          .parameter-card .ant-card-head {
-            background-color: #fafafa;
-            border-bottom: 1px solid #e8e8e8;
-          }
-    
-          .parameter-card .ant-card-head-title {
-            font-size: 16px;
-          }
-    
-          .parameter-detail {
-            margin-bottom: 8px;
-          }
-        }
-    
-        .container-footer {
-          width: 100%;
-          padding-left: 200px;
-          margin-bottom: 40px;
-        }
-    
-        .scout-config-back {
-          color: #1890ff;
-        }
-      }
-    }
-    
   }
+
+  .page-content {
+    width: 60%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    margin-top: 25px;
+    /* background-color: rgba(16, 25, 18, 0.3); */
+    background-color: #526D82;
+    border-radius: 10px;
+  }
+}
+
+.skill-configuration-container {
+  display: flex;
+  align-items: flex-start;
+
+  .skill-form {
+    flex: 1;
+    margin: 20px;
+    border-radius: 10px;
+    border-color: transparent;
+
+    .skill-card-view {
+      max-width: 600px;
+      font-size: 20px;
+      font-weight: bold;
+      font-family: "Arial", sans-serif;
+      width: 100%;
+      min-height: 700px;
+      border-color: transparent;
+      border-radius: 10px;
+      background-color: transparent;
+
+
+      .icon-select {
+        .option-content {
+          display: flex;
+          align-items: center;
+        }
+
+        .option-text {
+          margin-left: 8px;
+        }
+      }
+
+      .form-button-container {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 100px;
+        min-width: 400px;
+        width: 100%;
+      }
+      .skill-custom-button {
+        color: black;
+        border-radius: 3px;
+        border-color: white;
+      }
+
+      .skill-custom-button:hover {
+        color: #526D82;
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
+
+  .skill-list {
+    min-width: 500px;
+    width: 100%;
+    margin-top: 20px;
+    border-radius: 10px;
+
+
+    .skill-search {
+      background-color: rgba(240, 242, 245, 0.6);
+      margin-bottom: 16px;
+
+      .search-input {
+        background-color: rgba(240, 242, 245, 0.6);
+      }
+    }
+
+    .scrollable-list::-webkit-scrollbar {
+      width: 0;
+      background-color: transparent;
+    }
+    
+    .scrollable-list {
+      max-height: 660px;
+      border-radius: 10px;
+      overflow-y: auto;
+      -ms-overflow-style: none; /* Hide scrollbar on IE and Edge */
+      scrollbar-width: none; /* Hide scrollbar on Firefox */
+
+      .skill-card {
+        margin-bottom: 20px;
+        border-radius: 10px;
+        background-color: rgba(240, 242, 245, 0.6);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .skill-card-content {
+        padding: 16px;
+      }
+      
+      .skill-card-content .ant-typography {
+        margin-bottom: 12px;
+        font-size: 16px;
+      }
+      
+      .add-more-button {
+        color:  #526D82;
+        text-decoration: underline;
+      }
+      
+      .add-more-button:hover {
+        color:  #526D82;
+      }
+      
+      .ant-tag {
+        margin-bottom: 8px;
+      }
+    }
+  }
+  
+}
+
+.file-list .upload-button {
+  color: black;
+}
+
+.scout-configuration-container {
+  display: flex;
+  align-items: flex-start;
+}
+
+.scout-title,
+.scout-sub-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.scout-sub-title {
+  font-size: 18px;
+}
+
+.scout-config-back {
+  color: red;
+}
+
+.scout-result-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.progress-container {
+  margin-bottom: 20px;
+  width: 1400px;
+}
+
+.parameter-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 1200px;
+}
+
+.container-body {
+  padding-left: 200px;
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.parameter-card {
+  width: 200px;
+  margin-bottom: 20px;
+  border: 1px solid #e8e8e8;
+  border-radius: 5px;
+}
+
+.parameter-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.parameter-card .ant-card-body {
+  padding: 16px;
+}
+
+.parameter-card .ant-card-head {
+  background-color: #fafafa;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.parameter-card .ant-card-head-title {
+  font-size: 16px;
+}
+
+.parameter-detail {
+  margin-bottom: 8px;
+}
+
+.container-footer {
+  width: 100%;
+  padding-left: 200px;
+  margin-bottom: 40px;
+}
+
+.scout-config-back {
+  color: #1890ff;
 }

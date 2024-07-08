@@ -25,6 +25,9 @@ export const SKILL_CATEGORIES: { [key: number]: string } = {
     12: "Confidence",
     13: "Resilience"
 };
+export const PLAYER_IDS: { [key: number]: string } = {
+  1: "Player 1",
+};
 
 
 export const SKILL_CARD_MENU_ACTIONS = ['Create', 'Edit', 'Copy', 'Delete'];
@@ -34,7 +37,7 @@ export const EDIT = SKILL_CARD_MENU_ACTIONS.indexOf('Edit');
 export const COPY = SKILL_CARD_MENU_ACTIONS.indexOf('Copy');
 export const DELETE = SKILL_CARD_MENU_ACTIONS.indexOf('Delete');
 
-export const SCOUTING_SERVICE_URL = "http://localhost:5000";
+export const SCOUTING_SERVICE_URL = "http://localhost:5001";
 
 export const TRAINING_STATUS_TO_TEXT_MAP = new Map([
   [0, 'PENDING'],

@@ -17,7 +17,7 @@ export const ProgressContent: React.FC<ProgressContentProps> = ({
 
       const callAPI = async () => {
         // const url = `${SCOUTING_SERVICE_URL}/scout/${selectedSkill}`;
-        const url = `${SCOUTING_SERVICE_URL}/scout/66334ae49d8952602d477842`;
+        const url = `${SCOUTING_SERVICE_URL}/scout/66798830bbb733081142f03a?type=SCOUTING`;
         const result = await fetchData(url);
         setLatestRequest(result);
         setLoading(false);

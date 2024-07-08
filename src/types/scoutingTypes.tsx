@@ -88,3 +88,9 @@ export interface ScoutRequest {
 export interface ProgressContentProps {
   selectedSkill: string;
 }
+
+export interface CustomOptionProps {
+  imageURL?: string;
+  categoryName: string;
+  categoryValue: number;
+}

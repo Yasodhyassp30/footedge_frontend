@@ -4,8 +4,10 @@ export async function api(url, options = {}) {
         ...options,
     };
 
-    // Conditionally set Content-Type to 'application/json' only for JSON payloads
+
+    console.log(localStorage.getItem('user'));
     const headers = {
+        Authorization: JSON.parse(localStorage.getItem('user'))?.user.token || null,
         Accept: 'application/json',
         ...config.headers,
     };
