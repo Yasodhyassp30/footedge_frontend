@@ -5,10 +5,9 @@ import {
   CREATE,
   DELETE,
   EDIT,
-  PLAYER_IDS,
   SCOUTING_SERVICE_URL,
   SKILL_CARD_MENU_ACTIONS,
-  SKILL_CATEGORIES,
+  SKILL_CATEGORIES
 } from "../../../constants/scoutingConstants";
 import { Skill } from "../../../types/scoutingTypes";
 import CustomOption from "../common/CustomOption";
@@ -114,7 +113,7 @@ const SkillConfiguration: React.FC = () => {
     try {
       setLoading(true);
       const url = `${SCOUTING_SERVICE_URL}/files`;
-      await uploadFiles(formData, uploadModalRequest, url, "TRAINING");
+      await uploadFiles(formData, uploadModalRequest, undefined, url, "TRAINING");
     } catch (error) {
       console.error("File upload failed:", error);
     } finally {
@@ -164,34 +163,6 @@ const SkillConfiguration: React.FC = () => {
                   {Object.keys(SKILL_CATEGORIES).map((key) => {
                     const category = parseInt(key);
                     const categoryName = SKILL_CATEGORIES[category];
-                    const imageURL = ""; // Add logic to get the image URL if available
-
-                    return (
-                      <Option value={category} key={key}>
-                        <div className="option-content">
-                          <CustomOption
-                            imageURL={imageURL}
-                            categoryName={categoryName}
-                            categoryValue={category}
-                          />
-                        </div>
-                      </Option>
-                    );
-                  })}
-                </Select>
-              </Form.Item>
-              <Form.Item
-                name="linked_player"
-                label="Linked Player"
-              >
-                <Select
-                  placeholder="Select player"
-                  disabled={isNotEditable || actionType === EDIT}
-                  className="icon-select"
-                >
-                  {Object.keys(PLAYER_IDS).map((key) => {
-                    const category = parseInt(key);
-                    const categoryName = PLAYER_IDS[category];
                     const imageURL = ""; // Add logic to get the image URL if available
 
                     return (

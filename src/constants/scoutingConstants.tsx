@@ -25,6 +25,7 @@ export const SKILL_CATEGORIES: { [key: number]: string } = {
     12: "Confidence",
     13: "Resilience"
 };
+
 export const PLAYER_IDS: { [key: number]: string } = {
   1: "Player 1",
 };

@@ -2,7 +2,7 @@ import { Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import { SCOUTING_SERVICE_URL } from "../../../constants/scoutingConstants";
 import { ScoutRequest } from "../../../types/scoutingTypes";
-import ThreeDHumanPose from "../common/progressPreview";
+import ThreeDHumanPose from "../common/progressPreview.js";
 import "../scouting.css";
 import { fetchData } from "../scoutingApis";
 
@@ -26,7 +26,7 @@ const ScoutResult: React.FC = () => {
     setLoading(true);
 
     const callAPI = async () => {
-      const url = `${SCOUTING_SERVICE_URL}/scout/all`;
+      const url = `${SCOUTING_SERVICE_URL}/scout/all?type=SCOUTING`;
       const result = await fetchData(url);
       setActiveRequests(result);
       setLoading(false);
@@ -35,6 +35,7 @@ const ScoutResult: React.FC = () => {
     callAPI();
   }, []);
 
+  console.log(activeRequests);
   return (
     <Spin spinning={loading}>
       {activeRequests.map((request) => (

@@ -51,6 +51,7 @@ export const deleteData = async (skillName: string, url: string) => {
 export const uploadFiles = async (
   formData: FormData,
   skill: any,
+  player: any,
   url: string,
   type: string
 ) => {
@@ -61,7 +62,10 @@ export const uploadFiles = async (
     if (type) {
       formData.append("type", type);
     }
-
+    if(player){
+      formData.append("player", player);
+    
+    }
     const result = await api(url, {
       method: "POST",
       payload: formData,

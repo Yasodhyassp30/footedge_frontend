@@ -1,16 +1,25 @@
-import { Spin } from "antd";
+import { Form, Select, Spin } from "antd";
 import React, { useEffect, useState } from "react";
-import { SCOUTING_SERVICE_URL } from "../../../constants/scoutingConstants";
+import {
+  PLAYER_IDS,
+  SCOUTING_SERVICE_URL,
+} from "../../../constants/scoutingConstants";
 import { Skill } from "../../../types/scoutingTypes";
+import CustomOption from "../common/CustomOption";
 import FileUploadModal from "../common/uploadVideo";
 import "../scouting.css";
 import { fetchData, uploadFiles } from "../scoutingApis";
 import ScoutingSkillList from "./ScoutingSkillList";
 
+const { Option } = Select;
+
 const ScoutConfiguration: React.FC = () => {
+  const [form] = Form.useForm();
+
   const [skills, setSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedSkill, setSelectedSkill] = useState<Skill | undefined>();
+  const [selectedPlayer, setSelectedPlayer] = useState<number | undefined>();
   const [uploadModalVisible, setUploadModalVisible] = useState<boolean>(true);
 
   useEffect(() => {
@@ -34,8 +43,10 @@ const ScoutConfiguration: React.FC = () => {
 
   const onUpload = async (formData: FormData) => {
     const url = `${SCOUTING_SERVICE_URL}/files`;
-    await uploadFiles(formData, selectedSkill, url, "SCOUTING");
+    await uploadFiles(formData, selectedSkill, selectedPlayer, url, "SCOUTING");
     setUploadModalVisible(false);
+    setSelectedPlayer(0);
+    setSelectedSkill(undefined);
   };
 
   const onUploadModelClose = () => {
@@ -43,9 +54,39 @@ const ScoutConfiguration: React.FC = () => {
     setSelectedSkill(undefined);
   };
 
+  const handlePlayerSelect = (player: any) => {
+    console.log("Selected Player: ", player);
+    setSelectedPlayer(player);
+  }
+
   return (
     <Spin spinning={loading}>
       {selectedSkill && (
+        <Form form={form}>
+          <Form.Item name="linked_player" label="Linked Player">
+            <Select placeholder="Select player" className="icon-select" onChange={handlePlayerSelect}>
+              {Object.keys(PLAYER_IDS).map((key) => {
+                const category = parseInt(key);
+                const categoryName = PLAYER_IDS[category];
+                const imageURL = ""; // Add logic to get the image URL if available
+
+                return (
+                  <Option value={category} key={key}>
+                    <div className="option-content">
+                      <CustomOption
+                        imageURL={imageURL}
+                        categoryName={categoryName}
+                        categoryValue={category}
+                      />
+                    </div>
+                  </Option>
+                );
+              })}
+            </Select>
+          </Form.Item>
+        </Form>
+      )}
+      {selectedSkill && selectedPlayer && (
         <>
           <div className="scout-configuration-container">
             <div>
