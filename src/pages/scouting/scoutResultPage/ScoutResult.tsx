@@ -27,7 +27,6 @@ const ScoutResult: React.FC = () => {
   }, []);
 
   const onChange = (value: any) => {
-    console.log("onChange", value);
     if (value <= 4) {
       setHighlight(0);
     } else if (value === 5) {

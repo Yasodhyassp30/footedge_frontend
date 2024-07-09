@@ -43,7 +43,7 @@ const ResultCard = (request) => {
         <div className="parameter-cards">
           {dataPoints.map((point, index) => {
             return (
-              <div key={point.id} className="card" style={{background: request.highlight === index ?"red": "white"}}>
+              <div key={point.id} className="card" style={{background: request.highlight === index ?"blue": "white"}}>
                 <h3>{point.name}</h3>
                 <p>
                   Offset:{" "}
