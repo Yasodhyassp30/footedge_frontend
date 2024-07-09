@@ -3,6 +3,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import DescriptionIcon from '@mui/icons-material/Description';
 import MenuIcon from '@mui/icons-material/Menu';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
+import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import { IconButton } from '@mui/material';
 import { Button } from 'antd';
 import React from 'react';
@@ -67,6 +68,11 @@ function Navbar() {
       name: 'Annotation',
       link: '/annotate',
       icon: <AssignmentIcon />
+    },
+    {
+      name: 'Players',
+      link: '/players',
+      icon: <SupervisorAccountIcon />
     },
     {
       name: 'Scouting',

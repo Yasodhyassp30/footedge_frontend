@@ -12,6 +12,9 @@ import ReportPage from './pages/allreport/ReportPage';
 import ScoutingDashboard from "./pages/scouting/ScoutingDashBoard";
 import { authSlice } from './reducers/authReducer';
 import { RootState } from './reducers/combinedReducers';
+import Players from './pages/dashboard/components/playersComponent';
+import AddPlayer from './pages/dashboard/components/addPlayerForm';
+import PlayerProfile from './pages/dashboard/components/playerProfileView';
 
 function App() {
   const dispatch = useDispatch();
@@ -27,6 +30,10 @@ function App() {
       <Routes>
             <Route path="/" element={!user.token?<Navigate to="/login"/>:<Dashboard/> } />
             <Route path="/annotate" element={!user.token?<Navigate to="/login"/>:<AnnotationComponent />} />
+             <Route path="/players" element={!user.token?<Navigate to="/login"/>:<Players />} />
+             <Route path="/add-player" element={!user.token?<Navigate to="/login"/>:<AddPlayer />} />
+             <Route path="/add-player/:id" element={!user.token?<Navigate to="/login"/>:<AddPlayer />} />
+             <Route path="/player/:id" element={!user.token?<Navigate to="/login"/>:<PlayerProfile />} />
             <Route path="/scouting" element={!user.token?<Navigate to="/login"/>:<ScoutingDashboard />} />
             <Route path="/reports" element={!user.token?<Navigate to="/login"/>:<ReportPage/> } />
             <Route path="/login" element={user.token?<Navigate to="/"/>:<Login />} />

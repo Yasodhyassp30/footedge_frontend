@@ -21,6 +21,12 @@ const SidebarData = [
     icon: <GiIcons.GiSunglasses />,
     cName: "nav-text",
   },
+   {
+    title: "Players",
+    path: "/players",
+    icon: <TbIcons.TbReportSearch />,
+    cName: "nav-text",
+  },
   {
     title: "Annotate",
     path: "/annotate",
