@@ -175,7 +175,7 @@ const PresenceMaps:React.FC<PresenceMapsProps> = ({data}) => {
         .attr("width", "100%")
         .attr("height", "100%")
         .attr("fill", "green")
-        .attr("stroke", "#27374D")
+        .attr("stroke", "white")
         .attr("stroke-width", 5);
 
       svg
@@ -184,7 +184,7 @@ const PresenceMaps:React.FC<PresenceMapsProps> = ({data}) => {
         .attr("cy", "50%")
         .attr("r", "10%")
         .attr("fill", "none")
-        .attr("stroke", "#27374D")
+        .attr("stroke", "white")
         .attr("stroke-width", 5);
 
       svg
@@ -193,7 +193,7 @@ const PresenceMaps:React.FC<PresenceMapsProps> = ({data}) => {
         .attr("cy", "50%")
         .attr("r", "10%")
         .attr("fill", "none")
-        .attr("stroke", "#27374D")
+        .attr("stroke", "white")
         .attr("stroke-width", 5);
 
       svg
@@ -202,7 +202,7 @@ const PresenceMaps:React.FC<PresenceMapsProps> = ({data}) => {
         .attr("cy", "50%")
         .attr("r", "10%")
         .attr("fill", "none")
-        .attr("stroke", "#27374D")
+        .attr("stroke", "white")
         .attr("stroke-width", 5);
 
       svg
@@ -212,7 +212,7 @@ const PresenceMaps:React.FC<PresenceMapsProps> = ({data}) => {
         .attr("width", "20%")
         .attr("height", "55%")
         .attr("fill", "green")
-        .attr("stroke", "#27374D")
+        .attr("stroke", "white")
         .attr("stroke-width", 5);
 
       svg
@@ -222,7 +222,7 @@ const PresenceMaps:React.FC<PresenceMapsProps> = ({data}) => {
         .attr("width", "20%")
         .attr("height", "55%")
         .attr("fill", "green")
-        .attr("stroke", "#27374D")
+        .attr("stroke", "white")
         .attr("stroke-width", 5);
 
       svg
@@ -232,7 +232,7 @@ const PresenceMaps:React.FC<PresenceMapsProps> = ({data}) => {
         .attr("width", "8%")
         .attr("height", "25%")
         .attr("fill", "none")
-        .attr("stroke", "#27374D")
+        .attr("stroke", "white")
         .attr("stroke-width", 5);
 
       svg
@@ -242,7 +242,7 @@ const PresenceMaps:React.FC<PresenceMapsProps> = ({data}) => {
         .attr("width", "8%")
         .attr("height", "25%")
         .attr("fill", "none")
-        .attr("stroke", "#27374D")
+        .attr("stroke", "white")
         .attr("stroke-width", 5);
 
       svg
@@ -251,7 +251,7 @@ const PresenceMaps:React.FC<PresenceMapsProps> = ({data}) => {
         .attr("y1", "0%")
         .attr("x2", "50%")
         .attr("y2", "100%")
-        .attr("stroke", "#27374D")
+        .attr("stroke", "white")
         .attr("stroke-width", 5);
     
         svg
@@ -260,7 +260,7 @@ const PresenceMaps:React.FC<PresenceMapsProps> = ({data}) => {
         .attr("y1", "0%")
         .attr("x2", "20%")
         .attr("y2", "100%")
-        .attr("stroke", "#27374D")
+        .attr("stroke", "white")
         .attr("stroke-width", 5);
 
         svg
@@ -269,7 +269,7 @@ const PresenceMaps:React.FC<PresenceMapsProps> = ({data}) => {
         .attr("y1", "0%")
         .attr("x2", "80%")
         .attr("y2", "100%")
-        .attr("stroke", "#27374D")
+        .attr("stroke", "white")
         .attr("stroke-width", 5);
 
         svg
@@ -278,7 +278,7 @@ const PresenceMaps:React.FC<PresenceMapsProps> = ({data}) => {
         .attr("y1", "22.5%")
         .attr("x2", "100%")
         .attr("y2", "22.50%")
-        .attr("stroke", "#27374D")
+        .attr("stroke", "white")
         .attr("stroke-width", 5);
 
         svg
@@ -287,7 +287,7 @@ const PresenceMaps:React.FC<PresenceMapsProps> = ({data}) => {
         .attr("y1", "77.5%")
         .attr("x2", "100%")
         .attr("y2", "77.5%")
-        .attr("stroke", "#27374D")
+        .attr("stroke", "white")
         .attr("stroke-width", 5);
 
         
@@ -297,7 +297,7 @@ const PresenceMaps:React.FC<PresenceMapsProps> = ({data}) => {
         .attr("y1", "37.5%")
         .attr("x2", "80%")
         .attr("y2", "37.5%")
-        .attr("stroke", "#27374D")
+        .attr("stroke", "white")
         .attr("stroke-width", 5);
         
         svg
@@ -306,7 +306,7 @@ const PresenceMaps:React.FC<PresenceMapsProps> = ({data}) => {
         .attr("y1", "62.5%")
         .attr("x2", "80%")
         .attr("y2", "62.5%")
-        .attr("stroke", "#27374D")
+        .attr("stroke", "white")
         .attr("stroke-width", 5);
     
       keyAreas.forEach((area) => {
@@ -343,7 +343,7 @@ const PresenceMaps:React.FC<PresenceMapsProps> = ({data}) => {
           .append("text")
           .attr("x",(d) => `${(d.minX + d.maxX) / 2}%`)
           .attr("y",(d) => `${(d.minY + d.maxY) / 2}%`)
-          .text((d) =>`${(d.value/data.length *100).toFixed(1)}%`)
+          .text((d) =>`${d.value}`)
           .attr("fill", "black ")
           .style("font-size", "20px")
           .style("text-anchor", "middle")

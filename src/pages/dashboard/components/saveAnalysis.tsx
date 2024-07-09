@@ -56,7 +56,8 @@ export default function SaveAnalysisPopup() {
                 passings: ball,
                 date: new Date(),
                 name: name.current?.value,
-                id: user.id
+                id: user.id,
+                info: info
         })
         setOpen(false);
         setSnackbar(true);
