@@ -10,7 +10,7 @@ import "./dashboard.css";
 import axios, { AxiosResponse, CancelTokenSource } from "axios";
 import io, { Socket } from "socket.io-client";
 import TeamActivity from "./components/teamActivity";
-import { Box, Container, Grid, Grow, IconButton, Paper, Snackbar, SnackbarContent, Stack, Tooltip, Typography } from "@mui/material";
+import { Box, Container, Grid, Grow, IconButton, Paper, Stack, Tooltip, Typography } from "@mui/material";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import PeopleIcon from "@mui/icons-material/People";
 import AppsIcon from "@mui/icons-material/Apps";
@@ -29,7 +29,6 @@ import PassingNetwork from "./components/passingNetwork";
 import SaveAnalysisPopup from "./components/saveAnalysis";
 import { calc } from "antd/es/theme/internal";
 import PreviousMatches from "./components/previousMatches";
-import { Close } from "@mui/icons-material";
 
 const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
 
@@ -74,7 +73,6 @@ function Dashboard() {
     individual: false,
     passings: false,
   });
-  const [snackbar,setSnackbar] = React.useState<boolean>(false);
 
   const setViewHandler = (functionName: string) => {
     setView({
@@ -118,7 +116,6 @@ function Dashboard() {
   useEffect(() => {
     if (socket) {
       socket.on("final_message_from_server", (data) => {
-        setSnackbar(true);
         socket.disconnect();
         setSocket(null);
       });
@@ -245,16 +242,6 @@ function Dashboard() {
       height: "calc(100vh - 80px)",
       display: "flex",
     }}>
-     <Snackbar open={snackbar} autoHideDuration={6000} anchorOrigin={
-        { vertical: 'bottom', horizontal: 'right' }
-      } onClose={() => setSnackbar(false)}>
-        <div style={{ width: 300 }}>
-          <SnackbarContent
-            sx={{ backgroundColor: "green" }}
-            message={ "Analysis Completed"}
-          />
-        </div>
-      </Snackbar>
       <div style={{
          width: "100%",
          height: "100%",
@@ -307,21 +294,6 @@ function Dashboard() {
               }}
             />
           </Button>
-         {(videoSrc && uploadProgress==100) &&  <Button
-            component="label"
-            variant="contained"
-            color="error"
-            startIcon={<Close />}
-            sx={{
-              margin: "10px",
-              width: "max-content",
-            }}
-            onClick={() => {
-              setVideoSrc(null);
-            }}
-          >
-            Back
-          </Button>}
           {uploadProgress >0 && uploadProgress<100  && (
             <Button
               sx={{
@@ -591,7 +563,7 @@ function Dashboard() {
                   <div
                     style={{
                       padding: "10px",
-                      width: "80%",
+                      width: "100%",
                     }}
                   >
                     <PassingNetwork/>

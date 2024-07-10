@@ -85,17 +85,6 @@ const Players: React.FC = () => {
 
    return (
    <ThemeProvider theme={theme}>
-    <div style={{
-         width: "100%",
-         height: "100%",
-         position:"fixed",
-         top:0,
-         left:0, 
-         backgroundColor:"#9DB2BF",
-         zIndex:-1
-      }}>
-
-      </div>
       <Container className='pt-24'>
       <Grid container spacing={2} alignItems="center" className="mb-4">
           <Grid item xs={12} sm={4}>
