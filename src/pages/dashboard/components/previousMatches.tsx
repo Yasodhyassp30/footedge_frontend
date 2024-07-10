@@ -90,7 +90,7 @@ function PreviousMatches() {
 
   useEffect(() => {
    if(matchDetails.analysis !== undefined){
-    setSelectedPlayerData(matchDetails.analysis.players.filter((item:any)=>item.id==selectedPlayer)[0])
+    setSelectedPlayerData(matchDetails.analysis.players.filter((item:any)=>item.id==selectedPlayer)[0].positions)
    }
   }, [selectedPlayer]);
 
@@ -257,7 +257,7 @@ function PreviousMatches() {
               valueLabelDisplay="off"
               step={1}
               min={1}
-              max={matchDetails.analysis.players.length}
+              max={matchDetails.info.length}
               onChange={(e, val) => {
                 dispatch(tacticalAnalysisSlice.actions.setSlider(val));
               }}
@@ -268,7 +268,10 @@ function PreviousMatches() {
             />
             </Grid>
         </Grid>
-        <div>
+        <div style={{
+                      maxHeight: "calc(100vh - 160px)",
+                      overflowY: "auto",
+        }}>
             <Typography variant="h6">{details.filter((item:any)=>item._id.$oid==selected)[0].name}</Typography>
                  <Grow in={true}>
                  <Box component="fieldset">
@@ -389,7 +392,7 @@ function PreviousMatches() {
               ))}
             </Select>
             
-            <DensityPlot data={selectedPlayerData.positions!=undefined ? selectedPlayerData.positions.map((item:any)=>({coordinates:item})):[]} color={"red"} levels={5} />
+            <DensityPlot data={selectedPlayerData.map((item:any)=>({coordinates:item}))} color={"red"} levels={5} />
 
          </div>
         </div>

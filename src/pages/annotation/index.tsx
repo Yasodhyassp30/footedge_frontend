@@ -307,6 +307,16 @@ const handleSave = async () => {
             </option>
           ))}
         </select>
+      <div style={{
+         width: "100%",
+         height: "100%",
+         position:"fixed",
+         top:0,
+         left:0, 
+         backgroundColor:"#9DB2BF",
+         zIndex:-1
+      }}>
+
       </div>
       <div className="w-full flex">
         <div className="w-1/3 pr-4">
@@ -549,6 +559,7 @@ const handleSave = async () => {
         </Modal>
       )}
       <ToastContainer />
+    </div>
     </div>
   );
 };
