@@ -13,6 +13,7 @@ const dataPoints = [
   { id: 13, name: "Right Hip" },
   { id: 14, name: "Left Leg" },
   { id: 15, name: "Right Leg" },
+  { id: 15, name: "Ball" },
 ];
 
 const ResultCard = (request) => {
@@ -33,10 +34,16 @@ const ResultCard = (request) => {
       {quality.results && (
         <div>
           <h1>Overall Qulaity</h1>
-          <h1>
-            Distance:{quality.quality.distance}% And Angle{" "}
+          <h2>
+            Distance {quality.quality.distance}% And Angle{" "}
             {quality.quality.angle}%
-          </h1>
+          </h2>
+          {console.log(quality.quality.distance + quality.quality.angle)}
+          {(quality.quality.distance + quality.quality.angle) > 170 ? (
+            <h3>System Recommendation : Excellent Fit</h3>
+          ) : (quality.quality.distance + quality.quality.angle2) > 150 ?(
+            <h3>System Recommendation : Good Fit</h3>
+          ): <h3>System Recommendation : Average Fit</h3>}
         </div>
       )}
       {quality.results && (

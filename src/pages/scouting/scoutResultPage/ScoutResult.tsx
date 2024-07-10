@@ -11,9 +11,34 @@ import ResultCard from "./ResultCards";
 const ScoutResult: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [activeRequests, setActiveRequests] = useState<Array<ScoutRequest>>([]);
-  const [highlight, setHighlight] = useState<number>(0);
+  const [highlight, setHighlight] = useState<number>(-1);
   const [sliderValue, setSliderValue] = useState<number>(1);
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<Array<string>>([]);
+  const [pageScope, setPageScope] = useState<number>(1);
+
+  const handleSliderChange = async (value: number, req: any) => {
+    setLoading(true);
+    try {
+      const url_1 = `${SCOUTING_SERVICE_URL}/scout/frames?image_id=${value}&skill=${req.skill}&unique_id=${req.unique_id}&type=1`;
+      const url_2 = `${SCOUTING_SERVICE_URL}/scout/frames?image_id=${value}&skill=${req.skill}&unique_id=${req.unique_id}&type=2`;
+
+      const response_1 = await fetchData(url_1);
+      const response_2 = await fetchData(url_2);
+      if (!response_1 || !response_2) {
+        throw new Error("Network response was not ok");
+      }
+      const imageUrl_1 = `data:image/png;base64,${response_1}`;
+      const imageUrl_2 = `data:image/png;base64,${response_2}`;
+      setImage([imageUrl_1, imageUrl_2]);
+      setSliderValue(value);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching image:", error);
+      setImage([]);
+      setLoading(false);
+
+    }
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -26,6 +51,7 @@ const ScoutResult: React.FC = () => {
     };
 
     callAPI();
+    handleSliderChange(1, activeRequests[0]);
   }, []);
 
   const onChange = (value: any) => {
@@ -52,22 +78,6 @@ const ScoutResult: React.FC = () => {
     }
   };
 
-  const handleSliderChange = async (value: number, req: any) => {
-    try {
-      const url = `${SCOUTING_SERVICE_URL}/scout/frames?image_id=${value}&skill=${req.skill}&unique_id=${req.unique_id}`;
-      const response = await fetchData(url);
-      if (!response) {
-        throw new Error("Network response was not ok");
-      }
-      const imageUrl = `data:image/png;base64,${response}`;
-      setImage(imageUrl);
-      setSliderValue(value);
-    } catch (error) {
-      console.error("Error fetching image:", error);
-      setImage(null);
-    }
-  };
-
   const incrementSlider = (req: any) => {
     const newValue = sliderValue + 1;
     if (newValue <= 91) {
@@ -82,22 +92,44 @@ const ScoutResult: React.FC = () => {
     }
   };
 
-  console.log(image);
   return (
     <Spin spinning={loading}>
+      <div>
+        <Button style={{background: pageScope === 1 ?"white": "transparent"}} onClick={() => setPageScope(1)} >FRAME BY RESULT</Button>
+        <Button style={{background: pageScope === 2 ?"white": "transparent"}}  onClick={() => setPageScope(2)}>OVERALL RESULT</Button>
+      </div>
       {activeRequests.map((request) => (
         <div className="scout-result-container" key={request._id}>
           <div>
-            STATUS: {request.status === 2 ? "IN PROGRESS" : "COMPLETED"}
-          </div>
-          <div className="slider-container">
-            <Button onClick={() => decrementSlider(request)}>-</Button>
-            {image && <Image width={200} src={image} />}
-            <Button onClick={() => incrementSlider(request)}>+</Button>
-            <p>Selected Value: {sliderValue}</p>
-          </div>
+                <h1>SCOUT STATUS: {request.status === 2 ? "IN PROGRESS" : "COMPLETED"}</h1>
+              </div>
+          {pageScope === 1 && (
+            <>
+              
+              <div className="slider-container">
+                <Button onClick={() => decrementSlider(request)}>-</Button>
+                <div className="images-container">
+                  <div className="image-wrapper">
+                    {image && image.length > 1 && (
+                      <Image width={400} src={image[1]} />
+                    )}
+                    <div>TRAIN</div>
+                  </div>
+                  <div className="image-wrapper">
+                    {image && image.length > 1 && (
+                      <Image width={400} src={image[0]} />
+                    )}
+                    <div>SCOUT</div>
+                  </div>
+                </div>
+                <Button onClick={() => incrementSlider(request)}>+</Button>
+              </div>{" "}
+            </>
+          )}
           <ResultCard request={request} highlight={highlight} />
-          <ThreeDHumanPose selectedSkill={request} onChange={onChange} />
+          {pageScope === 2 && (
+            <ThreeDHumanPose selectedSkill={request} onChange={onChange} />
+          )}
         </div>
       ))}
     </Spin>
