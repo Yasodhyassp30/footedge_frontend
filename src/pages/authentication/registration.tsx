@@ -133,7 +133,7 @@ export default function Register() {
             >
                 Register 
             </Button>
-            <Link href="/register" sx={{
+            <Link href="/login" sx={{
                 textDecoration: "none",
                 marginTop: "1rem",
             }}>Already User? Login</Link>

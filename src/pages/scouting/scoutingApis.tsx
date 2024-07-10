@@ -4,6 +4,7 @@ import { api } from "../../utils/api";
 export const fetchData = async (url: string) => {
   try {
     const response = await api(url);
+    console.log(response)
     return response.data;
   } catch (error) {
     return [];

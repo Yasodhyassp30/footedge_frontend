@@ -65,6 +65,9 @@ export const tacticalAnalysisSlice = createSlice({
           }
       });
     },
+    setPossesionsWhole: (state, action) => {
+      state.ball = action.payload;
+    },
       addFrames: (state, action) => {
         state.info.push(action.payload.info);
         state.info.forEach((frame) => {

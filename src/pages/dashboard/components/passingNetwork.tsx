@@ -17,7 +17,7 @@ export default function PassingNetwork() {
               .attr("width", "100%")
               .attr("height", "100%")
               .attr("fill", "green")
-              .attr("stroke", "#27374D")
+              .attr("stroke", "white")
               .attr("stroke-width", 5);
       
             svg
@@ -26,7 +26,7 @@ export default function PassingNetwork() {
               .attr("cy", "50%")
               .attr("r", "10%")
               .attr("fill", "none")
-              .attr("stroke", "#27374D")
+              .attr("stroke", "white")
               .attr("stroke-width", 5);
       
             svg
@@ -35,7 +35,7 @@ export default function PassingNetwork() {
               .attr("cy", "50%")
               .attr("r", "10%")
               .attr("fill", "none")
-              .attr("stroke", "#27374D")
+              .attr("stroke", "white")
               .attr("stroke-width", 5);
       
             svg
@@ -44,7 +44,7 @@ export default function PassingNetwork() {
               .attr("cy", "50%")
               .attr("r", "10%")
               .attr("fill", "none")
-              .attr("stroke", "#27374D")
+              .attr("stroke", "white")
               .attr("stroke-width", 5);
       
             svg
@@ -54,7 +54,7 @@ export default function PassingNetwork() {
               .attr("width", "20%")
               .attr("height", "55%")
               .attr("fill", "green")
-              .attr("stroke", "#27374D")
+              .attr("stroke", "white")
               .attr("stroke-width", 5);
       
             svg
@@ -64,7 +64,7 @@ export default function PassingNetwork() {
               .attr("width", "20%")
               .attr("height", "55%")
               .attr("fill", "green")
-              .attr("stroke", "#27374D")
+              .attr("stroke", "white")
               .attr("stroke-width", 5);
       
             svg
@@ -74,7 +74,7 @@ export default function PassingNetwork() {
               .attr("width", "8%")
               .attr("height", "25%")
               .attr("fill", "none")
-              .attr("stroke", "#27374D")
+              .attr("stroke", "white")
               .attr("stroke-width", 5);
       
             svg
@@ -84,7 +84,7 @@ export default function PassingNetwork() {
               .attr("width", "8%")
               .attr("height", "25%")
               .attr("fill", "green")
-              .attr("stroke", "#27374D")
+              .attr("stroke", "white")
               .attr("stroke-width", 5);
       
             svg
@@ -93,13 +93,14 @@ export default function PassingNetwork() {
               .attr("y1", "0%")
               .attr("x2", "50%")
               .attr("y2", "100%")
-              .attr("stroke", "#27374D")
+              .attr("stroke", "white")
               .attr("stroke-width", 5);
           }
         }, []);
 
     useEffect(() => {
         if (svgRef.current) {
+          console.log(data);
           const newData = data.filter((d) => d.frame <= slider);
             const svg = d3.select(svgRef.current);
             
