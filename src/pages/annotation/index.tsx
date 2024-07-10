@@ -1,14 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactPlayer from 'react-player';
 import axios from 'axios';
-import {
-  Popover,
-  PopoverHandler,
-  PopoverContent,
-  Button,
-  Input,
-  Typography,
-} from "@material-tailwind/react";
+import Modal from 'react-modal';
+import { ReactSketchCanvas, ReactSketchCanvasRef } from 'react-sketch-canvas';
+import { Spinner } from "@material-tailwind/react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import ReactMarkdown from 'react-markdown';
 
 interface Annotation {
   id: number;
@@ -28,7 +26,6 @@ interface CustomButton {
 const AnnotationComponent: React.FC = () => {
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
   const [selectedAnnotationIndex, setSelectedAnnotationIndex] = useState<number | null>(null);
-  const [selectedDescriptorIndex, setSelectedDescriptorIndex] = useState<number | null>(null);
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
   const [customButtons, setCustomButtons] = useState<CustomButton[]>([]);
   const [showAddButtonWindow, setShowAddButtonWindow] = useState<boolean>(false);
@@ -36,15 +33,43 @@ const AnnotationComponent: React.FC = () => {
   const [isCategorical, setIsCategorical] = useState<boolean>(true);
   const [newButtonNotes, setNewButtonNotes] = useState<string>('');
   const [snapshots, setSnapshots] = useState<string[]>([]);
+  const [selectedSnapshot, setSelectedSnapshot] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [brushColor, setBrushColor] = useState<string>('red');
+  const [brushSize, setBrushSize] = useState<number>(4);
+  const [isErasing, setIsErasing] = useState<boolean>(false);
+  const [analysisResult, setAnalysisResult] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const videoRef = useRef<ReactPlayer>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const drawRef = useRef<ReactSketchCanvasRef>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const videoURL = URL.createObjectURL(file);
       setVideoSrc(videoURL);
+      analyzeVideo(file);
+    }
+  };
+
+  const analyzeVideo = async (file: File) => {
+    setLoading(true);
+    const formData = new FormData();
+    formData.append('video', file);
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/event-detection/analyze_video', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      setAnalysisResult(response.data.analysis);
+    } catch (error) {
+      console.error('Error analyzing video:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -112,13 +137,30 @@ const AnnotationComponent: React.FC = () => {
         videoSrc: videoSrc,
       };
 
-      // Send data to backend
-      const response = await axios.post('/analyze', dataToSend);
+      const response = await axios.post('http://localhost:5000/api/analyze', dataToSend);
 
-      // Handle response from backend if needed
       console.log('Analysis complete:', response.data);
     } catch (error) {
       console.error('Error analyzing:', error);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      const dataToSend = {
+        annotations: annotations,
+        customButtons: customButtons,
+        videoSrc: videoSrc,
+        snapshots: snapshots,
+      };
+
+      const response = await axios.post('http://localhost:5000/api/save_annotations', dataToSend);
+
+      toast.success('Save complete');
+      console.log('Save complete:', response.data);
+    } catch (error) {
+      toast.error('Error saving');
+      console.error('Error saving:', error);
     }
   };
 
@@ -130,19 +172,33 @@ const AnnotationComponent: React.FC = () => {
       if (context) {
         context.drawImage(currentVideo, 0, 0, canvas.width, canvas.height);
         const dataURL = canvas.toDataURL();
-        setSnapshots([...snapshots, dataURL]);
+        setSnapshots(prevSnapshots => [...prevSnapshots, dataURL]);
       }
     }
   };
 
+  const handleSnapshotClick = (snapshot: string) => {
+    setSelectedSnapshot(snapshot);
+    setIsModalOpen(true);
+  };
+
+  const handleSaveSnapshot = async () => {
+    if (drawRef.current) {
+      const editedSnapshot = await drawRef.current.exportImage('png');
+      const updatedSnapshots = snapshots.map(snapshot =>
+        snapshot === selectedSnapshot ? editedSnapshot : snapshot
+      );
+      setSnapshots(updatedSnapshots);
+      setIsModalOpen(false);
+    }
+  };
+
   return (
-    <div className="p-4 flex">
-      <div className="flex-1 mr-4">
-        <h1 className="text-2xl font-bold mb-4">Video Annotation</h1>
-        <div className="mb-4">
-          <input type="file" accept="video/*" onChange={handleFileChange} className="border p-2 w-full" />
-        </div>
-        <div className="mb-4">
+    <div className="p-4 flex flex-col space-y-4 pt-24">
+      <div className="w-full flex">
+        <div className="w-1/3 pr-4">
+          <h2 className="text-xl font-semibold mb-2">Upload your Video</h2>
+          <input type="file" accept="video/*" onChange={handleFileChange} className="border p-2 w-full mb-4" />
           {videoSrc && (
             <ReactPlayer
               ref={videoRef}
@@ -151,10 +207,116 @@ const AnnotationComponent: React.FC = () => {
               url={videoSrc}
             />
           )}
+          <button onClick={handleSnap} className="bg-blue-500 text-white px-4 py-2 rounded mt-4">Snap</button>
         </div>
-        <button onClick={handleSnap} className="bg-blue-500 text-white px-4 py-2 rounded mb-4">Snap</button>
-        <div>
-          <h2 className="text-xl font-semibold mb-2">Annotations:</h2>
+        <div className="w-1/3 px-4">
+          
+          {loading ? (
+            <div className="flex justify-center items-center h-full">
+              <div className="loader">
+                <Spinner/>
+              </div>
+            </div>
+          ) : (
+            
+            <div className="max-h-96 overflow-y-auto">
+              <h2 className="text-xl font-semibold mb-2">AI Analysis</h2>
+              {analysisResult && (
+             
+              <ReactMarkdown>{analysisResult}</ReactMarkdown>
+          
+              )}
+            </div>
+          )}
+        </div>
+        <div className="w-1/3 pl-4">
+          <button onClick={() => setShowAddButtonWindow(true)} className="bg-blue-500 text-white px-4 py-2 rounded mb-4">Add Button</button>
+          <div className="bg-gray-800 text-white p-4 rounded-lg h-4/5">
+            <h2 className="text-xl font-semibold mb-2">Tagging Window</h2>
+            <div className="mb-4">
+              <div className="grid grid-cols-2 gap-4 mb-4 overflow-y-auto h-32">
+                <div>
+                  {customButtons
+                    .filter(button => button.isCategorical)
+                    .map(button => (
+                      <div key={`${button.id}-home`} className="relative">
+                        <button
+                          onClick={() => handleCategoricalButtonClick(button.name, 'Home')}
+                          className="bg-red-800 text-white px-4 rounded-xl mb-2"
+                        >
+                          {`${button.name} - Home`}
+                        </button>
+                        <button
+                          onClick={() => handleRemoveButton(button.id)}
+                          className="absolute top-0 right-0 text-white"
+                        >
+                          &times;
+                        </button>
+                      </div>
+                    ))}
+                </div>
+                <div>
+                  {customButtons
+                    .filter(button => button.isCategorical)
+                    .map(button => (
+                      <div key={`${button.id}-away`} className="relative">
+                        <button
+                          onClick={() => handleCategoricalButtonClick(button.name, 'Away')}
+                          className="bg-blue-800 text-white px-4 rounded-xl mb-2"
+                        >
+                          {`${button.name} - Away`}
+                        </button>
+                        <button
+                          onClick={() => handleRemoveButton(button.id)}
+                          className="absolute top-0 right-0 text-white"
+                        >
+                          &times;
+                        </button>
+                      </div>
+                    ))}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4 overflow-y-auto h-32">
+                {customButtons
+                  .filter(button => !button.isCategorical)
+                  .map(button => (
+                    <div className="relative" key={button.id}>
+                      <button
+                        onClick={() => handleDescriptorButtonClick(button.name)}
+                        className="bg-cyan-800 text-white px-4 rounded-xl"
+                      >
+                        {button.name}
+                      </button>
+                      <button
+                        onClick={() => handleRemoveButton(button.id)}
+                        className="absolute top-0 right-0 text-white"
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="w-full flex">
+        <div className="w-1/2 pr-4">
+          <h2 className="text-xl font-semibold mb-2">Snapshots</h2>
+          <div className="grid grid-cols-3 gap-4 max-h-64 overflow-y-auto">
+            {snapshots.map((snapshot, index) => (
+              <img
+                key={index}
+                src={snapshot}
+                alt={`Snapshot ${index}`}
+                className="border p-2 rounded cursor-pointer"
+                onClick={() => handleSnapshotClick(snapshot)}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="w-1/2 pl-4">
+          <h2 className="text-xl font-semibold mb-2">Annotations Table</h2>
           <table className="w-full border-collapse border">
             <thead>
               <tr className="bg-gray-200">
@@ -197,51 +359,56 @@ const AnnotationComponent: React.FC = () => {
               ))}
             </tbody>
           </table>
-        </div>
-        <button onClick={handleAnalyze} className="bg-green-500 text-white px-4 py-2 rounded mt-4">
-          Analyze
-        </button>
-        <div className="mt-4">
-          <h2 className="text-xl font-semibold mb-2">Snapshots:</h2>
-          <div className="grid grid-cols-3 gap-4">
-            {snapshots.map((snapshot, index) => (
-              <img key={index} src={snapshot} alt={`Snapshot ${index}`} className="border p-2 rounded" />
-            ))}
+          <div className="flex justify-end space-x-4 mt-4">
+            <button onClick={handleAnalyze} className="bg-green-500 text-white px-4 py-2 rounded">
+              Analyze
+            </button>
+            <button onClick={handleSave} className="bg-blue-500 text-white px-4 py-2 rounded">
+              Save
+            </button>
           </div>
         </div>
       </div>
-      <div className="flex-1">
-        <div className="mb-4">
-          <h2 className="text-xl font-semibold mb-2">Categorical Buttons:</h2>
-          <div className="flex flex-wrap space-y-2 space-x-2 px-2">
-            {customButtons
-              .filter(button => button.isCategorical)
-              .map(button => (
-                <button key={button.id} onClick={() => handleCategoricalButtonClick(button.name, 'Home')} className="bg-red-500 text-white h-12 px-4 py-2 my-auto rounded">{`${button.name} - Home`}</button>
-              ))}
-            {customButtons
-              .filter(button => button.isCategorical)
-              .map(button => (
-                <button key={button.id} onClick={() => handleCategoricalButtonClick(button.name, 'Away')} className="bg-blue-500 text-white h-12 px-4 py-2 my-auto rounded">{`${button.name} - Away`}</button>
-              ))}
+      <canvas ref={canvasRef} className="hidden pt-24" width="640" height="600"></canvas>
+      <Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)} ariaHideApp={false}>
+        <div className="bg-white p-4 rounded shadow-lg w-3/4 h-full flex flex-col pt-24">
+          <div className="flex space-x-4 mb-4">
+            <label className="flex items-center space-x-2">
+              <span>Brush Color:</span>
+              <input type="color" value={brushColor} onChange={(e) => setBrushColor(e.target.value)} />
+            </label>
+            <label className="flex items-center space-x-2">
+              <span>Brush Size:</span>
+              <input
+                type="number"
+                value={brushSize}
+                onChange={(e) => setBrushSize(Number(e.target.value))}
+                min={1}
+                max={50}
+                className="w-16 p-1 border rounded"
+              />
+            </label>
+            <button onClick={() => setIsErasing(!isErasing)} className={`px-4 py-2 rounded ${isErasing ? 'bg-red-500 text-white' : 'bg-gray-200'}`}>
+              {isErasing ? 'Eraser Mode' : 'Brush Mode'}
+            </button>
           </div>
+          <ReactSketchCanvas
+            ref={drawRef}
+            backgroundImage={selectedSnapshot!}
+            width="100%"
+            height="100%"
+            strokeWidth={brushSize}
+            strokeColor={isErasing ? "rgba(0,0,0,0)" : brushColor}
+            eraserWidth={brushSize}
+          />
+          <button onClick={handleSaveSnapshot} className="bg-green-500 text-white px-4 py-2 rounded mt-4 self-end">
+            Save
+          </button>
         </div>
-        <div className="mb-4">
-          <h2 className="text-xl font-semibold mb-2">Descriptor Buttons:</h2>
-          <div className="flex flex-wrap space-y-2 space-x-2">
-            {customButtons
-              .filter(button => !button.isCategorical)
-              .map(button => (
-                <button key={button.id} onClick={() => handleDescriptorButtonClick(button.name)} className="bg-cyan-800 text-white px-4 py-2 rounded">{button.name}</button>
-              ))}
-          </div>
-        </div>
-        <h2 className="text-xl font-semibold mb-2">Custom Buttons:</h2>
-        <div className="mb-4">
-          <button onClick={() => setShowAddButtonWindow(true)} className="bg-blue-500 text-white px-4 py-2 rounded">Add Button</button>
-        </div>
-        {showAddButtonWindow && (
-          <div>
+      </Modal>
+      {showAddButtonWindow && (
+        <Modal isOpen={showAddButtonWindow} onRequestClose={() => setShowAddButtonWindow(false)} ariaHideApp={false}>
+          <div className="p-4 bg-white shadow rounded-lg w-1/2 mx-auto mt-24">
             <div className="mb-4">
               <label htmlFor="buttonName" className="block text-sm font-medium text-gray-700">Button Name:</label>
               <input type="text" id="buttonName" value={newButtonName} onChange={(e) => setNewButtonName(e.target.value)} className="border p-2 w-full rounded" />
@@ -258,17 +425,9 @@ const AnnotationComponent: React.FC = () => {
             </div>
             <button onClick={handleAddButton} className="bg-blue-500 text-white px-4 py-2 rounded">Add</button>
           </div>
-        )}
-        <div className="mt-4">
-          {customButtons.map(button => (
-            <div key={button.id} className="flex items-center justify-between bg-gray-200 rounded-full px-4 py-2 mb-2">
-              <span>{button.name}</span>
-              <button onClick={() => handleRemoveButton(button.id)}>&times;</button>
-            </div>
-          ))}
-        </div>
-      </div>
-      <canvas ref={canvasRef} className="hidden" width="640" height="360"></canvas>
+        </Modal>
+      )}
+      <ToastContainer />
     </div>
   );
 };
