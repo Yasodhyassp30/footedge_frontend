@@ -27,6 +27,8 @@ import TeamDetails from "./components/teamDetails";
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import PassingNetwork from "./components/passingNetwork";
 import SaveAnalysisPopup from "./components/saveAnalysis";
+import { calc } from "antd/es/theme/internal";
+import PreviousMatches from "./components/previousMatches";
 
 const ReactPlayer = _ReactPlayer as unknown as React.FC<ReactPlayerProps>;
 
@@ -237,44 +239,62 @@ function Dashboard() {
   return (
     <div style={{
       width: "100vw",
-      height: "100vh",
+      height: "calc(100vh - 80px)",
       display: "flex",
-      flexDirection: "column",
-      justifyContent: "start",
-      paddingTop: "80px",
-      paddingLeft: "10px",
-      paddingRight: "10px",
-      backgroundColor:"#9DB2BF"
     }}>
-      <Grid container spacing={0}>
-        
-        <Grid item xs={12} md={4} sx={{
-        
-        }}>
-          <Paper elevation={0} sx={{
-            height: "90vh",
-            padding: "5px",
-            backgroundColor:"#526D82",
-            borderRadius: "10px",
-          }}>
-          <Grid container spacing={0}>
-            <Grid item xs={12}>
-          {videoSrc && (
-            <div style={{
-              textAlign:"start",
-              fontWeight: "bold",
-              display:"flex",
-          flexDirection: "column",
+      <div style={{
+         width: "100%",
+         height: "100%",
+         position:"fixed",
+         top:0,
+         left:0, 
+         backgroundColor:"#9DB2BF",
+         zIndex:-1
+      }}>
+
+      </div>
+      <div style={{
+        padding: "90px 10px 10px 10px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        height: "100%",
+        width: "100%",
+      }}>
+      <Grid container spacing={0} sx={{
+        flexGrow: (videoSrc)?"1":"0",
+        maxHeight: "calc(100vh - 160px)",
+      }}>
+        <Grid item xs ={12} sx={{
+          display:"flex",
+          flexDirection: "row",
           justifyContent: "center",
-          alignItems: "center",
-            }}>
-              <ReactPlayer
-              url={videoSrc}
-              controls
-              width="480px"
-              height="auto"
+        }}>
+        <Button
+            component="label"
+            variant="contained"
+            startIcon={((uploadProgress>0 && uploadProgress <100 && videoSrc) ? <CircularProgress
+              variant="determinate"
+              value={uploadProgress}
+            />:(loading && videoSrc) ? <CircularProgress  sx={{
+              color: "white",
+            }} /> : <CloudUploadIcon />)}
+            disabled={uploadProgress > 0 && uploadProgress < 100}
+            sx={{
+              margin: "10px",
+              width: "max-content",
+            }}
+          >
+            Upload file
+            <VisuallyHiddenInput
+              type="file"
+              accept="video/mp4"
+              onChange={(event) => {
+                handleFileChange(event);
+              }}
             />
-          {uploadProgress > 0 && uploadProgress < 100 && (
+          </Button>
+          {uploadProgress >0 && uploadProgress<100  && (
             <Button
               sx={{
                 margin: "10px",
@@ -288,59 +308,44 @@ function Dashboard() {
               Cancel
             </Button>
           )}
-          {uploadProgress > 0 && uploadProgress < 100 && (
-                  <div
-                    style={{
-                      position: "relative",
-                      textAlign: "center",
-                      alignItems: "start",
-                      display: "flex",
-                    }}
-                  >
-                    <CircularProgress
-                      variant="determinate"
-                      value={uploadProgress}
-                    />
-                  </div>
-                )}
+        </Grid>
+        <Grid item xs={12}>
+          {(!videoSrc)?<PreviousMatches/>:<></>}
+        </Grid>
+        {videoSrc&&<Grid item xs={12} md={4} sx={{
+          flexGrow: 1,
+          
+        }}>
+          <Paper elevation={0} sx={{
+            flexGrow: 1,
+            padding: "5px",
+            backgroundColor:"#526D82",
+            borderRadius: "10px",
+            height: "100%",
+            
+            overflowY: "auto",
+          }}>
+          <Grid container spacing={0}>
+            <Grid item xs={12}>
+          {videoSrc && (
 
-    {loading && socket && (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: "20px",
-            }}
-          >
-            {" "}
-            <CircularProgress />
+          <div style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "start",
+          }}>
+                <ReactPlayer
+              url={videoSrc}
+              controls
+              width="75%"
+              height="auto"
+            />
           </div>
-        )}
-
-            </div>
 
           )
           
             }
-            <Button
-            component="label"
-            variant="contained"
-            startIcon={<CloudUploadIcon />}
-            disabled={uploadProgress > 0 && uploadProgress < 100}
-            sx={{
-              margin: "10px",
-            }}
-          >
-            Upload file
-            <VisuallyHiddenInput
-              type="file"
-              accept="video/mp4"
-              onChange={(event) => {
-                handleFileChange(event);
-              }}
-            />
-          </Button>
+
             {length > 0 && (
               <div style={{
                 width: "100%",
@@ -419,18 +424,16 @@ function Dashboard() {
         
         </Grid>
         </Paper>
-          </Grid>
+          </Grid>}
 
-          <Grid item xs={12} md={8} sx={{
+          {videoSrc&& <Grid item xs={12} md={8} sx={{
             height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
+            flexGrow: (videoSrc)?"1":"0",
           }}>
             {length !== 0 && (
                <div style={
                 {
-                  height: "90vh",
+                  maxHeight: "calc(100vh - 160px)",
                   overflowY: "auto",
                   overflowX: "hidden",
                 }
@@ -576,9 +579,10 @@ function Dashboard() {
            </div>
             )}
            
-          </Grid>
+          </Grid>}
 
       </Grid>
+      </div>
       
     </div>
   );
